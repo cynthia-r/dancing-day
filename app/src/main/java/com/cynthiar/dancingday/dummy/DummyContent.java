@@ -18,8 +18,10 @@ public class DummyContent {
      */
     public static final DummyItem[] ITEMS =
     {
-        new DummyItem("Monday","7PM-8:30PM","KDC","Jerri","Beg-Int"),
-        new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int")
+        new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay","Beg-Int"),
+        new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
+        new DummyItem("Thursday","7PM-8:30PM","KDC","Jerri","Intermediate"),
+        new DummyItem("Friday", "6:30PM-8PM","PNB Seattle","Landis","Beg-Int"),
     };
 
     /**
@@ -27,7 +29,17 @@ public class DummyContent {
      */
     public static final DummyItem[] ITEMS2 =
     {
-            new DummyItem("Monday","7PM-8:30PM","KDC","Jerri","Beg-Int"),
+        new DummyItem("Monday","7PM-8:30PM","KDC","Jerri","Beg-Int"),
+        new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
+        new DummyItem("Thursday","6:30PM-8PM","ADI","Kara","Intermediate"),
+        new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int")
+    };
+
+    /**
+     * An array of sample (dummy) items.
+     */
+    public static final DummyItem[] ITEMS3 =
+    {
             new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
             new DummyItem("Thursday","6:30PM-8PM","ADI","Kara","Intermediate"),
             new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int")

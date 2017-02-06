@@ -1,5 +1,6 @@
 package com.cynthiar.dancingday;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,17 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
  */
-public class MultiDayFragment extends ListFragment {
+public class MultiDayFragment extends Fragment {
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
@@ -36,20 +39,46 @@ public class MultiDayFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Set the adapter
-        setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS2));
-    }
-
-    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.multi_day_fragment_item_list, container, false);
 
         return view;
-    }*/
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Set the adapter
+        //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS2));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        int itemCount;
+        if (getArguments() != null) {
+            //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+        }
+        else
+            itemCount = 1;
+
+        // Set the adapter
+        //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
+
+        // Retrieve list of items
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        for (int i=0; i < DummyContent.ITEMS3.length; i++)
+            dummyItemList.add(DummyContent.ITEMS3[i]);
+
+        // Set up list view
+        Activity parentActivity = getActivity();
+        ListView mListView = (ListView) parentActivity.findViewById(R.id.multi_day_list_view);
+        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(dummyItemList, parentActivity);
+        mListView.setAdapter(adapter);
+    }
 
 /*
     @Override

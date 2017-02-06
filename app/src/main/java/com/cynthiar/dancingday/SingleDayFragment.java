@@ -84,8 +84,9 @@ public class SingleDayFragment extends Fragment {
 
         // Retrieve list of items
         List<DummyItem> dummyItemList = new ArrayList<>();
+        DummyItem[] inputArray = itemCount == 1 ? DummyContent.ITEMS : DummyContent.ITEMS2;
         for (int i=0; i < itemCount; i++)
-            dummyItemList.add(DummyContent.ITEMS2[i]);
+            dummyItemList.add(inputArray[i]);
 
         // Set up recycler view
         Activity parentActivity = getActivity();
