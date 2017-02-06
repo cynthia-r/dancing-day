@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DancingDay</string>
+    <string-array name="timeframes_array">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>Next 7 days</item>
+    </string-array>
+</resources>
