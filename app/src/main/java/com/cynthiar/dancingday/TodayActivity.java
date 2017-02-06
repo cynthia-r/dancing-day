@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +22,7 @@ import com.cynthiar.dancingday.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodayActivity extends FragmentActivity {
+public class TodayActivity extends AppCompatActivity {
 
     private String[] timeFrames;
     private DrawerLayout mDrawerLayout;
@@ -35,9 +36,9 @@ public class TodayActivity extends FragmentActivity {
         setContentView(R.layout.activity_today);
 
         // Setup toolbar
-        /*myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("Today");
-        setSupportActionBar(myToolbar);*/
+        setSupportActionBar(myToolbar);
 
         // Setup navigation drawer
         timeFrames = getResources().getStringArray(R.array.timeframes_array);
@@ -126,7 +127,7 @@ public class TodayActivity extends FragmentActivity {
     @Override
     public void setTitle(CharSequence title) {
         //mTitle = title;
-        //myToolbar.setTitle(title);
+        myToolbar.setTitle(title);
     }
 
 }

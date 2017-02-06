@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import android.app.ListFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,6 +99,8 @@ public class SingleDayFragment extends Fragment {
         //ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, dummyItemList);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
+
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle();
     }
 
     /*@Override
