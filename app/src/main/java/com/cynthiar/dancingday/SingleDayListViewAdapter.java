@@ -56,8 +56,8 @@ public class SingleDayListViewAdapter extends BaseAdapter {
         //holder.mItem = mValues.get(position);
         mTimeView.setText(mValues.get(position).time);
         mSchoolView.setText(mValues.get(position).school);
-        mLevelView.setText(mValues.get(position).teacher);
-        mTeacherView.setText(mValues.get(position).level);
+        mLevelView.setText(mValues.get(position).level);
+        mTeacherView.setText(mValues.get(position).teacher);
         return rowView;
     }
 }

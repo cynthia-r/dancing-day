@@ -152,7 +152,7 @@ public class TodayActivity extends AppCompatActivity {
         }
 
         Bundle args = new Bundle();
-        args.putInt(SingleDayFragment.ARG_ITEM_COUNT, position + 1);
+        args.putInt(SingleDayFragment.ARG_NUMBER, position + 1);
         fragment.setArguments(args);
 
         /*// Insert the fragment by replacing any existing fragment

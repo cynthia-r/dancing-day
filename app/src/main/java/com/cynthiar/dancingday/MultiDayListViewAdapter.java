@@ -58,18 +58,18 @@ public class MultiDayListViewAdapter extends BaseAdapter {
         // Get view for row item
         View rowView = mInflater.inflate(R.layout.multi_day_fragment_item, parent, false);
 
-        TextView mTimeView = (TextView) rowView.findViewById(R.id.day_time);
-        TextView mSchoolView = (TextView) rowView.findViewById(R.id.day_school);
+        TextView mTimeView = (TextView) rowView.findViewById(R.id.time);
+        TextView mSchoolView = (TextView) rowView.findViewById(R.id.school);
         TextView mDayView = (TextView) rowView.findViewById(R.id.day);
-        TextView mLevelView = (TextView) rowView.findViewById(R.id.day_level);
-        TextView mTeacherView = (TextView) rowView.findViewById(R.id.day_teacher);
+        TextView mLevelView = (TextView) rowView.findViewById(R.id.level);
+        TextView mTeacherView = (TextView) rowView.findViewById(R.id.teacher);
 
         //holder.mItem = mValues.get(position);
         mTimeView.setText(mValues.get(position).time);
         mSchoolView.setText(mValues.get(position).school);
         mDayView.setText(mValues.get(position).day);
-        mLevelView.setText(mValues.get(position).teacher);
-        mTeacherView.setText(mValues.get(position).level);
+        mLevelView.setText(mValues.get(position).level);
+        mTeacherView.setText(mValues.get(position).teacher);
         return rowView;
     }
 }

@@ -6,24 +6,6 @@
     android:orientation="vertical"
     tools:context="com.cynthiar.dancingday.SingleDayFragment">
 
-    <!--<android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        xmlns:android="http://schemas.android.com/apk/res/android" />-->
-
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Headlines fragment" />-->
-    <!--<android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/singledayrecyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>-->
     <ListView
         android:id="@+id/single_day_list_view"
         android:layout_height="match_parent"

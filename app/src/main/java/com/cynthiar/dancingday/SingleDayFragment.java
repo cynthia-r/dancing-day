@@ -29,10 +29,11 @@ public class SingleDayFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    public static final String ARG_ITEM_COUNT = "item-count";
+    public static final String ARG_NUMBER = "number";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    //private OnListFragmentInteractionListener mListener;
+    //private OnListFragmentIn
+    // teractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -74,7 +75,7 @@ public class SingleDayFragment extends Fragment {
         int itemCount;
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            itemCount = getArguments().getInt(ARG_ITEM_COUNT);
+            itemCount = getArguments().getInt(ARG_NUMBER);
         }
         else
             itemCount = 1;
@@ -85,7 +86,7 @@ public class SingleDayFragment extends Fragment {
         // Retrieve list of items
         List<DummyItem> dummyItemList = new ArrayList<>();
         DummyItem[] inputArray = itemCount == 1 ? DummyContent.ITEMS : DummyContent.ITEMS2;
-        for (int i=0; i < itemCount; i++)
+        for (int i=0; i < inputArray.length; i++)
             dummyItemList.add(inputArray[i]);
 
         // Set up recycler view
