@@ -12,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
+import com.cynthiar.dancingday.dummy.DanceClassPropertySelector;
+import com.cynthiar.dancingday.dummy.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -69,15 +73,27 @@ public class MultiDayFragment extends Fragment {
         //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
 
         // Retrieve list of items
+        DummyItem[] inputArray = DummyContent.ITEMS3;
         List<DummyItem> dummyItemList = new ArrayList<>();
-        for (int i=0; i < DummyContent.ITEMS3.length; i++)
-            dummyItemList.add(DummyContent.ITEMS3[i]);
+        for (int i=0; i < inputArray.length; i++)
+            dummyItemList.add(inputArray[i]);
+
+        DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
+        HashMap<String, List<DummyItem>> dummyItemMap = DummyContent.GroupBy(danceClassPropertySelector, inputArray);
+        List<String> groupList = new ArrayList<>(dummyItemMap.keySet()); // TODO sort
 
         // Set up list view
         Activity parentActivity = getActivity();
-        ListView mListView = (ListView) parentActivity.findViewById(R.id.multi_day_list_view);
-        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(dummyItemList, parentActivity);
+        // TODO use ExpandableView
+        ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
+        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, parentActivity);
         mListView.setAdapter(adapter);
+
+        // Expand groups the first time
+        for (int i=0; i < groupList.size(); i++)
+        {
+            mListView.expandGroup(i);
+        }
     }
 
 /*

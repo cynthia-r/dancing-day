@@ -46,18 +46,20 @@ public class SingleDayListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
+        if (convertView == null)
+        {
+            convertView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
+        }
 
-        TextView mTimeView = (TextView) rowView.findViewById(R.id.time);
-        TextView mSchoolView = (TextView) rowView.findViewById(R.id.school);
-        TextView mTeacherView = (TextView) rowView.findViewById(R.id.teacher);
-        TextView mLevelView = (TextView) rowView.findViewById(R.id.level);
+        TextView mTimeView = (TextView) convertView.findViewById(R.id.time);
+        TextView mSchoolView = (TextView) convertView.findViewById(R.id.school);
+        TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
+        TextView mLevelView = (TextView) convertView.findViewById(R.id.level);
 
-        //holder.mItem = mValues.get(position);
         mTimeView.setText(mValues.get(position).time);
         mSchoolView.setText(mValues.get(position).school);
         mLevelView.setText(mValues.get(position).level);
         mTeacherView.setText(mValues.get(position).teacher);
-        return rowView;
+        return convertView;
     }
 }

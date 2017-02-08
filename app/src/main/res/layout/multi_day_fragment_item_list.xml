@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.cynthiar.dancingday.MultiDayFragment">
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/multi_day_list_view"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content">
-    </ListView>
+        android:layout_width="wrap_content"/>
 
 </LinearLayout>

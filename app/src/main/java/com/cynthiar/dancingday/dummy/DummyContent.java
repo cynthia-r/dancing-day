@@ -3,7 +3,6 @@ package com.cynthiar.dancingday.dummy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -20,7 +19,8 @@ public class DummyContent {
     {
         new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay","Beg-Int"),
         new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
-        new DummyItem("Thursday","7PM-8:30PM","KDC","Jerri","Intermediate"),
+        new DummyItem("Thursday","6PM-7PM","KDC","Jerri","Beginner"),
+        new DummyItem("Thursday","6-30PM-8PM","ADI","Kara","Intermediate"),
         new DummyItem("Friday", "6:30PM-8PM","PNB Seattle","Landis","Beg-Int"),
     };
 
@@ -41,9 +41,32 @@ public class DummyContent {
     public static final DummyItem[] ITEMS3 =
     {
             new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
+            new DummyItem("Wednesday", "8PM-9PM","KDC","Amy","Beg-Int"),
             new DummyItem("Thursday","6:30PM-8PM","ADI","Kara","Intermediate"),
-            new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int")
+            new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int"),
+            new DummyItem("Saturday","10AM-11:30AM","KDC","Jerri","Beg-Int"),
+            new DummyItem("Saturday","11-20AM-12:50PM","ADI","Kara","Intermediate")
     };
+
+    public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, DummyItem[]dummyItems)
+    {
+        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyItem>>();
+        for (DummyItem dummyItem:dummyItems
+             ) {
+            // Retrieve the property that we group by on
+            String property = danceClassPropertySelector.GetProperty(dummyItem);
+
+            // Initialize the list of items for this entry if needed
+            List<DummyItem> dummyItemList = dummyItemDictionary.get(property);
+            if (null == dummyItemList)
+                dummyItemList = new ArrayList<DummyItem>();
+
+            // Add the current item to this entry
+            dummyItemList.add(dummyItem);
+            dummyItemDictionary.put(property, dummyItemList);
+        }
+        return dummyItemDictionary;
+    }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
