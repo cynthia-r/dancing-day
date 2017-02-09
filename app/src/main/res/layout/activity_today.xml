@@ -20,7 +20,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             xmlns:android="http://schemas.android.com/apk/res/android" />
 
-        <!-- Fragment frame -->
+        <!-- Schedule frame -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +40,18 @@
                 android:layout_alignParentLeft="true"
                 android:textAppearance="?attr/textAppearanceListItem" />
         </FrameLayout>
+
+        <!--<Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start download"
+            android:onClick="startDownload"/>
+
+        <TextView
+            android:id="@+id/downloadResult"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />-->
+
         <!-- Fragment frame -->
         <FrameLayout
             android:id="@+id/fragment_frame"

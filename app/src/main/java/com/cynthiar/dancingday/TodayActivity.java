@@ -1,7 +1,10 @@
 package com.cynthiar.dancingday;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,13 +21,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodayActivity extends AppCompatActivity {
+public class TodayActivity extends AppCompatActivity implements DownloadCallback<String> {
 
     private String[] timeFrames;
     private DrawerLayout mDrawerLayout;
@@ -34,6 +38,14 @@ public class TodayActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mTitle;
     private String mDrawerTitle = "Timeframes";
+
+    // Keep a reference to the NetworkFragment, which owns the AsyncTask object
+    // that is used to execute network ops.
+    private NetworkFragment mNetworkFragment;
+
+    // Boolean telling us whether a download is in progress, so we don't trigger overlapping
+    // downloads with consecutive button clicks.
+    private boolean mDownloading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +99,8 @@ public class TodayActivity extends AppCompatActivity {
         // Add the fragment to the 'fragment_container' FrameLayout
         SingleDayFragment firstFragment = new SingleDayFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment).commit();
+
+        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
     }
 
     @Override
@@ -182,4 +196,52 @@ public class TodayActivity extends AppCompatActivity {
         myToolbar.setTitle(title);
     }
 
+    public void startDownload(View view) {
+        if (!mDownloading && mNetworkFragment != null) {
+            // Execute the async download.
+            mNetworkFragment.startDownload();
+            mDownloading = true;
+        }
+    }
+
+    public void updateFromDownload(String result) {
+        // Update your UI here based on result of download.
+        /*TextView downloadResultTextView = (TextView) findViewById(R.id.downloadResult);
+        downloadResultTextView.setText(result);*/
+    }
+
+    public NetworkInfo getActiveNetworkInfo() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo;
+    }
+
+    public void onProgressUpdate(DownloadTaskProgress progressCode, DownloadTaskProgress percentComplete) {
+        switch(progressCode.GetProgressCode()) {
+            // You can add UI behavior for progress updates here.
+            case Progress.ERROR:
+
+                break;
+            case Progress.CONNECT_SUCCESS:
+
+                break;
+            case Progress.GET_INPUT_STREAM_SUCCESS:
+
+                break;
+            case Progress.PROCESS_INPUT_STREAM_IN_PROGRESS:
+
+                break;
+            case Progress.PROCESS_INPUT_STREAM_SUCCESS:
+
+                break;
+        }
+    }
+
+    public void finishDownloading() {
+        mDownloading = false;
+        if (mNetworkFragment != null) {
+            mNetworkFragment.cancelDownload();
+        }
+    }
 }
