@@ -78,7 +78,7 @@ public class NetworkFragment extends Fragment {
      */
     public void startDownload() {
         cancelDownload();
-        mDownloadTask = new DownloadTask(mCallback);
+        mDownloadTask = new DownloadTask(mCallback, mUrlString);
         mDownloadTask.execute(mUrlString);
     }
 

@@ -28,8 +28,9 @@ import com.cynthiar.dancingday.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodayActivity extends AppCompatActivity implements DownloadCallback<String> {
+public class TodayActivity extends AppCompatActivity implements DownloadCallback<List<DummyContent.DummyItem>>/*, IDataProvider<List<DummyContent.DummyItem>>*/ {
 
+    public static final String TODAY_KEY = "Today";
     private String[] timeFrames;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -46,6 +47,9 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
     // Boolean telling us whether a download is in progress, so we don't trigger overlapping
     // downloads with consecutive button clicks.
     private boolean mDownloading = false;
+
+    //private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
+    private List<DummyContent.DummyItem> mDummyItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +100,17 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        /*// Setup cache
+        IDataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider();
+        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);*/
+
         // Add the fragment to the 'fragment_container' FrameLayout
-        SingleDayFragment firstFragment = new SingleDayFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment).commit();
+        mDummyItemList = new ArrayList<>();
+        SingleDayFragment firstFragment = SingleDayFragment.newInstance(1, mDummyItemList);
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
+
     }
 
     @Override
@@ -108,6 +118,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+        startDownload();
     }
 
     @Override
@@ -144,6 +155,11 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         return super.onOptionsItemSelected(item);
     }
 
+    /*@Override
+    public List<DummyContent.DummyItem> GiveMeTheData() {
+        this.startDownload();
+    }*/
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -156,13 +172,16 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
 
         // Create a new fragment and specify the title to show based on position
         Fragment fragment;
+        String fragmentTag;
         if (position < 2)
         {
-            fragment = new SingleDayFragment();
+            fragment = SingleDayFragment.newInstance(1, mDummyItemList);
+            fragmentTag = SingleDayFragment.TAG;
         }
         else
         {
             fragment = new MultiDayFragment();
+            fragmentTag = "MultiDayFragment";
         }
 
         Bundle args = new Bundle();
@@ -178,7 +197,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_frame, fragment);
+        transaction.replace(R.id.fragment_frame, fragment, fragmentTag);
         transaction.addToBackStack(null);
 
         // Commit the transaction
@@ -196,7 +215,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         myToolbar.setTitle(title);
     }
 
-    public void startDownload(View view) {
+    public void startDownload() {
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
             mNetworkFragment.startDownload();
@@ -204,10 +223,24 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         }
     }
 
-    public void updateFromDownload(String result) {
+    public void updateFromDownload(List<DummyContent.DummyItem> result) {
         // Update your UI here based on result of download.
         /*TextView downloadResultTextView = (TextView) findViewById(R.id.downloadResult);
         downloadResultTextView.setText(result);*/
+        mDummyItemList = result;
+
+        // Reload current fragment
+        Fragment frg = null;
+        frg = getSupportFragmentManager().findFragmentByTag(SingleDayFragment.TAG);
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+
+        // setArguments();
+        SingleDayFragment singleDayFragment = (SingleDayFragment)frg;
+        singleDayFragment.setData(result);
+
+        ft.attach(frg);
+        ft.commit();
     }
 
     public NetworkInfo getActiveNetworkInfo() {

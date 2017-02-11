@@ -26,14 +26,16 @@ import java.util.List;
  * interface.
  */
 public class SingleDayFragment extends Fragment {
-
+    public static final String TAG = "SingleDayFragment";
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static final String ARG_NUMBER = "number";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    //private DataCache<List<DummyItem>> mDataCache;
     //private OnListFragmentIn
     // teractionListener mListener;
+    private List<DummyItem> mItemList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -42,17 +44,23 @@ public class SingleDayFragment extends Fragment {
     public SingleDayFragment() {
     }
 
-    /*
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static SingleDayFragment newInstance(int columnCount) {
+
+    public static SingleDayFragment newInstance(int columnCount/*, DataCache<List<DummyItem>> dataCache*/, List<DummyItem> dummyItemList) {
         SingleDayFragment fragment = new SingleDayFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+        //fragment.setDataCache(dataCache);
+        fragment.setData(dummyItemList);
         return fragment;
     }
-    */
+
+    /*private void setDataCache(DataCache<List<DummyItem>> dataCache) {
+        mDataCache = dataCache;
+    }*/
+    public void setData(List<DummyItem> data) {
+        mItemList = data;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +80,9 @@ public class SingleDayFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        //TodayActivity parentActivity = (TodayActivity)getActivity();
+        //parentActivity.startDownload();
+
         int itemCount;
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -85,12 +96,15 @@ public class SingleDayFragment extends Fragment {
 
         // Retrieve list of items
         List<DummyItem> dummyItemList = new ArrayList<>();
-        DummyItem[] inputArray = itemCount == 1 ? DummyContent.ITEMS : DummyContent.ITEMS2;
+        /*DummyItem[] inputArray = itemCount == 1 ? DummyContent.ITEMS : DummyContent.ITEMS2;
         for (int i=0; i < inputArray.length; i++)
-            dummyItemList.add(inputArray[i]);
+            dummyItemList.add(inputArray[i]);*/
+
+        //dummyItemList = mDataCache.Load(TodayActivity.TODAY_KEY);
+        for (int i=0; i < mItemList.size(); i++)
+            dummyItemList.add(mItemList.get(i));
 
         // Set up recycler view
-        Activity parentActivity = getActivity();
         //RecyclerView recyclerView = (RecyclerView) parentActivity.findViewById(R.id.singledayrecyclerview);
         //SingleDayRecyclerViewAdapter adapter = new SingleDayRecyclerViewAdapter(
         //        dummyItemList, parentActivity.getApplication());
