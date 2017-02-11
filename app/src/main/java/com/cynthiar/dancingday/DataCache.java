@@ -1,24 +1,25 @@
 package com.cynthiar.dancingday;
 
-import android.util.Pair;
+import android.support.v4.util.Pair;
 
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Robert on 09/02/2017.
  */
 
-public class DataCache<T> {
+public class DataCache<T> implements IConsumerCallback<Pair<String, T>> {
     HashMap<String, Pair<T, Date>> mCache;
-    IDataProvider<T> mDataProvider;
+    DataProvider<Pair<String, T>> mDataProvider;
+    public IConsumerCallback<T> mConsumerCallback;
     public static final int CACHE_EXPIRY_IN_MINUTES = 15;
 
-    public DataCache(IDataProvider<T> dataProvider) {
+    public DataCache(DataProvider<Pair<String, T>> dataProvider, IConsumerCallback<T> consumerCallback) {
         mCache = new HashMap<String, Pair<T, Date>>();
         mDataProvider = dataProvider;
+        mDataProvider.setConsumerCallback(this);
+        mConsumerCallback = consumerCallback;
     }
 
     /*
@@ -44,10 +45,18 @@ public class DataCache<T> {
 
         // Load data if not there
         // Or reload data if not fresh
-        T freshData = this.mDataProvider.GiveMeTheData();
+        this.mDataProvider.GiveMeTheData(key);
+        return null;
+    }
+
+    public void updateFromResult(Pair<String, T> result) {
+        String key = result.first;
+        T freshData = result.second;
 
         // Save data for next time
         this.Save(key, freshData);
-        return freshData;
+
+        // Update consumer with the result
+        mConsumerCallback.updateFromResult(freshData);
     }
 }

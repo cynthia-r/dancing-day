@@ -1,19 +1,16 @@
 package com.cynthiar.dancingday;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +18,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodayActivity extends AppCompatActivity implements DownloadCallback<List<DummyContent.DummyItem>>/*, IDataProvider<List<DummyContent.DummyItem>>*/ {
+public class TodayActivity extends AppCompatActivity
+        implements IDownloadCallback<List<DummyContent.DummyItem>>/*, DataProvider<List<DummyContent.DummyItem>>*/
+        , IConsumerCallback<List<DummyContent.DummyItem>> {
 
     public static final String TODAY_KEY = "Today";
     private String[] timeFrames;
@@ -48,7 +46,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
     // downloads with consecutive button clicks.
     private boolean mDownloading = false;
 
-    //private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
+    private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
     private List<DummyContent.DummyItem> mDummyItemList;
 
     @Override
@@ -100,9 +98,9 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        /*// Setup cache
-        IDataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider();
-        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);*/
+        // Setup cache
+        DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
+        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider, this);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         mDummyItemList = new ArrayList<>();
@@ -110,7 +108,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
-
+        mNetworkFragment.setConsumerCallback(danceClassDataProvider);
     }
 
     @Override
@@ -118,7 +116,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
-        startDownload();
+        //startDownload();
     }
 
     @Override
@@ -215,6 +213,18 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         myToolbar.setTitle(title);
     }
 
+    public List<DummyContent.DummyItem> getCurrentList() {
+        List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(TODAY_KEY);
+        if (null == dummyItemList)
+            return new ArrayList<>();
+        return dummyItemList;
+    }
+
+    public void updateFromDownload(List<DummyContent.DummyItem> result) {
+        //this.updateFromDownload(result);
+        // Do nothing
+    }
+
     public void startDownload() {
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
@@ -223,7 +233,7 @@ public class TodayActivity extends AppCompatActivity implements DownloadCallback
         }
     }
 
-    public void updateFromDownload(List<DummyContent.DummyItem> result) {
+    public void updateFromResult(List<DummyContent.DummyItem> result) {
         // Update your UI here based on result of download.
         /*TextView downloadResultTextView = (TextView) findViewById(R.id.downloadResult);
         downloadResultTextView.setText(result);*/

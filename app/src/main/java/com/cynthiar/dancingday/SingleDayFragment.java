@@ -1,20 +1,13 @@
 package com.cynthiar.dancingday;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import android.app.ListFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
@@ -80,7 +73,7 @@ public class SingleDayFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //TodayActivity parentActivity = (TodayActivity)getActivity();
+        TodayActivity parentActivity = (TodayActivity)getActivity();
         //parentActivity.startDownload();
 
         int itemCount;
@@ -101,8 +94,9 @@ public class SingleDayFragment extends Fragment {
             dummyItemList.add(inputArray[i]);*/
 
         //dummyItemList = mDataCache.Load(TodayActivity.TODAY_KEY);
-        for (int i=0; i < mItemList.size(); i++)
-            dummyItemList.add(mItemList.get(i));
+        /*for (int i=0; i < mItemList.size(); i++)
+            dummyItemList.add(mItemList.get(i));*/
+        dummyItemList = parentActivity.getCurrentList();
 
         // Set up recycler view
         //RecyclerView recyclerView = (RecyclerView) parentActivity.findViewById(R.id.singledayrecyclerview);

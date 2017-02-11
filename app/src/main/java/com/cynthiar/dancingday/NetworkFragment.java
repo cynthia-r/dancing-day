@@ -15,7 +15,8 @@ public class NetworkFragment extends Fragment {
 
     private static final String URL_KEY = "UrlKey";
 
-    private DownloadCallback mCallback;
+    private IDownloadCallback mDownloadCallback;
+    private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
     private String mUrlString;
 
@@ -40,6 +41,10 @@ public class NetworkFragment extends Fragment {
         return networkFragment;
     }
 
+    public void setConsumerCallback(IConsumerCallback consumerCallback) {
+        mConsumerCallback = consumerCallback;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +61,14 @@ public class NetworkFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         // Host Activity will handle callbacks from task.
-        mCallback = (DownloadCallback) context;
+        mDownloadCallback = (IDownloadCallback) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         // Clear reference to host Activity to avoid memory leak.
-        mCallback = null;
+        mDownloadCallback = null;
     }
 
     @Override
@@ -78,7 +83,7 @@ public class NetworkFragment extends Fragment {
      */
     public void startDownload() {
         cancelDownload();
-        mDownloadTask = new DownloadTask(mCallback, mUrlString);
+        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, mUrlString);
         mDownloadTask.execute(mUrlString);
     }
 

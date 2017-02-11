@@ -5,7 +5,7 @@ import android.net.NetworkInfo;
 /**
  * Created by Robert on 08/02/2017.
  */
-public interface DownloadCallback<T> {
+public interface IDownloadCallback<T> {
     interface Progress {
         int ERROR = -1;
         int CONNECT_SUCCESS = 0;
@@ -28,7 +28,7 @@ public interface DownloadCallback<T> {
 
     /**
      * Indicate to callback handler any progress update.
-     * @param progressCode must be one of the constants defined in DownloadCallback.Progress.
+     * @param progressCode must be one of the constants defined in IDownloadCallback.Progress.
      * @param percentComplete must be 0-100.
      */
     void onProgressUpdate(DownloadTaskProgress progressCode, DownloadTaskProgress percentComplete);

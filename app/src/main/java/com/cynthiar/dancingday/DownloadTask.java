@@ -19,21 +19,25 @@ import javax.net.ssl.HttpsURLConnection;
  * Implementation of AsyncTask designed to fetch data from the network.
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result> {
-    private DownloadCallback<List<DummyContent.DummyItem>> mCallback;
+    private IDownloadCallback<List<DummyContent.DummyItem>> mCallback;
+    private IConsumerCallback<String> mConsumerCallback;
     private String mUrl;
 
-    private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
+   // private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
 
-    DownloadTask(DownloadCallback<List<DummyContent.DummyItem>> callback, String url) {
+    DownloadTask(IDownloadCallback<List<DummyContent.DummyItem>> callback,
+                 IConsumerCallback<String> consumerCallback,
+                 String url) {
         setCallback(callback);
         mUrl = url;
+        mConsumerCallback = consumerCallback;
 
         // Setup cache
-        IDataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider(this);
-        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);
+        /*DataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider(this);
+        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);*/
     }
 
-    void setCallback(DownloadCallback<List<DummyContent.DummyItem>> callback) {
+    void setCallback(IDownloadCallback<List<DummyContent.DummyItem>> callback) {
         mCallback = callback;
     }
 
@@ -76,15 +80,15 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     @Override
     protected DownloadTask.Result doInBackground(String... urls) {
         Result result = null;
-        //if (!isCancelled() && urls != null && urls.length > 0) {
-        if (!isCancelled()) {
-            //String urlString = urls[0];
+        if (!isCancelled() && urls != null && urls.length > 0) {
+        //if (!isCancelled()) {
+            String urlString = urls[0];
             try {
-                //URL url = new URL(urlString);
-                //String resultString = downloadUrl();
-                List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(TodayActivity.TODAY_KEY);
-                if (dummyItemList != null) {
-                    result = new Result(dummyItemList);
+                URL url = new URL(urlString);
+                String resultString = downloadUrl();
+                //List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(TodayActivity.TODAY_KEY);
+                if (resultString != null) {
+                    result = new Result(resultString);
                 } else {
                     throw new IOException("No response received.");
                 }
@@ -96,17 +100,20 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     }
 
     /**
-     * Updates the DownloadCallback with the result.
+     * Updates the IDownloadCallback with the result.
      */
     @Override
     protected void onPostExecute(Result result) {
         if (result != null && mCallback != null) {
             if (result.mException != null) {
                 //mCallback.updateFromDownload(result.mException.getMessage());
-                // TODO
                 mCallback.updateFromDownload(null);
-            } else if (result.mResultList != null) {
+            } else if (result.mResultValue != null) {
                 mCallback.updateFromDownload(result.mResultList);
+                mConsumerCallback.updateFromResult(result.mResultValue);
+            }else if (result.mResultList != null) {
+                mCallback.updateFromDownload(result.mResultList);
+                //mConsumerCallback.updateFromResult(result.mResultList);
             }
             mCallback.finishDownloading();
         }
@@ -143,14 +150,14 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             connection.setDoInput(true);
             // Open communications link (network traffic occurs here).
             connection.connect();
-            this.publishProgress(new DownloadTaskProgress(DownloadCallback.Progress.CONNECT_SUCCESS));
+            this.publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.CONNECT_SUCCESS));
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
-            publishProgress(new DownloadTaskProgress(DownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
+            publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
             if (stream != null) {
                 // Converts Stream to String with max length of 500.
                 result = readStream(stream, 500);
@@ -182,7 +189,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         while (numChars < maxLength && readSize != -1) {
             numChars += readSize;
             int pct = (100 * numChars) / maxLength;
-            publishProgress(new DownloadTaskProgress(DownloadCallback.Progress.PROCESS_INPUT_STREAM_IN_PROGRESS), new DownloadTaskProgress(pct));
+            publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.PROCESS_INPUT_STREAM_IN_PROGRESS), new DownloadTaskProgress(pct));
             readSize = reader.read(buffer, numChars, buffer.length - numChars);
         }
         if (numChars != -1) {
