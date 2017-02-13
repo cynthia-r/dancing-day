@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.cynthiar.dancingday.dummy.ADIDanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class TodayActivity extends AppCompatActivity
         , IConsumerCallback<List<DummyContent.DummyItem>> {
 
     public static final String TODAY_KEY = "Today";
+    public static final String TOMORROW_KEY = "Tomorrow";
+    public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
     private String[] timeFrames;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -104,10 +107,12 @@ public class TodayActivity extends AppCompatActivity
 
         // Add the fragment to the 'fragment_container' FrameLayout
         mDummyItemList = new ArrayList<>();
-        SingleDayFragment firstFragment = SingleDayFragment.newInstance(1, mDummyItemList);
+        SingleDayFragment firstFragment = SingleDayFragment.newInstance(0, mDummyItemList);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
-        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
+        ADIDanceClassExtractor danceClassExtractor = new ADIDanceClassExtractor();
+        // TODO the url should not be set in the network fragment
+        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassExtractor.getUrl());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
     }
 
@@ -153,11 +158,6 @@ public class TodayActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public List<DummyContent.DummyItem> GiveMeTheData() {
-        this.startDownload();
-    }*/
-
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -173,7 +173,7 @@ public class TodayActivity extends AppCompatActivity
         String fragmentTag;
         if (position < 2)
         {
-            fragment = SingleDayFragment.newInstance(1, mDummyItemList);
+            fragment = SingleDayFragment.newInstance(position, mDummyItemList);
             fragmentTag = SingleDayFragment.TAG;
         }
         else
@@ -182,9 +182,9 @@ public class TodayActivity extends AppCompatActivity
             fragmentTag = "MultiDayFragment";
         }
 
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putInt(SingleDayFragment.ARG_NUMBER, position + 1);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
 
         /*// Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
@@ -213,15 +213,14 @@ public class TodayActivity extends AppCompatActivity
         myToolbar.setTitle(title);
     }
 
-    public List<DummyContent.DummyItem> getCurrentList() {
-        List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(TODAY_KEY);
+    public List<DummyContent.DummyItem> getCurrentList(String key) {
+        List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(key);
         if (null == dummyItemList)
             return new ArrayList<>();
         return dummyItemList;
     }
 
     public void updateFromDownload(List<DummyContent.DummyItem> result) {
-        //this.updateFromDownload(result);
         // Do nothing
     }
 

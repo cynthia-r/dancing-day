@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.dummy;
 
+import android.support.v4.util.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,10 @@ import java.util.List;
  * TODO: Replace all uses of this class before publishing your app.
  */
 public class DummyContent {
+
+    public static final String[] DAYS_OF_THE_WEEK = {
+            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+    };
 
     /**
      * An array of sample (dummy) items.
@@ -46,6 +52,12 @@ public class DummyContent {
             new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int"),
             new DummyItem("Saturday","10AM-11:30AM","KDC","Jerri","Beg-Int"),
             new DummyItem("Saturday","11-20AM-12:50PM","ADI","Kara","Intermediate")
+    };
+
+    public static final Pair<String, String>[] CLASS_AND_SELECTORS = new Pair[]{
+            new Pair<>("https://www.americandanceinstitute.com/ballet-classes/",
+                    /*".tve_twc .thrv_content_container_shortcode , .tcb-flex-col:nth-child(1)",*/
+                    ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)")
     };
 
     public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, DummyItem[]dummyItems)

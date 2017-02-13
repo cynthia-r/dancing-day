@@ -2,9 +2,12 @@ package com.cynthiar.dancingday;
 
 import android.support.v4.util.Pair;
 
+import com.cynthiar.dancingday.dummy.ADIDanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +19,7 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
 
     //private DownloadTask mDownloadTask;
     private TodayActivity mTodayActivity;
+    private String mCurrentKey; // TODO better design
 
     /*public DanceClassDataProvider(DownloadTask downloadTask) {
         this.mDownloadTask = downloadTask;
@@ -31,6 +35,7 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
         String dataString = "";
         try{
             //dataString = mDownloadTask.downloadUrl();
+            mCurrentKey = key;
             mTodayActivity.startDownload();
         } catch (Exception e) {
 
@@ -41,9 +46,18 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
     }
 
     public void updateFromResult(String dataString) {
+        // Parse the result
+        ADIDanceClassExtractor danceClassExtractor = new ADIDanceClassExtractor();
         List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
-        dummyItemList.add(new DummyContent.DummyItem("Monday","6PM",dataString.substring(0, 5),dataString.substring(0, 7),"Beginner"));
-        mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(TodayActivity.TODAY_KEY, dummyItemList));
+        try {
+            dummyItemList = danceClassExtractor.Extract(dataString);
+        }
+        catch(Exception e) {
+            String l = e.getMessage();
+        }
+
+        mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(mCurrentKey, dummyItemList));
         // TODO key
+
     }
 }

@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -38,10 +40,10 @@ public class SingleDayFragment extends Fragment {
     }
 
 
-    public static SingleDayFragment newInstance(int columnCount/*, DataCache<List<DummyItem>> dataCache*/, List<DummyItem> dummyItemList) {
+    public static SingleDayFragment newInstance(int position/*, DataCache<List<DummyItem>> dataCache*/, List<DummyItem> dummyItemList) {
         SingleDayFragment fragment = new SingleDayFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(ARG_NUMBER, position);
         fragment.setArguments(args);
         //fragment.setDataCache(dataCache);
         fragment.setData(dummyItemList);
@@ -76,13 +78,13 @@ public class SingleDayFragment extends Fragment {
         TodayActivity parentActivity = (TodayActivity)getActivity();
         //parentActivity.startDownload();
 
-        int itemCount;
+        int position;
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            itemCount = getArguments().getInt(ARG_NUMBER);
+            position = getArguments().getInt(ARG_NUMBER);
         }
         else
-            itemCount = 1;
+            position = 0;
 
         // Set the adapter
         //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
@@ -96,14 +98,12 @@ public class SingleDayFragment extends Fragment {
         //dummyItemList = mDataCache.Load(TodayActivity.TODAY_KEY);
         /*for (int i=0; i < mItemList.size(); i++)
             dummyItemList.add(mItemList.get(i));*/
-        dummyItemList = parentActivity.getCurrentList();
+        dummyItemList = parentActivity.getCurrentList(TodayActivity.TODAY_KEY);
 
-        // Set up recycler view
-        //RecyclerView recyclerView = (RecyclerView) parentActivity.findViewById(R.id.singledayrecyclerview);
-        //SingleDayRecyclerViewAdapter adapter = new SingleDayRecyclerViewAdapter(
-        //        dummyItemList, parentActivity.getApplication());
-        //recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(parentActivity));*/
+
+        // Filter for single day results
+        dummyItemList = this.filterList(position, dummyItemList);
+
 
         ListView mListView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
         //ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, dummyItemList);
@@ -112,6 +112,51 @@ public class SingleDayFragment extends Fragment {
 
         //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle();
     }
+
+
+    public List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
+        Calendar calendar = Calendar.getInstance();
+        int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
+        if (1 == position) {
+            calendar.add(Calendar.DATE, 1);
+            dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
+        }
+
+        String dayToKeep = "";
+        switch (dayToFilter) {
+            case Calendar.MONDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[0];
+                break;
+            case Calendar.TUESDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[1];
+                break;
+            case Calendar.WEDNESDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[2];
+                break;
+            case Calendar.THURSDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[3];
+                break;
+            case Calendar.FRIDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[4];
+                break;
+            case Calendar.SATURDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[5];
+                break;
+            case Calendar.SUNDAY:
+                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[6];
+                break;
+            default:
+                break;
+        }
+        List<DummyContent.DummyItem> filteredList = new ArrayList<>();
+        for (DummyContent.DummyItem dummyItem:unfilteredList
+                ) {
+            if (dayToKeep.equals(dummyItem.day))
+                filteredList.add(dummyItem);
+        }
+        return filteredList;
+    }
+
 
     /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

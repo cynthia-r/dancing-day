@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,7 +87,6 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             try {
                 URL url = new URL(urlString);
                 String resultString = downloadUrl();
-                //List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(TodayActivity.TODAY_KEY);
                 if (resultString != null) {
                     result = new Result(resultString);
                 } else {
@@ -159,8 +159,8 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             stream = connection.getInputStream();
             publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
             if (stream != null) {
-                // Converts Stream to String with max length of 500.
-                result = readStream(stream, 500);
+                // Converts Stream to String
+                result = readAllStream(stream);
             }
         } finally {
             // Close Stream and disconnect HTTPS connection.
@@ -200,5 +200,15 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             result = new String(buffer, 0, numChars);
         }
         return result;
+    }
+
+    private String readAllStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            out.append(line);
+        }
+        return out.toString();
     }
 }

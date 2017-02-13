@@ -15,7 +15,4 @@ public abstract class DataProvider<T> {
     }
 
     public abstract void GiveMeTheData(String key);
-
-    //public abstract void GiveBackTheData(T result);
-
 }
