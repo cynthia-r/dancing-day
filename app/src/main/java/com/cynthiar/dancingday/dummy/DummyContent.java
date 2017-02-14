@@ -60,22 +60,22 @@ public class DummyContent {
                     ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)")
     };
 
-    public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, DummyItem[]dummyItems)
+    public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, List<DummyItem> dummyItemList)
     {
         HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyItem>>();
-        for (DummyItem dummyItem:dummyItems
+        for (DummyItem dummyItem:dummyItemList
              ) {
             // Retrieve the property that we group by on
             String property = danceClassPropertySelector.GetProperty(dummyItem);
 
             // Initialize the list of items for this entry if needed
-            List<DummyItem> dummyItemList = dummyItemDictionary.get(property);
-            if (null == dummyItemList)
-                dummyItemList = new ArrayList<DummyItem>();
+            List<DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
+            if (null == dummyItemListForGroup)
+                dummyItemListForGroup = new ArrayList<DummyItem>();
 
             // Add the current item to this entry
-            dummyItemList.add(dummyItem);
-            dummyItemDictionary.put(property, dummyItemList);
+            dummyItemListForGroup.add(dummyItem);
+            dummyItemDictionary.put(property, dummyItemListForGroup);
         }
         return dummyItemDictionary;
     }

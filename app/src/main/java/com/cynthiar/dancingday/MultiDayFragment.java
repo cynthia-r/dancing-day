@@ -69,22 +69,22 @@ public class MultiDayFragment extends Fragment {
         else
             itemCount = 1;
 
+        TodayActivity parentActivity = (TodayActivity)getActivity();
         // Set the adapter
         //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
 
         // Retrieve list of items
         DummyItem[] inputArray = DummyContent.ITEMS3;
         List<DummyItem> dummyItemList = new ArrayList<>();
-        for (int i=0; i < inputArray.length; i++)
-            dummyItemList.add(inputArray[i]);
+        /*for (int i=0; i < inputArray.length; i++)
+            dummyItemList.add(inputArray[i]);*/
+        dummyItemList = parentActivity.getCurrentList();
 
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
-        HashMap<String, List<DummyItem>> dummyItemMap = DummyContent.GroupBy(danceClassPropertySelector, inputArray);
+        HashMap<String, List<DummyItem>> dummyItemMap = DummyContent.GroupBy(danceClassPropertySelector, dummyItemList);
         List<String> groupList = new ArrayList<>(dummyItemMap.keySet()); // TODO sort
 
         // Set up list view
-        Activity parentActivity = getActivity();
-        // TODO use ExpandableView
         ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
         MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, parentActivity);
         mListView.setAdapter(adapter);

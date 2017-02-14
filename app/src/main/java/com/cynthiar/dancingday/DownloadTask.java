@@ -3,6 +3,7 @@ package com.cynthiar.dancingday;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.util.Pair;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 
@@ -21,16 +22,16 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result> {
     private IDownloadCallback<List<DummyContent.DummyItem>> mCallback;
-    private IConsumerCallback<String> mConsumerCallback;
-    private String mUrl;
+    private IConsumerCallback<Pair<String, String>> mConsumerCallback;
+    private String mKey;
 
    // private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
 
     DownloadTask(IDownloadCallback<List<DummyContent.DummyItem>> callback,
-                 IConsumerCallback<String> consumerCallback,
-                 String url) {
+                 IConsumerCallback<Pair<String, String>> consumerCallback,
+                 String key) {
         setCallback(callback);
-        mUrl = url;
+        mKey = key;
         mConsumerCallback = consumerCallback;
 
         // Setup cache
@@ -48,10 +49,10 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      * This allows you to pass exceptions to the UI thread that were thrown during doInBackground().
      */
     static class Result {
-        public String mResultValue;
+        public Pair<String, String> mResultValue;
         public List<DummyContent.DummyItem> mResultList;
         public Exception mException;
-        public Result(String resultValue) { mResultValue = resultValue; }
+        public Result(Pair<String, String> resultValue) { mResultValue = resultValue; }
         public Result(List<DummyContent.DummyItem> resultList) { mResultList = resultList; }
         public Result(Exception exception) {
             mException = exception;
@@ -86,9 +87,9 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             String urlString = urls[0];
             try {
                 URL url = new URL(urlString);
-                String resultString = downloadUrl();
+                String resultString = downloadUrl(url);
                 if (resultString != null) {
-                    result = new Result(resultString);
+                    result = new Result(new Pair<>(mKey, resultString));
                 } else {
                     throw new IOException("No response received.");
                 }
@@ -131,13 +132,13 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      * If the network request is successful, it returns the response body in String form. Otherwise,
      * it will throw an IOException.
      */
-    //public String downloadUrl(URL url) throws IOException {
-    public String downloadUrl() throws IOException {
+    public String downloadUrl(URL url) throws IOException {
+    //public String downloadUrl() throws IOException {
         InputStream stream = null;
         HttpsURLConnection connection = null;
         String result = null;
         try {
-            URL url = new URL(mUrl);
+            //URL url = new URL(mUrl);
             connection = (HttpsURLConnection) url.openConnection();
             // Timeout for reading InputStream arbitrarily set to 3000ms.
             connection.setReadTimeout(3000);

@@ -98,7 +98,7 @@ public class SingleDayFragment extends Fragment {
         //dummyItemList = mDataCache.Load(TodayActivity.TODAY_KEY);
         /*for (int i=0; i < mItemList.size(); i++)
             dummyItemList.add(mItemList.get(i));*/
-        dummyItemList = parentActivity.getCurrentList(TodayActivity.TODAY_KEY);
+        dummyItemList = parentActivity.getCurrentList();
 
 
         // Filter for single day results

@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.cynthiar.dancingday.dummy.ADIDanceClassExtractor;
+import com.cynthiar.dancingday.dummy.extractor.ADIDanceClassExtractor;
+import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.extractor.Extractors;
+import com.cynthiar.dancingday.dummy.extractor.PNBDanceClassExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ public class TodayActivity extends AppCompatActivity
     public static final String TOMORROW_KEY = "Tomorrow";
     public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
     private String[] timeFrames;
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -110,9 +113,8 @@ public class TodayActivity extends AppCompatActivity
         SingleDayFragment firstFragment = SingleDayFragment.newInstance(0, mDummyItemList);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
-        ADIDanceClassExtractor danceClassExtractor = new ADIDanceClassExtractor();
-        // TODO the url should not be set in the network fragment
-        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassExtractor.getUrl());
+        // Setup the network fragment
+        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
     }
 
@@ -213,10 +215,28 @@ public class TodayActivity extends AppCompatActivity
         myToolbar.setTitle(title);
     }
 
-    public List<DummyContent.DummyItem> getCurrentList(String key) {
-        List<DummyContent.DummyItem> dummyItemList = mDanceClassCache.Load(key);
-        if (null == dummyItemList)
-            return new ArrayList<>();
+    public List<DummyContent.DummyItem> getCurrentList() {
+        List<List<DummyContent.DummyItem>> schoolLists = new ArrayList<>(Extractors.EXTRACTORS.length);
+        for (int i = 0; i < Extractors.EXTRACTORS.length; i++
+             ) {
+            DanceClassExtractor danceClassExtractor = Extractors.EXTRACTORS[i];
+
+            // Return if not all lists are ready
+            List<DummyContent.DummyItem>[] data = new List[1];
+            if (!mDanceClassCache.Load(danceClassExtractor.getKey(), data))
+                return new ArrayList<>();
+
+            // Save the list
+            List<DummyContent.DummyItem> schoolList = data[0];
+            schoolLists.add(schoolList);
+        }
+
+        // Merge the school lists
+        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
+        for (List<DummyContent.DummyItem> schoolList:schoolLists
+             ) {
+            dummyItemList.addAll(schoolList);
+        }
         return dummyItemList;
     }
 
@@ -224,10 +244,11 @@ public class TodayActivity extends AppCompatActivity
         // Do nothing
     }
 
-    public void startDownload() {
+    public void startDownload(String key) {
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
-            mNetworkFragment.startDownload();
+            DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
+            mNetworkFragment.startDownload(key, danceClassExtractor.getUrl());
             mDownloading = true;
         }
     }
@@ -243,6 +264,8 @@ public class TodayActivity extends AppCompatActivity
         frg = getSupportFragmentManager().findFragmentByTag(SingleDayFragment.TAG);
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
+
+        // TODO reload MultiDayFragment if multi day
 
         // setArguments();
         SingleDayFragment singleDayFragment = (SingleDayFragment)frg;

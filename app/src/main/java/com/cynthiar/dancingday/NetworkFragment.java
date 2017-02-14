@@ -13,18 +13,18 @@ import android.support.v4.app.FragmentManager;
 public class NetworkFragment extends Fragment {
     public static final String TAG = "NetworkFragment";
 
-    private static final String URL_KEY = "UrlKey";
+    //private static final String URL_KEY = "UrlKey";
 
     private IDownloadCallback mDownloadCallback;
     private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
-    private String mUrlString;
+    //private String mUrlString;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static NetworkFragment getInstance(FragmentManager fragmentManager, String url) {
+    public static NetworkFragment getInstance(FragmentManager fragmentManager/*, String url*/) {
         // Recover NetworkFragment in case we are re-creating the Activity due to a config change.
         // This is necessary because NetworkFragment might have a task that began running before
         // the config change occurred and has not finished yet.
@@ -33,9 +33,9 @@ public class NetworkFragment extends Fragment {
                 .findFragmentByTag(NetworkFragment.TAG);
         if (networkFragment == null) {
             networkFragment = new NetworkFragment();
-            Bundle args = new Bundle();
+            /*Bundle args = new Bundle();
             args.putString(URL_KEY, url);
-            networkFragment.setArguments(args);
+            networkFragment.setArguments(args);*/
             fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
         }
         return networkFragment;
@@ -48,7 +48,7 @@ public class NetworkFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUrlString = getArguments().getString(URL_KEY);
+        //mUrlString = getArguments().getString(URL_KEY);
 
         //...
 
@@ -81,10 +81,10 @@ public class NetworkFragment extends Fragment {
     /**
      * Start non-blocking execution of DownloadTask.
      */
-    public void startDownload() {
+    public void startDownload(String key, String url) {
         cancelDownload();
-        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, mUrlString);
-        mDownloadTask.execute(mUrlString);
+        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, key);
+        mDownloadTask.execute(url);
     }
 
     /**

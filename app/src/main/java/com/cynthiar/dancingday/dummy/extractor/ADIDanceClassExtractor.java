@@ -1,9 +1,10 @@
-package com.cynthiar.dancingday.dummy;
+package com.cynthiar.dancingday.dummy.extractor;
+
+import com.cynthiar.dancingday.dummy.DummyContent;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -17,8 +18,13 @@ import java.util.regex.Pattern;
 public class ADIDanceClassExtractor extends DanceClassExtractor {
     //private static final String mainSelector = ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)";
     private static final String mainSelector = ".tve_tfo p";
-    private static Pattern classTextPattern = Pattern.compile("Pre-Ballet/Tap Combo II (ages 6-7): Monday, 3:40 - 4:40PM (Maia) Studio #2");
 
+    @Override
+    public String getKey() {
+        return "ADI";
+    }
+
+    @Override
     public String getUrl() {
         return "https://www.americandanceinstitute.com/winter-spring-2017-greenwood-dance-class-schedule-greenwood/#tab-con-7";
     }

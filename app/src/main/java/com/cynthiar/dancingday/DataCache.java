@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
+ * Asynchronous data cache.
  * Created by Robert on 09/02/2017.
  */
 
@@ -32,21 +33,23 @@ public class DataCache<T> implements IConsumerCallback<Pair<String, T>> {
     /*
         Loads data from the cache and reloads it if it's too old.
      */
-    public T Load(String key) {
+    public boolean Load(String key, T[] data) {
         if (mCache.containsKey(key)) {
             Pair<T,Date> dataPair = mCache.get(key);
 
             // Return data if fresh
             Date currentDate = new Date();
             long elapsedMilliseconds = currentDate.getTime() - dataPair.second.getTime();
-            if (elapsedMilliseconds / (60 * 1000) < DataCache.CACHE_EXPIRY_IN_MINUTES)
-                return dataPair.first;
+            if (elapsedMilliseconds / (60 * 1000) < DataCache.CACHE_EXPIRY_IN_MINUTES) {
+                data[0] = dataPair.first;
+                return true;
+            }
         }
 
         // Load data if not there
         // Or reload data if not fresh
         this.mDataProvider.GiveMeTheData(key);
-        return null;
+        return false;
     }
 
     public void updateFromResult(Pair<String, T> result) {

@@ -1,6 +1,8 @@
-package com.cynthiar.dancingday.dummy;
+package com.cynthiar.dancingday.dummy.extractor;
 
 import android.support.v4.util.Pair;
+
+import com.cynthiar.dancingday.dummy.DummyContent;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ public abstract class DanceClassExtractor {
 
     protected DanceClassExtractor() {
     }
+
+    public abstract String getKey();
 
     public abstract String getUrl();
 

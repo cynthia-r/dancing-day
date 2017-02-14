@@ -2,12 +2,11 @@ package com.cynthiar.dancingday;
 
 import android.support.v4.util.Pair;
 
-import com.cynthiar.dancingday.dummy.ADIDanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,7 +14,7 @@ import java.util.List;
  */
 
 public class DanceClassDataProvider extends DataProvider<Pair<String, List<DummyContent.DummyItem>>>
-    implements IConsumerCallback<String>{
+    implements IConsumerCallback<Pair<String, String>>{
 
     //private DownloadTask mDownloadTask;
     private TodayActivity mTodayActivity;
@@ -35,8 +34,7 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
         String dataString = "";
         try{
             //dataString = mDownloadTask.downloadUrl();
-            mCurrentKey = key;
-            mTodayActivity.startDownload();
+            mTodayActivity.startDownload(key);
         } catch (Exception e) {
 
         }
@@ -45,9 +43,12 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
         mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(key, dummyItemList));*/
     }
 
-    public void updateFromResult(String dataString) {
+    public void updateFromResult(Pair<String, String> keyAndDataString) {
+        String key = keyAndDataString.first;
+        String dataString = keyAndDataString.second;
+
         // Parse the result
-        ADIDanceClassExtractor danceClassExtractor = new ADIDanceClassExtractor();
+        DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
         List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
         try {
             dummyItemList = danceClassExtractor.Extract(dataString);
@@ -56,7 +57,7 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
             String l = e.getMessage();
         }
 
-        mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(mCurrentKey, dummyItemList));
+        mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(key, dummyItemList));
         // TODO key
 
     }
