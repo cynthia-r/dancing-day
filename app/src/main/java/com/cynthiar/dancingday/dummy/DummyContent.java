@@ -3,6 +3,7 @@ package com.cynthiar.dancingday.dummy;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,26 +60,6 @@ public class DummyContent {
                     /*".tve_twc .thrv_content_container_shortcode , .tcb-flex-col:nth-child(1)",*/
                     ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)")
     };
-
-    public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, List<DummyItem> dummyItemList)
-    {
-        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyItem>>();
-        for (DummyItem dummyItem:dummyItemList
-             ) {
-            // Retrieve the property that we group by on
-            String property = danceClassPropertySelector.GetProperty(dummyItem);
-
-            // Initialize the list of items for this entry if needed
-            List<DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
-            if (null == dummyItemListForGroup)
-                dummyItemListForGroup = new ArrayList<DummyItem>();
-
-            // Add the current item to this entry
-            dummyItemListForGroup.add(dummyItem);
-            dummyItemDictionary.put(property, dummyItemListForGroup);
-        }
-        return dummyItemDictionary;
-    }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();

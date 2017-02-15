@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
+import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,32 +123,7 @@ public class SingleDayFragment extends Fragment {
             dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
         }
 
-        String dayToKeep = "";
-        switch (dayToFilter) {
-            case Calendar.MONDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[0];
-                break;
-            case Calendar.TUESDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[1];
-                break;
-            case Calendar.WEDNESDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[2];
-                break;
-            case Calendar.THURSDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[3];
-                break;
-            case Calendar.FRIDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[4];
-                break;
-            case Calendar.SATURDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[5];
-                break;
-            case Calendar.SUNDAY:
-                dayToKeep = DummyContent.DAYS_OF_THE_WEEK[6];
-                break;
-            default:
-                break;
-        }
+        String dayToKeep = DummyUtils.getCurrentDay(dayToFilter);
         List<DummyContent.DummyItem> filteredList = new ArrayList<>();
         for (DummyContent.DummyItem dummyItem:unfilteredList
                 ) {

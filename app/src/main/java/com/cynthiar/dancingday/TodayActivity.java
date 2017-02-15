@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.dummy.extractor.ADIDanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
@@ -237,6 +239,8 @@ public class TodayActivity extends AppCompatActivity
              ) {
             dummyItemList.addAll(schoolList);
         }
+        // TODO sort by time
+
         return dummyItemList;
     }
 
