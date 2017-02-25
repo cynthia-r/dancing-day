@@ -8,7 +8,8 @@ public class Extractors {
 
     public static final DanceClassExtractor[] EXTRACTORS = {
             new ADIDanceClassExtractor(),
-            new PNBDanceClassExtractor()
+            new PNBDanceClassExtractor(),
+            new KDCDanceClassExtractor()
     };
 
     public static DanceClassExtractor getExtractor(String key) {

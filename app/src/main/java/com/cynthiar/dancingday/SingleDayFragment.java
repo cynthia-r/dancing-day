@@ -1,11 +1,15 @@
 package com.cynthiar.dancingday;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
@@ -110,9 +114,38 @@ public class SingleDayFragment extends Fragment {
         //ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, dummyItemList);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
+        //mListView.setItemsCanFocus(true);
+        mListView.setOnItemClickListener(mMessageClickedHandler);
+        /*mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                Object item = adapter.getItemAtPosition(position);
+                try {
+                    String url = "waze://?ll=47.680279, -122.191947&z=10&navigate=yes";
+                    Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+                    startActivity( intent );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //}
 
+            //@Override
+            //public void onItemClick(AdapterView<?>adapter, View v, int position){
+
+
+            }
+        });*/
         //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle();
     }
+
+    // Create a message handling object as an anonymous class.
+    private AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView parent, View v, int position, long id) {
+            // Do something in response to the click
+            String a = "b";
+            String b = a.concat("b");
+        }
+    };
 
 
     public List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {

@@ -1,11 +1,13 @@
 package com.cynthiar.dancingday;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.cynthiar.dancingday.dummy.comparer.DayComparer;
 import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
@@ -104,11 +106,11 @@ public class MultiDayFragment extends Fragment {
         if (propertySelector instanceof DayPropertySelector) {
             String currentDay = DummyUtils.getCurrentDay();
             int k=0;
-            while (!sortedGroups[k].equals(currentDay) && k < sortedGroups.length) { // Find current day position
+            while (k < sortedGroups.length && !sortedGroups[k].equals(currentDay)) { // Find current day position
                 k++;
             }
             if (k == sortedGroups.length) {
-                // TODO toast
+                DummyUtils.toast(getActivity().getApplicationContext());
             }
 
             // Copy to the list back again

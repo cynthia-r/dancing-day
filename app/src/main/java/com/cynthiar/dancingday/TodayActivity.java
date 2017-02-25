@@ -1,9 +1,12 @@
 package com.cynthiar.dancingday;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,13 +21,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
-import com.cynthiar.dancingday.dummy.extractor.ADIDanceClassExtractor;
+import com.cynthiar.dancingday.download.DownloadTaskProgress;
+import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
-import com.cynthiar.dancingday.dummy.extractor.PNBDanceClassExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +119,7 @@ public class TodayActivity extends AppCompatActivity
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
+        mNetworkFragment.setContext(this);
     }
 
     @Override
@@ -223,10 +225,12 @@ public class TodayActivity extends AppCompatActivity
              ) {
             DanceClassExtractor danceClassExtractor = Extractors.EXTRACTORS[i];
 
-            // Return if not all lists are ready
+            // Continue if the list is not ready
             List<DummyContent.DummyItem>[] data = new List[1];
-            if (!mDanceClassCache.Load(danceClassExtractor.getKey(), data))
-                return new ArrayList<>();
+            if (!mDanceClassCache.Load(danceClassExtractor.getKey(), data)) {
+                schoolLists.add(new ArrayList<DummyContent.DummyItem>());
+                continue;
+            }
 
             // Save the list
             List<DummyContent.DummyItem> schoolList = data[0];
@@ -252,7 +256,7 @@ public class TodayActivity extends AppCompatActivity
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
             DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
-            mNetworkFragment.startDownload(key, danceClassExtractor.getUrl());
+            mNetworkFragment.startDownload(key, danceClassExtractor);
             mDownloading = true;
         }
     }
@@ -311,6 +315,22 @@ public class TodayActivity extends AppCompatActivity
         mDownloading = false;
         if (mNetworkFragment != null) {
             mNetworkFragment.cancelDownload();
+        }
+    }
+
+    public void startDownload(View view) {
+        try
+        {
+            //String url = "waze://?q=Kirkland%20Dance%20Center%20835%207th%20Ave&navigate=yes";
+            String url = "waze://?ll=47.680279, -122.191947&z=10&navigate=yes";
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+            startActivity( intent );
+        }
+        catch ( ActivityNotFoundException ex  )
+        {
+            Intent intent =
+                    new Intent( Intent.ACTION_VIEW, Uri.parse( "market://details?id=com.waze" ) );
+            startActivity(intent);
         }
     }
 }

@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven.snowtide.com/releases"
+    }
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -20,7 +27,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -30,5 +37,8 @@ dependencies {
     // jsoup HTML parser library @ http://jsoup.org/
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'org.apache.commons:commons-lang3:3.4'
+    //compile 'org.apache.pdfbox:pdfbox:2.0.2'
+    // compile 'com.snowtide:pdfxstream:3.4.0'
     testCompile 'junit:junit:4.12'
+    compile files('libs/PDFxStream.jar')
 }

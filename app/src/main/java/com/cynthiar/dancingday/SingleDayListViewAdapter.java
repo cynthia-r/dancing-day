@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.List;
 
@@ -17,12 +18,12 @@ import java.util.List;
 
 public class SingleDayListViewAdapter extends BaseAdapter {
     private final List<DummyContent.DummyItem> mValues;
-    private Context context;
+    private Context mContext;
     private LayoutInflater mInflater;
 
     public SingleDayListViewAdapter(List<DummyContent.DummyItem> items, Context context) {
         mValues = items;
-        context = context;
+        mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
@@ -51,6 +52,7 @@ public class SingleDayListViewAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
         }
 
+
         TextView mTimeView = (TextView) convertView.findViewById(R.id.time);
         TextView mSchoolView = (TextView) convertView.findViewById(R.id.school);
         TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
@@ -60,6 +62,18 @@ public class SingleDayListViewAdapter extends BaseAdapter {
         mSchoolView.setText(mValues.get(position).school);
         mLevelView.setText(mValues.get(position).level);
         mTeacherView.setText(mValues.get(position).teacher);
+
+        convertView.setClickable(true);
+        convertView.setFocusable(true);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                DummyUtils.toast(mContext);
+            }
+
+        });
         return convertView;
     }
 }

@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.download;
 
 /**
  * Created by Robert on 08/02/2017.

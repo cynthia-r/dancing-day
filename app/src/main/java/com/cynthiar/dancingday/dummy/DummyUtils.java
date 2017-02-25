@@ -1,7 +1,18 @@
 package com.cynthiar.dancingday.dummy;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -110,5 +121,55 @@ public class DummyUtils<T> {
                 break;
         }
         return dayString;
+    }
+
+    public static String readAllStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            out.append(line);
+        }
+        return out.toString();
+    }
+
+    public File writeToStorage(InputStream inputStream, String filePath) throws IOException {
+        InputStreamReader input = new InputStreamReader(inputStream, "UTF-8");
+        File file = null;
+        try {
+            file = new File(filePath);
+            OutputStream output = new FileOutputStream(file);
+            try {
+                try {
+                    char[] buffer = new char[4 * 1024]; // or other buffer size
+                    int read;
+
+                    while ((read = input.read(buffer)) != -1) {
+                        byte[] bytes = new byte[buffer.length];
+                        for (int i=0; i < bytes.length; i++)
+                            bytes[i] = (byte)buffer[i];
+                        output.write(bytes, 0, read);
+                    }
+                    output.flush();
+                } finally {
+                    output.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace(); // handle exception, define IOException and others
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            input.close();
+        }
+        return file;
+    }
+
+    public static void toast(Context context) {
+        CharSequence text = "Toast";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

@@ -6,6 +6,7 @@ import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 
 public class DanceClassDataProvider extends DataProvider<Pair<String, List<DummyContent.DummyItem>>>
-    implements IConsumerCallback<Pair<String, String>>{
+    implements IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>>{
 
     //private DownloadTask mDownloadTask;
     private TodayActivity mTodayActivity;
@@ -43,22 +44,22 @@ public class DanceClassDataProvider extends DataProvider<Pair<String, List<Dummy
         mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(key, dummyItemList));*/
     }
 
-    public void updateFromResult(Pair<String, String> keyAndDataString) {
+    public void updateFromResult(Pair<String, List<DummyContent.DummyItem>> keyAndDataString) {
         String key = keyAndDataString.first;
-        String dataString = keyAndDataString.second;
+        List<DummyContent.DummyItem> dummyItemList = keyAndDataString.second;
 
         // Parse the result
-        DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
+        /*DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
         List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
         try {
+
             dummyItemList = danceClassExtractor.Extract(dataString);
         }
         catch(Exception e) {
             String l = e.getMessage();
-        }
+        }*/
 
-        mConsumerCallback.updateFromResult(new Pair<String, List<DummyContent.DummyItem>>(key, dummyItemList));
-        // TODO key
-
+        // See if can callback the main activity directly
+        mConsumerCallback.updateFromResult(new Pair<>(key, dummyItemList));
     }
 }

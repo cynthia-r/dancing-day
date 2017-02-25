@@ -6,6 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.cynthiar.dancingday.download.DownloadTask;
+import com.cynthiar.dancingday.download.IDownloadCallback;
+import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
+
 /**
  * Created by Robert on 08/02/2017.
  */
@@ -19,6 +23,7 @@ public class NetworkFragment extends Fragment {
     private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
     //private String mUrlString;
+    private Context mContext;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
@@ -43,6 +48,10 @@ public class NetworkFragment extends Fragment {
 
     public void setConsumerCallback(IConsumerCallback consumerCallback) {
         mConsumerCallback = consumerCallback;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     @Override
@@ -81,9 +90,10 @@ public class NetworkFragment extends Fragment {
     /**
      * Start non-blocking execution of DownloadTask.
      */
-    public void startDownload(String key, String url) {
+    public void startDownload(String key, DanceClassExtractor danceClassExtractor) {
         cancelDownload();
-        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, key);
+        String url = danceClassExtractor.getUrl();
+        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, key, danceClassExtractor, mContext);
         mDownloadTask.execute(url);
     }
 

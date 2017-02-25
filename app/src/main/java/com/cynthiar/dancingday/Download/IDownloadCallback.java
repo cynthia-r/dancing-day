@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.download;
 
 import android.net.NetworkInfo;
 

@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * Created by Robert on 13/02/2017.
  */
 
-public class PNBDanceClassExtractor extends DanceClassExtractor {
+public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
     private static final String mainSelector = "table tr";
     private int mSchoolNumber = -1;
 
@@ -32,8 +34,13 @@ public class PNBDanceClassExtractor extends DanceClassExtractor {
     }
 
     @Override
-    public List<DummyContent.DummyItem> Extract(String htmlContent) {
-        Document doc = Jsoup.parse(htmlContent);
+    public Document processDownload(InputStream downloadStream, String baseUri) throws IOException {
+        Document doc = Jsoup.parse(downloadStream, null, baseUri);
+        return doc;
+    }
+
+    @Override
+    public List<DummyContent.DummyItem> Extract(Document doc) throws IOException {
         Elements classes = doc.select(mainSelector);
 
         // Return empty list if nothing extracted
@@ -53,7 +60,10 @@ public class PNBDanceClassExtractor extends DanceClassExtractor {
 
     private List<DummyContent.DummyItem> parseClassElement(Element classElement) {
         try {
-            Element firstChild = (Element) classElement.childNode(0);
+
+            //Element firstChild = (Element) classElement.childNode(0);
+            NextElement nextElement = findNextChildElement(classElement, 0);
+            Element firstChild = nextElement.getElement();
             if (null == firstChild)
                 return null;
 
@@ -66,14 +76,22 @@ public class PNBDanceClassExtractor extends DanceClassExtractor {
                 return null;
 
             List<DummyContent.DummyItem> classItemList = new ArrayList<>();
-            for (int i=1; i <= 6; i++) {
-                Element dayClassElement = (Element) classElement.childNode(i);
-                if (null == dayClassElement)
+            int i=1;   // 6 days (no classes on Sunday)
+            while (i <= 6) {
+                nextElement = findNextChildElement(classElement, nextElement.getNextN());
+                Element dayClassElement = nextElement.getElement();
+                if (null == dayClassElement) {
+                    i++;
                     continue; // no class on that day
+                }
+
 
                 String classText = StringEscapeUtils.unescapeHtml4(dayClassElement.text());
                 if (null == classText || classText.equals(""))
+                {
+                    i++;
                     continue; // no class on that day
+                }
 
                 int j=0;
                 while (j < dayClassElement.childNodes().size()) { // multiple classes on that day
@@ -86,6 +104,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor {
                     }
                     j+=2;
                 }
+                i++;
             }
             return classItemList;
         }
@@ -134,5 +153,38 @@ public class PNBDanceClassExtractor extends DanceClassExtractor {
         if (1 == mSchoolNumber)
             return "PNB Bellevue";
         return "";
+    }
+
+    private NextElement findNextChildElement(Element parentElement, int n) {
+        // Find the next element child
+        Element nextElement = null;
+        while (n < parentElement.childNodeSize()) {
+            try {
+                nextElement = (Element) parentElement.childNode(n);
+                n++;
+                break;
+            }
+            catch (Exception e) {
+                n++;
+            }
+        }
+        return new NextElement(nextElement, n);
+    }
+
+    private class NextElement {
+        Element mElement;
+        int mNextN;
+        public NextElement(Element element, int n) {
+            mElement = element;
+            mNextN = n;
+        }
+
+        public Element getElement() {
+            return mElement;
+        }
+
+        public int getNextN() {
+            return mNextN;
+        }
     }
 }

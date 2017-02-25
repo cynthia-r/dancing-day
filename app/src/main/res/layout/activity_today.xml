@@ -41,13 +41,13 @@
                 android:textAppearance="?attr/textAppearanceListItem" />
         </FrameLayout>
 
-        <!--<Button
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start download"
             android:onClick="startDownload"/>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/downloadResult"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />-->
