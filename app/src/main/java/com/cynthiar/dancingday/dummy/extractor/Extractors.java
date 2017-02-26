@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.dummy.extractor;
 
+import android.content.Context;
+
 import com.cynthiar.dancingday.MultiDayFragment;
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
@@ -15,14 +17,42 @@ import java.util.List;
 
 public class Extractors {
 
-    public static final DanceClassExtractor[] EXTRACTORS = {
-            new ADIDanceClassExtractor(),
-            new PNBDanceClassExtractor(),
-            new KDCDanceClassExtractor(),
-            new WDCDanceClassExtractor()
-    };
+    private static Extractors mExtractorsInstance;
 
-    public static DanceClassExtractor getExtractor(String key) {
+    private static volatile Object syncObject = new Object();
+
+    private Extractors(DanceClassExtractor[] danceClassExtractors) {
+        EXTRACTORS = danceClassExtractors;
+    }
+
+    public DanceClassExtractor[] EXTRACTORS;
+
+    public static Extractors getInstance(Context context) {
+        if (null != mExtractorsInstance)
+            return mExtractorsInstance;
+
+        synchronized (syncObject) {
+            if (null == mExtractorsInstance) {
+                DanceClassExtractor[] danceClassExtractors = loadExtractors(context);
+                mExtractorsInstance = new Extractors(danceClassExtractors);
+            }
+        }
+        return mExtractorsInstance;
+    }
+
+    public static Extractors getInstance() { return mExtractorsInstance; }
+
+    private static DanceClassExtractor[] loadExtractors(Context context) {
+        DanceClassExtractor[] danceClassExtractors = new DanceClassExtractor[] {
+                new ADIDanceClassExtractor(context),
+                new PNBDanceClassExtractor(context),
+                new KDCDanceClassExtractor(context),
+                new WDCDanceClassExtractor(context)
+        };
+        return danceClassExtractors;
+    }
+
+    public DanceClassExtractor getExtractor(String key) {
         for (int i=0; i < EXTRACTORS.length; i++
              ) {
             DanceClassExtractor extractor = EXTRACTORS[i];
@@ -32,7 +62,7 @@ public class Extractors {
         return null;
     }
 
-    public static DanceClassPropertySelector getSelector(String key) {
+    public DanceClassPropertySelector getSelector(String key) {
         switch (key) {
             case MultiDayFragment.SCHOOL_SPINNER_PREFIX:
                 return new SchoolPropertySelector();
@@ -43,7 +73,7 @@ public class Extractors {
         }
     }
 
-    public static List<String> getSchoolList() {
+    public List<String> getSchoolList() {
         List<String> propertyList = new ArrayList<>();
         propertyList.add(MultiDayFragment.ALL_KEY.concat(" schools"));
         for (DanceClassExtractor danceClassExtractor : EXTRACTORS
@@ -53,7 +83,7 @@ public class Extractors {
         return propertyList;
     }
 
-    public static List<String> getLevelList() {
+    public List<String> getLevelList() {
         List<String> propertyList = new ArrayList<>();
         propertyList.add(MultiDayFragment.ALL_KEY.concat(" levels"));
         for (DanceClassLevel danceClassLevel : DanceClassLevel.values()

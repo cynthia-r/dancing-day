@@ -28,18 +28,16 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     private IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> mConsumerCallback;
     private String mKey;
     private DanceClassExtractor mExtractor;
-    private Context mContext;
 
    // private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
 
     public DownloadTask(IDownloadCallback<List<DummyContent.DummyItem>> callback,
                  IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> consumerCallback,
-                 String key, DanceClassExtractor danceClassExtractor, Context context) {
+                 String key, DanceClassExtractor danceClassExtractor) {
         setCallback(callback);
         mKey = key;
         mConsumerCallback = consumerCallback;
         mExtractor = danceClassExtractor;
-        mContext = context;
 
         // Setup cache
         /*DataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider(this);
@@ -98,7 +96,6 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                 /*if (resultString != null) {
                     result = new Result(new Pair<>(mKey, resultString));*/
                 if (processedResult != null) {
-                    mExtractor.setContext(mContext);
                     List<DummyContent.DummyItem> dummyItemList = mExtractor.Extract(processedResult);
                     result = new Result(new Pair<>(mKey, dummyItemList));
                 } else {

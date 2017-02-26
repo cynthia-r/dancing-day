@@ -99,12 +99,12 @@ public class MultiDayFragment extends Fragment {
         // Setup spinners
         // School spinner
         mSchoolSpinner = (Spinner)parentActivity.findViewById(R.id.schoolSpinner);
-        List<String> schoolList = Extractors.getSchoolList();
+        List<String> schoolList = Extractors.getInstance(parentActivity).getSchoolList();
         this.setupSpinner(parentActivity, mSchoolSpinner, schoolList);
 
         // Level spinner
         mLevelSpinner = (Spinner)parentActivity.findViewById(R.id.levelSpinner);
-        List<String> levelList = Extractors.getLevelList();
+        List<String> levelList = Extractors.getInstance(parentActivity).getLevelList();
         this.setupSpinner(parentActivity, mLevelSpinner, levelList);
 
         // Setup spinners listener
@@ -124,7 +124,7 @@ public class MultiDayFragment extends Fragment {
         // Sort the list
         String[] unsortedGroups = new String[groupList.size()];
         String[] sortedGroups = dummyItemMap.keySet().toArray(unsortedGroups);
-        new DummyUtils<String>(sortedGroups, propertySelector.getComparer()).quickSort();
+        new DummyUtils<>(sortedGroups, propertySelector.getComparer()).quickSort();
 
         // Rotate days (tomorrow should be first)
         if (propertySelector instanceof DayPropertySelector) {

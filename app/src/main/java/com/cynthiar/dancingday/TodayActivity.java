@@ -122,7 +122,6 @@ public class TodayActivity extends AppCompatActivity
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
-        mNetworkFragment.setContext(this);
     }
 
     @Override
@@ -223,10 +222,11 @@ public class TodayActivity extends AppCompatActivity
     }
 
     public List<DummyContent.DummyItem> getCurrentList() {
-        List<List<DummyContent.DummyItem>> schoolLists = new ArrayList<>(Extractors.EXTRACTORS.length);
-        for (int i = 0; i < Extractors.EXTRACTORS.length; i++
+        Extractors extractorsInstance = Extractors.getInstance(this);
+        List<List<DummyContent.DummyItem>> schoolLists = new ArrayList<>(extractorsInstance.EXTRACTORS.length);
+        for (int i = 0; i < extractorsInstance.EXTRACTORS.length; i++
              ) {
-            DanceClassExtractor danceClassExtractor = Extractors.EXTRACTORS[i];
+            DanceClassExtractor danceClassExtractor = extractorsInstance.EXTRACTORS[i];
 
             // Continue if the list is not ready
             List<DummyContent.DummyItem>[] data = new List[1];
@@ -258,7 +258,7 @@ public class TodayActivity extends AppCompatActivity
     public void startDownload(String key) {
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
-            DanceClassExtractor danceClassExtractor = Extractors.getExtractor(key);
+            DanceClassExtractor danceClassExtractor = Extractors.getInstance(this).getExtractor(key);
             mNetworkFragment.startDownload(key, danceClassExtractor);
             mDownloading = true;
         }

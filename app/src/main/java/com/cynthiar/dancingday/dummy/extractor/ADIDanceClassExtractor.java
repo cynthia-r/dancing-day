@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.dummy.extractor;
 
+import android.content.Context;
+
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import org.jsoup.Jsoup;
@@ -21,6 +23,8 @@ import java.util.regex.Pattern;
 public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
     //private static final String mainSelector = ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)";
     private static final String mainSelector = ".tve_tfo p";
+
+    public ADIDanceClassExtractor(Context context) { super(context); }
 
     @Override
     public String getKey() {

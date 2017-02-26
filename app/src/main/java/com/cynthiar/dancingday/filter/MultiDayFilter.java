@@ -56,7 +56,7 @@ public class MultiDayFilter extends Filter {
 
                     String[] prefixAndGroup = spinnerFilter.split("-");
                     String prefix = prefixAndGroup[0];
-                    DanceClassPropertySelector danceClassPropertySelector = Extractors.getSelector(prefix);
+                    DanceClassPropertySelector danceClassPropertySelector = Extractors.getInstance().getSelector(prefix);
 
                     String groupToKeep = prefixAndGroup[1];
                     if (groupToKeep.startsWith(MultiDayFragment.ALL_KEY))

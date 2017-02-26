@@ -24,7 +24,6 @@ public class NetworkFragment extends Fragment {
     private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
     //private String mUrlString;
-    private Context mContext;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
@@ -49,10 +48,6 @@ public class NetworkFragment extends Fragment {
 
     public void setConsumerCallback(IConsumerCallback consumerCallback) {
         mConsumerCallback = consumerCallback;
-    }
-
-    public void setContext(Context context) {
-        mContext = context;
     }
 
     @Override
@@ -94,7 +89,7 @@ public class NetworkFragment extends Fragment {
     public void startDownload(String key, DanceClassExtractor danceClassExtractor) {
         cancelDownload();
         String url = danceClassExtractor.getUrl();
-        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, key, danceClassExtractor, mContext);
+        mDownloadTask = new DownloadTask(mDownloadCallback, mConsumerCallback, key, danceClassExtractor);
         mDownloadTask.execute(url);
     }
 

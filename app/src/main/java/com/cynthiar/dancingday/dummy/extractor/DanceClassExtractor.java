@@ -19,6 +19,10 @@ public abstract class DanceClassExtractor<T> {
     protected DanceClassExtractor() {
     }
 
+    protected DanceClassExtractor(Context context) {
+        mContext = context;
+    }
+
     public abstract String getKey();
 
     public abstract List<String> getSchoolList();
@@ -28,8 +32,4 @@ public abstract class DanceClassExtractor<T> {
     public abstract T processDownload(InputStream downloadStream, String baseUri) throws IOException;
 
     public abstract List<DummyContent.DummyItem> Extract(T htmlContent) throws IOException;
-
-    public void setContext(Context context) {
-        mContext = context;
-    }
 }

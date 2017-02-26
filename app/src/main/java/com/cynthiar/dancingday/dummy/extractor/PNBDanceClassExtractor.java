@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.dummy.extractor;
 
+import android.content.Context;
+
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import org.jsoup.Jsoup;
@@ -22,6 +24,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
     private static final String mainSelector = "table tr";
     private int mSchoolNumber = -1;
+
+    public PNBDanceClassExtractor(Context context) { super(context); }
 
     @Override
     public String getKey() {

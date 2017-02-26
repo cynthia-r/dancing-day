@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.dummy.extractor;
 
+import android.content.Context;
+
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
@@ -25,6 +27,8 @@ import java.util.regex.Pattern;
 
 public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     private Pattern timePattern = Pattern.compile("(\\d+\\D*((am)|(pm))?)+");
+
+    public KDCDanceClassExtractor(Context context) { super(context); }
 
     @Override
     public String getKey() {
