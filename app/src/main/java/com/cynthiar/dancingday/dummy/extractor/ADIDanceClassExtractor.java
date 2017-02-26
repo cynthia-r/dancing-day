@@ -3,8 +3,10 @@ package com.cynthiar.dancingday.dummy.extractor;
 import android.content.Context;
 
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -152,7 +154,7 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
             String teacher = classTimeText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
 
             // Build and return the class object
-            return new DummyItem(day, time, "ADI", teacher, level);
+            return new DummyItem(day, DanceClassTime.create(time), "ADI", teacher, level);
         }
         catch (Exception e) {
             String a = classElement.text();

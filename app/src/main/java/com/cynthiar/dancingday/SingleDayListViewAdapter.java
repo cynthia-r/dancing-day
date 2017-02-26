@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
@@ -53,13 +57,15 @@ public class SingleDayListViewAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
         }
 
-
         TextView mTimeView = (TextView) convertView.findViewById(R.id.time);
         TextView mSchoolView = (TextView) convertView.findViewById(R.id.school);
         TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
         TextView mLevelView = (TextView) convertView.findViewById(R.id.level);
 
-        mTimeView.setText(mValues.get(position).time);
+        DanceClassTime danceClassTime = mValues.get(position).danceClassTime;
+        String time = null == danceClassTime ? "" : danceClassTime.toString();
+
+        mTimeView.setText(time);
         mSchoolView.setText(mValues.get(position).school);
         mLevelView.setText(mValues.get(position).level.toString());
         mTeacherView.setText(mValues.get(position).teacher);

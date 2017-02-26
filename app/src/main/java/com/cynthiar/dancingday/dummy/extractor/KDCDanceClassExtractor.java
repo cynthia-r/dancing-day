@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
 import com.snowtide.pdf.OutputTarget;
@@ -70,15 +71,15 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     @Override
     public List<DummyItem> Extract(String okay) {
         List<DummyItem> dummyItemList = new ArrayList<>();
-        dummyItemList.add(new DummyItem("Monday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyItem("Monday", "6-7 pm", "KDC", "Beinna", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyItem("Monday", "7-8 pm", "KDC", "Elbert/Cody", DanceClassLevel.OpenLevel));
-        dummyItemList.add(new DummyItem("Tuesday", "6-7 pm", "KDC", "Lindsay", DanceClassLevel.Beginner));
-        dummyItemList.add(new DummyItem("Tuesday", "7-8 pm", "KDC", "Mustafa", DanceClassLevel.OpenLevel));
-        dummyItemList.add(new DummyItem("Wednesday", "7-8 pm", "KDC", "Mari", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyItem("Thursday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.Beginner));
-        dummyItemList.add(new DummyItem("Saturday", "10-11:30 am", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyItem("Saturday", "11:30 am-12:30 pm", "KDC", "Jerri", DanceClassLevel.Pointe));
+        dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), "KDC", "Beinna", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("7-8 pm"), "KDC", "Elbert/Cody", DanceClassLevel.OpenLevel));
+        dummyItemList.add(new DummyItem("Tuesday", DanceClassTime.create("6-7 pm"), "KDC", "Lindsay", DanceClassLevel.Beginner));
+        dummyItemList.add(new DummyItem("Tuesday", DanceClassTime.create("7-8 pm"), "KDC", "Mustafa", DanceClassLevel.OpenLevel));
+        dummyItemList.add(new DummyItem("Wednesday", DanceClassTime.create("7-8 pm"), "KDC", "Mari", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Thursday", DanceClassTime.create("6-7 pm"), "KDC", "Jerri", DanceClassLevel.Beginner));
+        dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("10-11:30 am"), "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("11:30 am-12:30 pm"), "KDC", "Jerri", DanceClassLevel.Pointe));
         return dummyItemList;
     }
 
@@ -161,7 +162,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
                      ) {
                     time = time.concat(timePart);
                 }
-                dummyItem = new DummyItem("day", time, "KDC", teacher, level);
+                dummyItem = new DummyItem("day", DanceClassTime.create(time), "KDC", teacher, level);
             }
         }
 

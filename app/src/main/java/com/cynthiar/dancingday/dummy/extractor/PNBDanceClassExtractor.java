@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -146,7 +147,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         String day = DummyContent.DAYS_OF_THE_WEEK[i-1];
 
         // Build and return the dummy item
-        return new DummyItem(day, time, school, teacher, level);
+        return new DummyItem(day, DanceClassTime.create(time), school, teacher, level);
     }
 
     private DanceClassLevel parseLevel(String levelText) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,8 +56,8 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
         // Return empty list if nothing extracted
         if (null == classes || classes.size() == 0) {
             List<DummyItem> dummyItemList = new ArrayList<>();
-            dummyItemList.add(new DummyItem("Monday", "10:00-11:30am", "WDC", "Heather Dawson", DanceClassLevel.BeginnerIntermediate));
-            dummyItemList.add(new DummyItem("Monday", "4:00-5:30 pm", "WDC", "Erin Krall", DanceClassLevel.BeginnerIntermediate));
+            dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("10:00-11:30am"), "WDC", "Heather Dawson", DanceClassLevel.BeginnerIntermediate));
+            dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("4:00-5:30 pm"), "WDC", "Erin Krall", DanceClassLevel.BeginnerIntermediate));
             /*dummyItemList.add(new DummyContent.DummyItem("Monday", "7-8 pm", "WDC", "Elbert/Cody", "Open Level"));
             dummyItemList.add(new DummyContent.DummyItem("Tuesday", "6-7 pm", "WDC", "Lindsay", "Beginner"));
             dummyItemList.add(new DummyContent.DummyItem("Tuesday", "7-8 pm", "WDC", "Mustafa", "Open Level"));
@@ -64,7 +65,7 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
             dummyItemList.add(new DummyContent.DummyItem("Thursday", "6-7 pm", "WDC", "Jerri", "Beginner"));
             dummyItemList.add(new DummyContent.DummyItem("Saturday", "10-11:30 am", "WDC", "Jerri", "Beg/Int"));
             dummyItemList.add(new DummyContent.DummyItem("Saturday", "11:30 am-12:30 pm", "WDC", "Jerri", "Pointe"));*/
-            dummyItemList.add(new DummyItem("Sunday", "1:00-2:00 pm", "WDC", "Melissa Brown", DanceClassLevel.Beginner));
+            dummyItemList.add(new DummyItem("Sunday", DanceClassTime.create("1:00-2:00 pm"), "WDC", "Melissa Brown", DanceClassLevel.Beginner));
             return dummyItemList;
         }
         else {

@@ -1,6 +1,6 @@
 package com.cynthiar.dancingday.dummy.comparer;
 
-import com.cynthiar.dancingday.dummy.DanceClassTime;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
@@ -18,8 +18,8 @@ public class SingleDayDummyItemComparer implements DummyUtils.IComparer<DummyIte
             return dayComparisonResult;
 
         // Items are on the same day - compare the start times
-        DanceClassTime startClassTime1 = elem1.getClassTime();
-        DanceClassTime startClassTime2 = elem2.getClassTime();
+        DanceClassTime startClassTime1 = elem1.danceClassTime;
+        DanceClassTime startClassTime2 = elem2.danceClassTime;
 
         if (null == startClassTime1 && null == startClassTime2)
             return 0;

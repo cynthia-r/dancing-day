@@ -1,4 +1,6 @@
-package com.cynthiar.dancingday.dummy;
+package com.cynthiar.dancingday.dummy.time;
+
+import com.cynthiar.dancingday.dummy.time.TimeHalf;
 
 /**
  * Created by CynthiaR on 2/26/2017.

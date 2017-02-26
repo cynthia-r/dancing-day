@@ -5,6 +5,9 @@ import android.widget.Toast;
 
 import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+import com.cynthiar.dancingday.dummy.time.TimeHalf;
+import com.cynthiar.dancingday.dummy.time.TimeParts;
 
 import org.joda.time.LocalTime;
 

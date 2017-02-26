@@ -2,6 +2,8 @@ package com.cynthiar.dancingday.dummy;
 
 import android.support.v4.util.Pair;
 
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -19,11 +21,11 @@ public class DummyContent {
      */
     public final DummyItem[] ITEMS =
     {
-        new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay",DanceClassLevel.BeginnerIntermediate),
-        new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
-        new DummyItem("Thursday","6PM-7PM","KDC","Jerri",DanceClassLevel.Beginner),
-        new DummyItem("Thursday","6-30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
-        new DummyItem("Friday", "6:30PM-8PM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Monday", DanceClassTime.create("7PM-8:30PM"),"KDC","Lindsay",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Tuesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Thursday",DanceClassTime.create("6PM-7PM"),"KDC","Jerri",DanceClassLevel.Beginner),
+        new DummyItem("Thursday",DanceClassTime.create("6-30PM-8PM"),"ADI","Kara",DanceClassLevel.Intermediate),
+        new DummyItem("Friday", DanceClassTime.create("6:30PM-8PM"),"PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
     };
 
     /**
@@ -31,10 +33,10 @@ public class DummyContent {
      */
     public final DummyItem[] ITEMS2 =
     {
-        new DummyItem("Monday","7PM-8:30PM","KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
-        new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
-        new DummyItem("Thursday","6:30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
-        new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate)
+        new DummyItem("Monday",DanceClassTime.create("7PM-8:30PM"),"KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Wednesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Thursday",DanceClassTime.create("6:30PM-8PM"),"ADI","Kara",DanceClassLevel.Intermediate),
+        new DummyItem("Saturday",DanceClassTime.create("10AM-11:30AM"),"PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate)
     };
 
     /**
@@ -42,12 +44,12 @@ public class DummyContent {
      */
     public final DummyItem[] ITEMS3 =
     {
-            new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
-            new DummyItem("Wednesday", "8PM-9PM","KDC","Amy",DanceClassLevel.BeginnerIntermediate),
-            new DummyItem("Thursday","6:30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
-            new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
-            new DummyItem("Saturday","10AM-11:30AM","KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
-            new DummyItem("Saturday","11-20AM-12:50PM","ADI","Kara",DanceClassLevel.Intermediate)
+            new DummyItem("Wednesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Wednesday", DanceClassTime.create("8PM-9PM"),"KDC","Amy",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Thursday",DanceClassTime.create("6:30PM-8PM"),"ADI","Kara",DanceClassLevel.Intermediate),
+            new DummyItem("Saturday",DanceClassTime.create("10AM-11:30AM"),"PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Saturday",DanceClassTime.create("10AM-11:30AM"),"KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Saturday",DanceClassTime.create("11-20AM-12:50PM"),"ADI","Kara",DanceClassLevel.Intermediate)
     };
 
     public static final Pair<String, String>[] CLASS_AND_SELECTORS = new Pair[]{

@@ -1,10 +1,9 @@
 package com.cynthiar.dancingday;
 
-import com.cynthiar.dancingday.dummy.DanceClassTime;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.comparer.IntComparer;
 
-import org.joda.time.LocalTime;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
