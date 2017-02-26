@@ -70,7 +70,7 @@ public class SingleDayListViewAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                DummyUtils.toast(mContext);
+                DummyUtils.toast(mContext, "Doing something");
             }
 
         });

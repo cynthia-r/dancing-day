@@ -73,9 +73,7 @@ public class MultiDayFragment extends Fragment {
         // Retrieve list of items
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
 
-        // Only keep items starting fro, tomorrow
-        dummyItemList = this.filterList(dummyItemList);
-
+        // Group by the selector
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
         List<String> groupList = sortAndRotateGroups(dummyItemMap, danceClassPropertySelector);
@@ -92,20 +90,6 @@ public class MultiDayFragment extends Fragment {
         }
     }
 
-    private List<DummyContent.DummyItem> filterList(List<DummyContent.DummyItem> unfilteredList) {
-        Calendar calendar = Calendar.getInstance();
-        int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
-
-        String dayToExclude = DummyUtils.getCurrentDay(dayToFilter);
-        List<DummyContent.DummyItem> filteredList = new ArrayList<>();
-        for (DummyContent.DummyItem dummyItem:unfilteredList
-                ) {
-            if (!dayToExclude.equals(dummyItem.day))
-                filteredList.add(dummyItem);
-        }
-        return filteredList;
-    }
-
     private List<String> sortAndRotateGroups(HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
         List<String> groupList = new ArrayList<>(dummyItemMap.keySet());
 
@@ -116,13 +100,14 @@ public class MultiDayFragment extends Fragment {
 
         // Rotate days (tomorrow should be first)
         if (propertySelector instanceof DayPropertySelector) {
-            String currentDay = DummyUtils.getCurrentDay();
+            String tomorrow = DummyUtils.getTomorrow();
+            // Find the position of tomorrow
             int k=0;
-            while (k < sortedGroups.length && !sortedGroups[k].equals(currentDay)) { // Find current day position
+            while (k < sortedGroups.length && !sortedGroups[k].equals(tomorrow)) {
                 k++;
             }
             if (k == sortedGroups.length) {
-                DummyUtils.toast(getActivity().getApplicationContext());
+                DummyUtils.toast(getActivity().getApplicationContext(), "Tomorrow not found");
             }
 
             // Copy to the list back again

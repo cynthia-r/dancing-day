@@ -93,7 +93,14 @@ public class DummyUtils<T> {
         return getCurrentDay(dayToFilter);
     }
 
-    public static String getCurrentDay(int calendarDayPosition) {
+    public static String getTomorrow() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
+        return getCurrentDay(dayToFilter);
+    }
+
+    private static String getCurrentDay(int calendarDayPosition) {
         String dayString = "";
         switch (calendarDayPosition) {
             case Calendar.MONDAY:
@@ -165,8 +172,8 @@ public class DummyUtils<T> {
         return file;
     }
 
-    public static void toast(Context context) {
-        CharSequence text = "Toast";
+    public static void toast(Context context, String message) {
+        CharSequence text = (null == message) ? "Toast" : message;
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, text, duration);

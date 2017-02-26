@@ -149,14 +149,9 @@ public class SingleDayFragment extends Fragment {
 
 
     private List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
-        Calendar calendar = Calendar.getInstance();
-        int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
-        if (1 == position) {
-            calendar.add(Calendar.DATE, 1);
-            dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
-        }
-
-        String dayToKeep = DummyUtils.getCurrentDay(dayToFilter);
+        String dayToKeep = (1 == position) ?
+                DummyUtils.getTomorrow()
+                : DummyUtils.getCurrentDay();
         List<DummyContent.DummyItem> filteredList = new ArrayList<>();
         for (DummyContent.DummyItem dummyItem:unfilteredList
                 ) {
