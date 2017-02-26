@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.dummy.extractor;
 
 import android.content.Context;
 
+import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import org.jsoup.Jsoup;
@@ -83,7 +84,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
             if (firstChildText.equals("Class"))
                 mSchoolNumber++;
 
-            String level = this.parseLevel(firstChildText);
+            DanceClassLevel level = this.parseLevel(firstChildText);
             if (level.equals(""))
                 return null;
 
@@ -125,7 +126,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         }
     }
 
-    private DummyContent.DummyItem parseClassText(String classText, int i, String level) {
+    private DummyContent.DummyItem parseClassText(String classText, int i, DanceClassLevel level) {
         int indexOfOpeningParenthesis = classText.indexOf('(');
         int indexOfClosingParenthesis = classText.indexOf(')');
         if (indexOfOpeningParenthesis < 0 || indexOfClosingParenthesis <= 0)
@@ -147,16 +148,16 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         return new DummyContent.DummyItem(day, time, school, teacher, level);
     }
 
-    private String parseLevel(String levelText) {
+    private DanceClassLevel parseLevel(String levelText) {
         if (levelText.contains("Int.") && levelText.contains("Adv."))
-            return "Advanced";
+            return DanceClassLevel.Advanced;
         if (levelText.contains("Int.") && levelText.contains("Beg."))
-            return "Beg/Int";
+            return DanceClassLevel.BeginnerIntermediate;
         if (levelText.contains("Beg."))
-            return "Beginner";
+            return DanceClassLevel.Beginner;
         if (levelText.contains("Int."))
-            return "Intermediate"; // TODO this should be an enum
-        return "";
+            return DanceClassLevel.Intermediate;
+        return DanceClassLevel.Unknown;
     }
 
     private String getSchool() {

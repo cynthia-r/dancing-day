@@ -24,11 +24,11 @@ public class DummyContent {
      */
     public static final DummyItem[] ITEMS =
     {
-        new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay","Beg-Int"),
-        new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
-        new DummyItem("Thursday","6PM-7PM","KDC","Jerri","Beginner"),
-        new DummyItem("Thursday","6-30PM-8PM","ADI","Kara","Intermediate"),
-        new DummyItem("Friday", "6:30PM-8PM","PNB Seattle","Landis","Beg-Int"),
+        new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Thursday","6PM-7PM","KDC","Jerri",DanceClassLevel.Beginner),
+        new DummyItem("Thursday","6-30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
+        new DummyItem("Friday", "6:30PM-8PM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
     };
 
     /**
@@ -36,10 +36,10 @@ public class DummyContent {
      */
     public static final DummyItem[] ITEMS2 =
     {
-        new DummyItem("Monday","7PM-8:30PM","KDC","Jerri","Beg-Int"),
-        new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
-        new DummyItem("Thursday","6:30PM-8PM","ADI","Kara","Intermediate"),
-        new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int")
+        new DummyItem("Monday","7PM-8:30PM","KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+        new DummyItem("Thursday","6:30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
+        new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate)
     };
 
     /**
@@ -47,12 +47,12 @@ public class DummyContent {
      */
     public static final DummyItem[] ITEMS3 =
     {
-            new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis","Beg-Int"),
-            new DummyItem("Wednesday", "8PM-9PM","KDC","Amy","Beg-Int"),
-            new DummyItem("Thursday","6:30PM-8PM","ADI","Kara","Intermediate"),
-            new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis","Beg-Int"),
-            new DummyItem("Saturday","10AM-11:30AM","KDC","Jerri","Beg-Int"),
-            new DummyItem("Saturday","11-20AM-12:50PM","ADI","Kara","Intermediate")
+            new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Wednesday", "8PM-9PM","KDC","Amy",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Thursday","6:30PM-8PM","ADI","Kara",DanceClassLevel.Intermediate),
+            new DummyItem("Saturday","10AM-11:30AM","PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Saturday","10AM-11:30AM","KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
+            new DummyItem("Saturday","11-20AM-12:50PM","ADI","Kara",DanceClassLevel.Intermediate)
     };
 
     public static final Pair<String, String>[] CLASS_AND_SELECTORS = new Pair[]{
@@ -78,9 +78,9 @@ public class DummyContent {
         public final String time;
         public final String school;
         public final String teacher;
-        public final String level;
+        public final DanceClassLevel level;
 
-        public DummyItem(String day, String time, String school, String teacher, String level) {
+        public DummyItem(String day, String time, String school, String teacher, DanceClassLevel level) {
             this.day = day;
             this.time = time;
             this.school = school;

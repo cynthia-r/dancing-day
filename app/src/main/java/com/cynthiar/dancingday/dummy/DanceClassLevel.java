@@ -5,6 +5,11 @@ package com.cynthiar.dancingday.dummy;
  */
 
 public enum DanceClassLevel {
+    Unknown {
+        public String toString() {
+            return "Unknown";
+        }
+    },
     Beginner {
         public String toString() {
             return "Beginner";

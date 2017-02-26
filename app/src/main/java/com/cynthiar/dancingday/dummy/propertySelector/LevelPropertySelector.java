@@ -7,7 +7,7 @@ import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector
 
 public class LevelPropertySelector implements DanceClassPropertySelector {
     public String getProperty(DummyContent.DummyItem dummyItem){
-        return dummyItem.level;
+        return dummyItem.level.toString();
     }
 
     @Override

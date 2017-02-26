@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.dummy.extractor;
 
 import android.content.Context;
 
+import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
 
 import org.jsoup.Jsoup;
@@ -125,8 +126,8 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
             String classTimeText = classText.substring(indexOfDay + day.length() + 1); // go after the day and the comma
 
             // Parse the level
-            String level = this.parseLevel(levelText);
-            if (level.equals("Children"))
+            DanceClassLevel level = this.parseLevel(levelText);
+            if (DanceClassLevel.Children == level)
             {
                 System.out.print("Excluded:" + levelText + " because level is Children");
                 return null;
@@ -167,15 +168,15 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
 
     }
 
-    private String parseLevel(String levelText) {
+    private DanceClassLevel parseLevel(String levelText) {
         if (levelText.contains("Pointe"))
-            return "Pointe";
+            return DanceClassLevel.Pointe;
         if (!levelText.contains("Adult"))
-            return "Children";
+            return DanceClassLevel.Children;
         if (levelText.contains("Intermediate"))
-            return "Intermediate";
+            return DanceClassLevel.Intermediate;
         if (levelText.contains("Beginning"))
-            return "Beginner"; // TODO this should be an enum
-        return "";
+            return DanceClassLevel.Beginner;
+        return DanceClassLevel.Unknown;
     }
 }
