@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTask;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;

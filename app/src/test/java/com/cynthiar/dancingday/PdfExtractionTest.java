@@ -1,11 +1,9 @@
 package com.cynthiar.dancingday;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Pair;
 
-import com.cynthiar.dancingday.download.DownloadTask;
+import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.DummyContent;

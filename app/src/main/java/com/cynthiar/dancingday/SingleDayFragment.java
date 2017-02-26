@@ -81,7 +81,6 @@ public class SingleDayFragment extends Fragment {
         super.onStart();
 
         TodayActivity parentActivity = (TodayActivity)getActivity();
-        //parentActivity.startDownload();
 
         int position;
         if (getArguments() != null) {
@@ -91,62 +90,17 @@ public class SingleDayFragment extends Fragment {
         else
             position = 0;
 
-        // Set the adapter
-        //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
-
         // Retrieve list of items
-        List<DummyItem> dummyItemList = new ArrayList<>();
-        /*DummyItem[] inputArray = itemCount == 1 ? DummyContent.ITEMS : DummyContent.ITEMS2;
-        for (int i=0; i < inputArray.length; i++)
-            dummyItemList.add(inputArray[i]);*/
-
-        //dummyItemList = mDataCache.Load(TodayActivity.TODAY_KEY);
-        /*for (int i=0; i < mItemList.size(); i++)
-            dummyItemList.add(mItemList.get(i));*/
-        dummyItemList = parentActivity.getCurrentList();
-
+        List<DummyItem> dummyItemList = parentActivity.getCurrentList();
 
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);
 
-
+        // Setup list adapter
         ListView mListView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
-        //ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, dummyItemList);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
-        //mListView.setItemsCanFocus(true);
-        //mListView.setOnItemClickListener(mMessageClickedHandler);
-        /*mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                Object item = adapter.getItemAtPosition(position);
-                try {
-                    String url = "waze://?ll=47.680279, -122.191947&z=10&navigate=yes";
-                    Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
-                    startActivity( intent );
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //}
-
-            //@Override
-            //public void onItemClick(AdapterView<?>adapter, View v, int position){
-
-
-            }
-        });*/
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle();
     }
-
-    // Create a message handling object as an anonymous class.
-    private AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView parent, View v, int position, long id) {
-            // Do something in response to the click
-            String a = "b";
-            String b = a.concat("b");
-        }
-    };
-
 
     private List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
         String dayToKeep = (1 == position) ?

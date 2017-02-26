@@ -1,5 +1,6 @@
 package com.cynthiar.dancingday;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.filter.MultiDaySpinner;
+import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
+import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +31,12 @@ public class MultiDayFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private Spinner mSchoolSpinner;
+    private Spinner mLevelSpinner;
     private HashMap<String, List<DummyItem>> mAllItemMap;
 
     public static final String ALL_KEY = "All";
+    public static final String SCHOOL_SPINNER_PREFIX = "SCHOOL";
+    public static final String LEVEL_SPINNER_PREFIX = "LEVEL";
 
 //    private OnListFragmentInteractionListener mListener;
 
@@ -90,14 +97,25 @@ public class MultiDayFragment extends Fragment {
         }
 
         // Setup spinners
+        // School spinner
         mSchoolSpinner = (Spinner)parentActivity.findViewById(R.id.schoolSpinner);
         List<String> schoolList = Extractors.getSchoolList();
-        SchoolSpinnerAdapter schoolSpinnerAdapter = new SchoolSpinnerAdapter(
-                parentActivity, android.R.layout.simple_spinner_dropdown_item, schoolList);
-        schoolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSchoolSpinner.setAdapter(schoolSpinnerAdapter);
-        mSchoolSpinner.setOnItemSelectedListener(
-                new SpinnerItemsSelectedListener(parentActivity, schoolSpinnerAdapter, adapter));
+        this.setupSpinner(parentActivity, mSchoolSpinner, schoolList);
+
+        // Level spinner
+        mLevelSpinner = (Spinner)parentActivity.findViewById(R.id.levelSpinner);
+        List<String> levelList = Extractors.getLevelList();
+        this.setupSpinner(parentActivity, mLevelSpinner, levelList);
+
+        // Setup spinners listener
+        MultiDaySpinner[] spinners = {
+             new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
+             new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX)
+        };
+        SpinnerItemsSelectedListener spinnerItemsSelectedListener =
+                new SpinnerItemsSelectedListener(parentActivity, spinners, adapter);
+        mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+        mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
     }
 
     private List<String> sortAndRotateGroups(HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
@@ -145,6 +163,14 @@ public class MultiDayFragment extends Fragment {
 
         // Return the group list
         return groupList;
+    }
+
+    private MultiDaySpinnerAdapter setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {
+        MultiDaySpinnerAdapter spinnerAdapter = new MultiDaySpinnerAdapter(
+                context, android.R.layout.simple_spinner_dropdown_item, spinnerItemList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        return spinnerAdapter;
     }
 
 /*

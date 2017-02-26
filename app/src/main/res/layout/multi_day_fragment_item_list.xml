@@ -6,19 +6,39 @@
     android:orientation="vertical"
     tools:context="com.cynthiar.dancingday.MultiDayFragment">
 
-    <Spinner
-        android:id="@+id/schoolSpinner"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:spinnerMode="dropdown"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:dropDownSelector="@android:drawable/btn_dropdown"
-        android:background="#0fddaf"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:context="com.cynthiar.dancingday.MultiDayFragment">
+
+        <Spinner
+            android:id="@+id/schoolSpinner"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:dropDownSelector="@android:drawable/btn_dropdown"
+            android:background="#0fddaf"/>
+
+        <Spinner
+            android:id="@+id/levelSpinner"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:dropDownSelector="@android:drawable/btn_dropdown"
+            android:background="#0fddaf"/>
+
+    </LinearLayout>
+
 
     <ExpandableListView
         android:id="@+id/multi_day_list_view"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 
 </LinearLayout>

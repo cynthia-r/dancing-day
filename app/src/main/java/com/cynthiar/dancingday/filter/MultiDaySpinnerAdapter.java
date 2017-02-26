@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.filter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,24 +14,24 @@ import java.util.List;
  * Created by CynthiaR on 2/25/2017.
  */
 
-public class SchoolSpinnerAdapter extends ArrayAdapter<String> {
+public class MultiDaySpinnerAdapter extends ArrayAdapter<String> {
 
     private Context context;
-    private List<String> schoolList;
+    private List<String> groupList;
 
-    public SchoolSpinnerAdapter(Context context, int textViewResourceId,
-                       List<String> values) {
+    public MultiDaySpinnerAdapter(Context context, int textViewResourceId,
+                                  List<String> values) {
         super(context, textViewResourceId, values);
         this.context = context;
-        this.schoolList = values;
+        this.groupList = values;
     }
 
     public int getCount(){
-        return schoolList.size();
+        return groupList.size();
     }
 
     public String getItem(int position){
-        return schoolList.get(position);
+        return groupList.get(position);
     }
 
     public long getItemId(int position){
@@ -43,7 +43,7 @@ public class SchoolSpinnerAdapter extends ArrayAdapter<String> {
         TextView view = new TextView(context);
         view.setTextColor(Color.BLACK);
         view.setGravity(Gravity.CENTER);
-        view.setText(schoolList.get(position));
+        view.setText(groupList.get(position));
 
         return view;
     }
@@ -54,7 +54,7 @@ public class SchoolSpinnerAdapter extends ArrayAdapter<String> {
                                 ViewGroup parent) {
         TextView view = new TextView(context);
         view.setTextColor(Color.BLACK);
-        view.setText(schoolList.get(position));
+        view.setText(groupList.get(position));
         view.setHeight(60);
 
         return view;

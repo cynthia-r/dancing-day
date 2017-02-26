@@ -1,13 +1,10 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.data;
 
 import android.support.v4.util.Pair;
 
+import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.dummy.DummyContent;
-import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +12,7 @@ import java.util.List;
  */
 
 public class DanceClassDataProvider extends DataProvider<Pair<String, List<DummyContent.DummyItem>>>
-    implements IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>>{
+    implements IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> {
 
     //private DownloadTask mDownloadTask;
     private TodayActivity mTodayActivity;

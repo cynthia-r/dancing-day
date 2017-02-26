@@ -6,19 +6,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 
-import com.cynthiar.dancingday.IConsumerCallback;
+import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.dummy.DummyContent;
-import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
