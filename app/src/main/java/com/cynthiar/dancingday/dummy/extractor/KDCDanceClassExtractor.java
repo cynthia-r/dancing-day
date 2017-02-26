@@ -36,6 +36,13 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
         return "http://www.kirklanddance.org/uploads/4/8/4/0/48406365/adult_teen_schedule__1_.pdf";
     }
 
+    @Override
+    public List<String> getSchoolList() {
+        List<String> schoolList = new ArrayList<>();
+        schoolList.add(this.getKey());
+        return schoolList;
+    }
+
     /*public File processDownload(String downloadStream, String baseUri) throws IOException {
 
         InputStream inputStream = new ByteArrayInputStream(downloadStream.getBytes());

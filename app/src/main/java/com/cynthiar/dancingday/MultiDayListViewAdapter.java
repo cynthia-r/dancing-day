@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,17 +24,23 @@ import java.util.Map;
  * Created by CynthiaR on 2/5/2017.
  */
 
-public class MultiDayListViewAdapter extends BaseExpandableListAdapter {
+public class MultiDayListViewAdapter extends BaseExpandableListAdapter implements Filterable{
     private List<String> mGroups;
     private HashMap<String, List<DummyContent.DummyItem>> mValues;
+    private HashMap<String, List<DummyContent.DummyItem>> mAllValues;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyContent.DummyItem>> itemMap, Context context) {
+    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyContent.DummyItem>> itemMap, HashMap<String, List<DummyContent.DummyItem>> allItemMap, Context context) {
         mGroups = groupList;
         mValues = itemMap;
+        mAllValues = allItemMap;
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setValues(HashMap<String, List<DummyContent.DummyItem>> items) {
+        mValues = items;
     }
 
     @Override
@@ -100,5 +108,10 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new MultiDayFilter(this, mAllValues);
     }
 }

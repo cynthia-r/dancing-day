@@ -21,6 +21,8 @@ public abstract class DanceClassExtractor<T> {
 
     public abstract String getKey();
 
+    public abstract List<String> getSchoolList();
+
     public abstract String getUrl();
 
     public abstract T processDownload(InputStream downloadStream, String baseUri) throws IOException;

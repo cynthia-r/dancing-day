@@ -33,6 +33,13 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
+    public List<String> getSchoolList() {
+        List<String> schoolList = new ArrayList<>();
+        schoolList.add(this.getKey());
+        return schoolList;
+    }
+
+    @Override
     public Document processDownload(InputStream inputStream, String baseUri) throws IOException {
         Document doc = Jsoup.parse(inputStream, null, baseUri);
         return doc;

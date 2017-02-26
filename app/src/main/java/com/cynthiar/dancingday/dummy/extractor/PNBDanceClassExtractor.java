@@ -34,6 +34,14 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
+    public List<String> getSchoolList() {
+        List<String> schoolList = new ArrayList<>();
+        schoolList.add("PNB Seattle"); // TODO consts
+        schoolList.add("PNB Bellevue");
+        return schoolList;
+    }
+
+    @Override
     public Document processDownload(InputStream downloadStream, String baseUri) throws IOException {
         Document doc = Jsoup.parse(downloadStream, null, baseUri);
         return doc;

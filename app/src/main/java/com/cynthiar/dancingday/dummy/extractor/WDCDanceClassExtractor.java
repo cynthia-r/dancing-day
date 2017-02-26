@@ -30,6 +30,13 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
+    public List<String> getSchoolList() {
+        List<String> schoolList = new ArrayList<>();
+        schoolList.add(this.getKey());
+        return schoolList;
+    }
+
+    @Override
     public Document processDownload(InputStream downloadStream, String baseUri) throws IOException {
         Document doc = Jsoup.parse(downloadStream, null, baseUri);
         return doc;

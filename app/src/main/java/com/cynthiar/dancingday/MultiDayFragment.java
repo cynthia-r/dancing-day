@@ -1,25 +1,20 @@
 package com.cynthiar.dancingday;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
-import com.cynthiar.dancingday.dummy.comparer.DayComparer;
-import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
-import com.cynthiar.dancingday.dummy.comparer.StringComparer;
+import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +26,10 @@ public class MultiDayFragment extends Fragment {
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private Spinner mSchoolSpinner;
+    private HashMap<String, List<DummyItem>> mAllItemMap;
+
+    public static final String ALL_KEY = "All";
 
 //    private OnListFragmentInteractionListener mListener;
 
@@ -76,11 +75,12 @@ public class MultiDayFragment extends Fragment {
         // Group by the selector
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
+        mAllItemMap = dummyItemMap;
         List<String> groupList = sortAndRotateGroups(dummyItemMap, danceClassPropertySelector);
 
         // Set up list view
         ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
-        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, parentActivity);
+        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
         mListView.setAdapter(adapter);
 
         // Expand groups the first time
@@ -88,6 +88,16 @@ public class MultiDayFragment extends Fragment {
         {
             mListView.expandGroup(i);
         }
+
+        // Setup spinners
+        mSchoolSpinner = (Spinner)parentActivity.findViewById(R.id.schoolSpinner);
+        List<String> schoolList = Extractors.getSchoolList();
+        SchoolSpinnerAdapter schoolSpinnerAdapter = new SchoolSpinnerAdapter(
+                parentActivity, android.R.layout.simple_spinner_dropdown_item, schoolList);
+        schoolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSchoolSpinner.setAdapter(schoolSpinnerAdapter);
+        mSchoolSpinner.setOnItemSelectedListener(
+                new SpinnerItemsSelectedListener(parentActivity, schoolSpinnerAdapter, adapter));
     }
 
     private List<String> sortAndRotateGroups(HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
