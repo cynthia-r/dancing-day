@@ -115,7 +115,7 @@ public class SingleDayFragment extends Fragment {
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
         //mListView.setItemsCanFocus(true);
-        mListView.setOnItemClickListener(mMessageClickedHandler);
+        //mListView.setOnItemClickListener(mMessageClickedHandler);
         /*mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
@@ -148,7 +148,7 @@ public class SingleDayFragment extends Fragment {
     };
 
 
-    public List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
+    private List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
         Calendar calendar = Calendar.getInstance();
         int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
         if (1 == position) {

@@ -9,7 +9,8 @@ public class Extractors {
     public static final DanceClassExtractor[] EXTRACTORS = {
             new ADIDanceClassExtractor(),
             new PNBDanceClassExtractor(),
-            new KDCDanceClassExtractor()
+            new KDCDanceClassExtractor(),
+            new WDCDanceClassExtractor()
     };
 
     public static DanceClassExtractor getExtractor(String key) {

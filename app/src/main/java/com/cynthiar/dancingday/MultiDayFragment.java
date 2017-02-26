@@ -19,6 +19,7 @@ import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,15 +69,12 @@ public class MultiDayFragment extends Fragment {
             itemCount = 1;
 
         TodayActivity parentActivity = (TodayActivity)getActivity();
-        // Set the adapter
-        //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS));
 
         // Retrieve list of items
-        DummyItem[] inputArray = DummyContent.ITEMS3;
-        List<DummyItem> dummyItemList = new ArrayList<>();
-        /*for (int i=0; i < inputArray.length; i++)
-            dummyItemList.add(inputArray[i]);*/
-        dummyItemList = parentActivity.getCurrentList();
+        List<DummyItem> dummyItemList = parentActivity.getCurrentList();
+
+        // Only keep items starting fro, tomorrow
+        dummyItemList = this.filterList(dummyItemList);
 
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
@@ -94,6 +92,20 @@ public class MultiDayFragment extends Fragment {
         }
     }
 
+    private List<DummyContent.DummyItem> filterList(List<DummyContent.DummyItem> unfilteredList) {
+        Calendar calendar = Calendar.getInstance();
+        int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
+
+        String dayToExclude = DummyUtils.getCurrentDay(dayToFilter);
+        List<DummyContent.DummyItem> filteredList = new ArrayList<>();
+        for (DummyContent.DummyItem dummyItem:unfilteredList
+                ) {
+            if (!dayToExclude.equals(dummyItem.day))
+                filteredList.add(dummyItem);
+        }
+        return filteredList;
+    }
+
     private List<String> sortAndRotateGroups(HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
         List<String> groupList = new ArrayList<>(dummyItemMap.keySet());
 
@@ -102,7 +114,7 @@ public class MultiDayFragment extends Fragment {
         String[] sortedGroups = dummyItemMap.keySet().toArray(unsortedGroups);
         new DummyUtils<String>(sortedGroups, propertySelector.getComparer()).quickSort();
 
-        // Rotate days (current day should be first)
+        // Rotate days (tomorrow should be first)
         if (propertySelector instanceof DayPropertySelector) {
             String currentDay = DummyUtils.getCurrentDay();
             int k=0;
