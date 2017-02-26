@@ -15,23 +15,23 @@
 
         <Spinner
             android:id="@+id/schoolSpinner"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:spinnerMode="dropdown"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"
-            android:background="#0fddaf"/>
+            android:background="@color/colorBlue"/>
 
         <Spinner
             android:id="@+id/levelSpinner"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:spinnerMode="dropdown"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"
-            android:background="#0fddaf"/>
+            android:background="@color/colorBlue"/>
 
     </LinearLayout>
 

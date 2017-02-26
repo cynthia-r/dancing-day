@@ -41,7 +41,7 @@ public class MultiDaySpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView view = new TextView(context);
-        view.setTextColor(Color.BLACK);
+        view.setTextColor(Color.WHITE);
         view.setGravity(Gravity.CENTER);
         view.setText(groupList.get(position));
 
