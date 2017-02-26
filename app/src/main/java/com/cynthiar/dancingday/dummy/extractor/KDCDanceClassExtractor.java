@@ -3,7 +3,7 @@ package com.cynthiar.dancingday.dummy.extractor;
 import android.content.Context;
 
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
 import com.snowtide.pdf.OutputTarget;
@@ -11,13 +11,10 @@ import com.snowtide.pdf.Page;
 import com.snowtide.pdf.layout.Block;
 import com.snowtide.pdf.layout.BlockParent;
 import com.snowtide.pdf.layout.Line;
-import com.snowtide.pdf.layout.O;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -71,21 +68,21 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     }
 
     @Override
-    public List<DummyContent.DummyItem> Extract(String okay) {
-        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
-        dummyItemList.add(new DummyContent.DummyItem("Monday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyContent.DummyItem("Monday", "6-7 pm", "KDC", "Beinna", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyContent.DummyItem("Monday", "7-8 pm", "KDC", "Elbert/Cody", DanceClassLevel.OpenLevel));
-        dummyItemList.add(new DummyContent.DummyItem("Tuesday", "6-7 pm", "KDC", "Lindsay", DanceClassLevel.Beginner));
-        dummyItemList.add(new DummyContent.DummyItem("Tuesday", "7-8 pm", "KDC", "Mustafa", DanceClassLevel.OpenLevel));
-        dummyItemList.add(new DummyContent.DummyItem("Wednesday", "7-8 pm", "KDC", "Mari", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyContent.DummyItem("Thursday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.Beginner));
-        dummyItemList.add(new DummyContent.DummyItem("Saturday", "10-11:30 am", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
-        dummyItemList.add(new DummyContent.DummyItem("Saturday", "11:30 am-12:30 pm", "KDC", "Jerri", DanceClassLevel.Pointe));
+    public List<DummyItem> Extract(String okay) {
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        dummyItemList.add(new DummyItem("Monday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Monday", "6-7 pm", "KDC", "Beinna", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Monday", "7-8 pm", "KDC", "Elbert/Cody", DanceClassLevel.OpenLevel));
+        dummyItemList.add(new DummyItem("Tuesday", "6-7 pm", "KDC", "Lindsay", DanceClassLevel.Beginner));
+        dummyItemList.add(new DummyItem("Tuesday", "7-8 pm", "KDC", "Mustafa", DanceClassLevel.OpenLevel));
+        dummyItemList.add(new DummyItem("Wednesday", "7-8 pm", "KDC", "Mari", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Thursday", "6-7 pm", "KDC", "Jerri", DanceClassLevel.Beginner));
+        dummyItemList.add(new DummyItem("Saturday", "10-11:30 am", "KDC", "Jerri", DanceClassLevel.BeginnerIntermediate));
+        dummyItemList.add(new DummyItem("Saturday", "11:30 am-12:30 pm", "KDC", "Jerri", DanceClassLevel.Pointe));
         return dummyItemList;
     }
 
-    public List<DummyContent.DummyItem> Extract(File pdfFile) throws IOException {
+    public List<DummyItem> Extract(File pdfFile) throws IOException {
         File file = new File(mContext.getCacheDir(), "kirklandSchedule.pdf");
         //Document pdf = PDF.open(downloadStream, "adult_teen_schedule__1_.pdf");
         Document pdf = PDF.open(file);
@@ -94,7 +91,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
 
         Page page = pdf.getPage(0);
         BlockParent blockParent = page.getTextContent();
-        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
+        List<DummyItem> dummyItemList = new ArrayList<>();
 
         // Front studio table
         Block firstTableBlock = blockParent.getChild(2);
@@ -111,14 +108,14 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     }
 
 
-    private void parseBlock(Block block, List<DummyContent.DummyItem> dummyItemList) {
+    private void parseBlock(Block block, List<DummyItem> dummyItemList) {
 
         // Return if empty block
         if (0 == block.getChildCnt() && 0 == block.getLineCnt())
             return;
 
         // Parse block lines
-        DummyContent.DummyItem dummyItem = null;
+        DummyItem dummyItem = null;
         int lineCount = block.getLineCnt();
         if (0 < lineCount) {
             DanceClassLevel level = DanceClassLevel.Unknown;
@@ -164,7 +161,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
                      ) {
                     time = time.concat(timePart);
                 }
-                dummyItem = new DummyContent.DummyItem("day", time, "KDC", teacher, level);
+                dummyItem = new DummyItem("day", time, "KDC", teacher, level);
             }
         }
 

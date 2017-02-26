@@ -26,16 +26,18 @@ import com.cynthiar.dancingday.data.DataCache;
 import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TodayActivity extends AppCompatActivity
-        implements IDownloadCallback<List<DummyContent.DummyItem>>/*, DataProvider<List<DummyContent.DummyItem>>*/
-        , IConsumerCallback<List<DummyContent.DummyItem>> {
+        implements IDownloadCallback<List<DummyItem>>/*, DataProvider<List<DummyContent.DummyItem>>*/
+        , IConsumerCallback<List<DummyItem>> {
 
     public static final String TODAY_KEY = "Today";
     public static final String TOMORROW_KEY = "Tomorrow";
@@ -58,8 +60,8 @@ public class TodayActivity extends AppCompatActivity
     // downloads with consecutive button clicks.
     private boolean mDownloading = false;
 
-    private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
-    private List<DummyContent.DummyItem> mDummyItemList;
+    private DataCache<List<DummyItem>> mDanceClassCache;
+    private List<DummyItem> mDummyItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +112,12 @@ public class TodayActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        // Setup joda time library
+        JodaTimeAndroid.init(this);
+
         // Setup cache
         DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
-        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider, this);
+        mDanceClassCache = new DataCache<List<DummyItem>>(danceClassDataProvider, this);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         mDummyItemList = new ArrayList<>();
@@ -221,28 +226,28 @@ public class TodayActivity extends AppCompatActivity
         myToolbar.setTitle(title);
     }
 
-    public List<DummyContent.DummyItem> getCurrentList() {
+    public List<DummyItem> getCurrentList() {
         Extractors extractorsInstance = Extractors.getInstance(this);
-        List<List<DummyContent.DummyItem>> schoolLists = new ArrayList<>(extractorsInstance.EXTRACTORS.length);
+        List<List<DummyItem>> schoolLists = new ArrayList<>(extractorsInstance.EXTRACTORS.length);
         for (int i = 0; i < extractorsInstance.EXTRACTORS.length; i++
              ) {
             DanceClassExtractor danceClassExtractor = extractorsInstance.EXTRACTORS[i];
 
             // Continue if the list is not ready
-            List<DummyContent.DummyItem>[] data = new List[1];
+            List<DummyItem>[] data = new List[1];
             if (!mDanceClassCache.Load(danceClassExtractor.getKey(), data)) {
-                schoolLists.add(new ArrayList<DummyContent.DummyItem>());
+                schoolLists.add(new ArrayList<DummyItem>());
                 continue;
             }
 
             // Save the list
-            List<DummyContent.DummyItem> schoolList = data[0];
+            List<DummyItem> schoolList = data[0];
             schoolLists.add(schoolList);
         }
 
         // Merge the school lists
-        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
-        for (List<DummyContent.DummyItem> schoolList:schoolLists
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        for (List<DummyItem> schoolList:schoolLists
              ) {
             dummyItemList.addAll(schoolList);
         }
@@ -251,7 +256,7 @@ public class TodayActivity extends AppCompatActivity
         return dummyItemList;
     }
 
-    public void updateFromDownload(List<DummyContent.DummyItem> result) {
+    public void updateFromDownload(List<DummyItem> result) {
         // Do nothing
     }
 
@@ -264,7 +269,7 @@ public class TodayActivity extends AppCompatActivity
         }
     }
 
-    public void updateFromResult(List<DummyContent.DummyItem> result) {
+    public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.
         /*TextView downloadResultTextView = (TextView) findViewById(R.id.downloadResult);
         downloadResultTextView.setText(result);*/

@@ -6,7 +6,7 @@ import android.util.Pair;
 import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.KDCDanceClassExtractor;
@@ -64,11 +64,11 @@ public class PdfExtractionTest {
         Document pdf = PDF.open(file);
     }
 
-    private class TestDownloadCallback implements IDownloadCallback<List<DummyContent.DummyItem>>,
-            IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> {
+    private class TestDownloadCallback implements IDownloadCallback<List<DummyItem>>,
+            IConsumerCallback<Pair<String, List<DummyItem>>> {
 
         @Override
-        public void updateFromDownload(List<DummyContent.DummyItem> result) {
+        public void updateFromDownload(List<DummyItem> result) {
 
         }
 
@@ -88,13 +88,13 @@ public class PdfExtractionTest {
         }
 
         @Override
-        public void updateFromResult(Pair<String, List<DummyContent.DummyItem>> result) {
+        public void updateFromResult(Pair<String, List<DummyItem>> result) {
 
         }
     }
 
     private void testDownloadAsync(URL url) {
-        DanceClassExtractor danceClassExtractor = new KDCDanceClassExtractor();
+        DanceClassExtractor danceClassExtractor = new KDCDanceClassExtractor(null);
         String key = "KDC";
         TestDownloadCallback testDownloadCallback = new TestDownloadCallback();
         IConsumerCallback testConsumerCallback = new TestDownloadCallback();
@@ -132,7 +132,7 @@ public class PdfExtractionTest {
         if (stream != null) {
             // Converts Stream to String
            // String result = DummyUtils.readAllStream(stream);
-            processedInput = new KDCDanceClassExtractor().processDownload(stream, url.toString());
+            processedInput = new KDCDanceClassExtractor(null).processDownload(stream, url.toString());
         }
     } finally {
         // Close the stream

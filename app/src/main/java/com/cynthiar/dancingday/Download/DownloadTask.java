@@ -1,13 +1,12 @@
 package com.cynthiar.dancingday.download;
 
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 
 import java.io.IOException;
@@ -24,15 +23,15 @@ import javax.net.ssl.HttpsURLConnection;
  * Implementation of AsyncTask designed to fetch data from the network.
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result> {
-    private IDownloadCallback<List<DummyContent.DummyItem>> mCallback;
-    private IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> mConsumerCallback;
+    private IDownloadCallback<List<DummyItem>> mCallback;
+    private IConsumerCallback<Pair<String, List<DummyItem>>> mConsumerCallback;
     private String mKey;
     private DanceClassExtractor mExtractor;
 
    // private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
 
-    public DownloadTask(IDownloadCallback<List<DummyContent.DummyItem>> callback,
-                 IConsumerCallback<Pair<String, List<DummyContent.DummyItem>>> consumerCallback,
+    public DownloadTask(IDownloadCallback<List<DummyItem>> callback,
+                 IConsumerCallback<Pair<String, List<DummyItem>>> consumerCallback,
                  String key, DanceClassExtractor danceClassExtractor) {
         setCallback(callback);
         mKey = key;
@@ -44,7 +43,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);*/
     }
 
-    void setCallback(IDownloadCallback<List<DummyContent.DummyItem>> callback) {
+    void setCallback(IDownloadCallback<List<DummyItem>> callback) {
         mCallback = callback;
     }
 
@@ -54,11 +53,11 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      * This allows you to pass exceptions to the UI thread that were thrown during doInBackground().
      */
     public class Result {
-        public Pair<String, List<DummyContent.DummyItem>> mResultValue;
-        public List<DummyContent.DummyItem> mResultList;
+        public Pair<String, List<DummyItem>> mResultValue;
+        public List<DummyItem> mResultList;
         public Exception mException;
-        public Result(Pair<String, List<DummyContent.DummyItem>> resultValue) { mResultValue = resultValue; }
-        public Result(List<DummyContent.DummyItem> resultList) { mResultList = resultList; }
+        public Result(Pair<String, List<DummyItem>> resultValue) { mResultValue = resultValue; }
+        public Result(List<DummyItem> resultList) { mResultList = resultList; }
         public Result(Exception exception) {
             mException = exception;
         }
@@ -96,7 +95,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                 /*if (resultString != null) {
                     result = new Result(new Pair<>(mKey, resultString));*/
                 if (processedResult != null) {
-                    List<DummyContent.DummyItem> dummyItemList = mExtractor.Extract(processedResult);
+                    List<DummyItem> dummyItemList = mExtractor.Extract(processedResult);
                     result = new Result(new Pair<>(mKey, dummyItemList));
                 } else {
                     throw new IOException("No response received.");

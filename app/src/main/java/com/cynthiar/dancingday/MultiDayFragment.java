@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.filter.MultiDaySpinner;
 import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
@@ -82,6 +82,7 @@ public class MultiDayFragment extends Fragment {
         // Group by the selector
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
+        sortItemMap(dummyItemMap);
         mAllItemMap = dummyItemMap;
         List<String> groupList = sortAndRotateGroups(dummyItemMap, danceClassPropertySelector);
 
@@ -163,6 +164,14 @@ public class MultiDayFragment extends Fragment {
 
         // Return the group list
         return groupList;
+    }
+
+    private void sortItemMap(HashMap<String, List<DummyItem>> dummyItemMap) {
+        for (String key:dummyItemMap.keySet()
+             ) {
+            List<DummyItem> sortedItemList = DummyUtils.sortItemList(dummyItemMap.get(key));
+            dummyItemMap.put(key, sortedItemList);
+        }
     }
 
     private MultiDaySpinnerAdapter setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {

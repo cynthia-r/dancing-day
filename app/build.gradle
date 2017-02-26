@@ -39,6 +39,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     //compile 'org.apache.pdfbox:pdfbox:2.0.2'
     // compile 'com.snowtide:pdfxstream:3.4.0'
+    compile 'net.danlew:android.joda:2.9.5.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/PDFxStream.jar')
 }

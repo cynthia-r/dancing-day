@@ -3,7 +3,10 @@ package com.cynthiar.dancingday.dummy;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+
+import org.joda.time.LocalTime;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,18 +39,18 @@ public class DummyUtils<T> {
         mArray = array;
     }
 
-    public static HashMap<String, List<DummyContent.DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, List<DummyContent.DummyItem> dummyItemList)
+    public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, List<DummyItem> dummyItemList)
     {
-        HashMap<String, List<DummyContent.DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyContent.DummyItem>>();
-        for (DummyContent.DummyItem dummyItem:dummyItemList
+        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyItem>>();
+        for (DummyItem dummyItem:dummyItemList
                 ) {
             // Retrieve the property that we group by on
             String property = danceClassPropertySelector.getProperty(dummyItem);
 
             // Initialize the list of items for this entry if needed
-            List<DummyContent.DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
+            List<DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
             if (null == dummyItemListForGroup)
-                dummyItemListForGroup = new ArrayList<DummyContent.DummyItem>();
+                dummyItemListForGroup = new ArrayList<DummyItem>();
 
             // Add the current item to this entry
             dummyItemListForGroup.add(dummyItem);
@@ -178,5 +181,130 @@ public class DummyUtils<T> {
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    public static DanceClassTime parseTime(String timeString) {
+
+        if (null == timeString || timeString.isEmpty())
+            return null;
+
+        String cleanTimeString = DummyUtils.clean(timeString); // todo remove line breaks if needed
+        String[] timeParts = cleanTimeString.split("-");
+
+        if (null == timeParts || 0 == timeParts.length)
+            return null;
+
+        LocalTime startTime;
+        LocalTime endTime;
+
+        String startTimePart = timeParts[0];
+        TimeParts startTimeParts;
+        TimeParts endTimeParts;
+        startTimeParts = DummyUtils.parseTimeStringIntoParts(startTimePart);
+
+        if (null == startTimeParts)
+            return null;
+
+        if (1 == timeParts.length) {
+            startTime = new LocalTime(startTimeParts.hours, startTimeParts.minutes);
+            endTime = startTime.plusHours(1).plusMinutes(30);
+        }
+        else {
+            String endTimePart = timeParts[1];
+            endTimeParts = DummyUtils.parseTimeStringIntoParts(endTimePart);
+
+            if (null == endTimeParts)
+                return null;
+
+            endTime = new LocalTime(endTimeParts.hours, endTimeParts.minutes);
+
+            if (TimeHalf.Undetermined == startTimeParts.timeHalf) {
+                if (TimeHalf.Pm == endTimeParts.timeHalf
+                        && 12 > startTimeParts.hours) {
+                    startTimeParts.hours += 12;
+                } else if (TimeHalf.Am == endTimeParts.timeHalf
+                                && 12 == startTimeParts.hours) {
+                            startTimeParts.hours = 0;
+                        }
+            }
+            startTime = new LocalTime(startTimeParts.hours, startTimeParts.minutes);
+        }
+
+        DanceClassTime danceClassTime = new DanceClassTime(startTime, endTime);
+        return danceClassTime;
+    }
+
+    private static TimeParts parseTimeStringIntoParts(String timeString) {
+        TimeParts timeParts;
+
+        int indexOfAmIndicator = timeString.toLowerCase().indexOf("am");
+        if (0 <= indexOfAmIndicator) {
+            String timePortion = timeString.substring(0, indexOfAmIndicator);
+            timeParts = DummyUtils.parseTimePart(timePortion, TimeHalf.Am);
+            return timeParts;
+        }
+
+        int indexOfPmIndicator = timeString.toLowerCase().indexOf("pm");
+        if (0 <= indexOfPmIndicator) {
+            String timePortion = timeString.substring(0, indexOfPmIndicator);
+            timeParts = DummyUtils.parseTimePart(timePortion, TimeHalf.Pm);
+            return timeParts;
+        }
+
+        timeParts = DummyUtils.parseTimePart(timeString, TimeHalf.Undetermined);
+        return timeParts;
+    }
+
+    private static TimeParts parseTimePart(String timePortion, TimeHalf timeHalf) {
+        if (null == timePortion || timePortion.isEmpty())
+            return null;
+
+        String[] timePortionParts = timePortion.split(":");
+        String hoursPart = DummyUtils.clean(timePortionParts[0]);
+
+        if (null == hoursPart || hoursPart.isEmpty())
+            return null;
+
+        int hours;
+        try {
+            hours = Integer.parseInt(hoursPart);
+        }
+        catch (Exception e) {
+            return null;
+        }
+        if (TimeHalf.Pm == timeHalf && 12 > hours) // PM -> +12 except for 12PM = noon
+            hours += 12;
+
+        if (TimeHalf.Am == timeHalf && 12 == hours) // 12AM is midnight
+            hours = 0;
+
+        int minutes = 0;
+        if (2 == timePortionParts.length) {
+            String minutesPart = DummyUtils.clean(timePortionParts[1]);
+            if (null != minutesPart && !minutesPart.isEmpty())
+                try {
+                    minutes = Integer.parseInt(minutesPart);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+        }
+        return new TimeParts(hours, minutes, timeHalf);
+    }
+
+    public static List<DummyItem> sortItemList(List<DummyItem> dummyItemList) {
+        DummyItem[] unsortedItems = new DummyItem[dummyItemList.size()];
+        DummyItem[] sortedItems = dummyItemList.toArray(unsortedItems);
+        new DummyUtils<>(sortedItems, new SingleDayDummyItemComparer()).quickSort();
+
+        List<DummyItem> sortedItemList = new ArrayList<>();
+        for (DummyItem dummyItem:sortedItems
+                ) {
+            sortedItemList.add(dummyItem);
+        }
+        return sortedItemList;
+    }
+
+    public static String clean(String inputString) {
+        return inputString.trim().replaceAll("[^a-zA-Z0-9\\-:]", "");
     }
 }

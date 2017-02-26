@@ -4,7 +4,7 @@ import android.widget.Filter;
 
 import com.cynthiar.dancingday.MultiDayFragment;
 import com.cynthiar.dancingday.MultiDayListViewAdapter;
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 
@@ -19,9 +19,9 @@ import java.util.List;
 public class MultiDayFilter extends Filter {
 
     protected MultiDayListViewAdapter mAdapter;
-    protected HashMap<String, List<DummyContent.DummyItem>> mUnfilteredValues;
+    protected HashMap<String, List<DummyItem>> mUnfilteredValues;
 
-    public MultiDayFilter(MultiDayListViewAdapter adapter, HashMap<String, List<DummyContent.DummyItem>> unfilteredValues) {
+    public MultiDayFilter(MultiDayListViewAdapter adapter, HashMap<String, List<DummyItem>> unfilteredValues) {
         mUnfilteredValues = unfilteredValues;
         mAdapter = adapter;
     }
@@ -37,15 +37,15 @@ public class MultiDayFilter extends Filter {
             return filterResults;
         }
 
-        HashMap<String, List<DummyContent.DummyItem>> itemToKeepList = new HashMap<>();
+        HashMap<String, List<DummyItem>> itemToKeepList = new HashMap<>();
         String[] spinnerFilters = filterString.split("\\|"); // TODO separators should be const
 
         // Loop through each item to see if it should be filtered
         for (String groupKey: mUnfilteredValues.keySet()
                 ) {
-            List<DummyContent.DummyItem> itemInGroupList = mUnfilteredValues.get(groupKey);
-            List<DummyContent.DummyItem> filteredListForGroup = new ArrayList<>();
-            for (DummyContent.DummyItem dummyItem: itemInGroupList
+            List<DummyItem> itemInGroupList = mUnfilteredValues.get(groupKey);
+            List<DummyItem> filteredListForGroup = new ArrayList<>();
+            for (DummyItem dummyItem: itemInGroupList
                     ) {
                 // Check if any filter applies
                 boolean shouldFilter = false;
@@ -82,7 +82,7 @@ public class MultiDayFilter extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        mAdapter.setValues((HashMap<String, List<DummyContent.DummyItem>>)results.values);
+        mAdapter.setValues((HashMap<String, List<DummyItem>>)results.values);
         mAdapter.notifyDataSetChanged();
     }
 }

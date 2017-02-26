@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,10 +13,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by Robert on 12/02/2017.
@@ -51,7 +50,7 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public List<DummyContent.DummyItem> Extract(Document doc) throws IOException {
+    public List<DummyItem> Extract(Document doc) throws IOException {
 
         Elements classes = doc.select(mainSelector);
 
@@ -60,10 +59,10 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
             return new ArrayList<>();
 
         // Keep the ballet classes only
-        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
+        List<DummyItem> dummyItemList = new ArrayList<>();
         for (Element classElement:classes
              ) {
-            DummyContent.DummyItem classItem = this.parseClassElement(classElement);
+            DummyItem classItem = this.parseClassElement(classElement);
             if (null != classItem)
                 dummyItemList.add(classItem);
 
@@ -71,7 +70,7 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
         return dummyItemList;
     }
 
-    private DummyContent.DummyItem parseClassElement(Element classElement) {
+    private DummyItem parseClassElement(Element classElement) {
         String classType = "";
         String classText = "";
         String levelText = "";
@@ -153,7 +152,7 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
             String teacher = classTimeText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
 
             // Build and return the class object
-            return new DummyContent.DummyItem(day, time, "ADI", teacher, level);
+            return new DummyItem(day, time, "ADI", teacher, level);
         }
         catch (Exception e) {
             String a = classElement.text();

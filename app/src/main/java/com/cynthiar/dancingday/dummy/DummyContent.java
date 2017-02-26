@@ -2,11 +2,6 @@ package com.cynthiar.dancingday.dummy;
 
 import android.support.v4.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -22,7 +17,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final DummyItem[] ITEMS =
+    public final DummyItem[] ITEMS =
     {
         new DummyItem("Monday","7PM-8:30PM","KDC","Lindsay",DanceClassLevel.BeginnerIntermediate),
         new DummyItem("Tuesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
@@ -34,7 +29,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final DummyItem[] ITEMS2 =
+    public final DummyItem[] ITEMS2 =
     {
         new DummyItem("Monday","7PM-8:30PM","KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
         new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
@@ -45,7 +40,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final DummyItem[] ITEMS3 =
+    public final DummyItem[] ITEMS3 =
     {
             new DummyItem("Wednesday", "6:30PM-8PM","PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
             new DummyItem("Wednesday", "8PM-9PM","KDC","Amy",DanceClassLevel.BeginnerIntermediate),
@@ -70,27 +65,4 @@ public class DummyContent {
         return builder.toString();
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
-    public static class DummyItem {
-        public final String day;
-        public final String time;
-        public final String school;
-        public final String teacher;
-        public final DanceClassLevel level;
-
-        public DummyItem(String day, String time, String school, String teacher, DanceClassLevel level) {
-            this.day = day;
-            this.time = time;
-            this.school = school;
-            this.teacher = teacher;
-            this.level = level;
-        }
-
-        @Override
-        public String toString() {
-            return school;
-        }
-    }
 }

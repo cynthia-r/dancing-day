@@ -5,11 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.List;
@@ -19,11 +17,11 @@ import java.util.List;
  */
 
 public class SingleDayListViewAdapter extends BaseAdapter{
-    private List<DummyContent.DummyItem> mValues;
+    private List<DummyItem> mValues;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public SingleDayListViewAdapter(List<DummyContent.DummyItem> items, Context context) {
+    public SingleDayListViewAdapter(List<DummyItem> items, Context context) {
         mValues = items;
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

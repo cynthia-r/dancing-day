@@ -1,23 +1,17 @@
 package com.cynthiar.dancingday;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.cynthiar.dancingday.dummy.DummyContent;
-import com.cynthiar.dancingday.dummy.DummyContent.DummyItem;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -96,18 +90,21 @@ public class SingleDayFragment extends Fragment {
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);
 
+        // Sort list
+        dummyItemList = DummyUtils.sortItemList(dummyItemList);
+
         // Setup list adapter
         ListView mListView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
     }
 
-    private List<DummyContent.DummyItem> filterList(int position, List<DummyContent.DummyItem> unfilteredList) {
+    private List<DummyItem> filterList(int position, List<DummyItem> unfilteredList) {
         String dayToKeep = (1 == position) ?
                 DummyUtils.getTomorrow()
                 : DummyUtils.getCurrentDay();
-        List<DummyContent.DummyItem> filteredList = new ArrayList<>();
-        for (DummyContent.DummyItem dummyItem:unfilteredList
+        List<DummyItem> filteredList = new ArrayList<>();
+        for (DummyItem dummyItem:unfilteredList
                 ) {
             if (dayToKeep.equals(dummyItem.day))
                 filteredList.add(dummyItem);

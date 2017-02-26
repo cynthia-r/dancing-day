@@ -1,6 +1,6 @@
 package com.cynthiar.dancingday.dummy.propertySelector;
 
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 /**
@@ -8,7 +8,7 @@ import com.cynthiar.dancingday.dummy.DummyUtils;
  */
 
 public interface DanceClassPropertySelector {
-    String getProperty(DummyContent.DummyItem dummyItem);
+    String getProperty(DummyItem dummyItem);
     DummyUtils.IComparer getComparer();
 }
 

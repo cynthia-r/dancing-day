@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.filter.MultiDayFilter;
 
 import java.util.HashMap;
@@ -21,12 +21,12 @@ import java.util.List;
 
 public class MultiDayListViewAdapter extends BaseExpandableListAdapter implements Filterable{
     private List<String> mGroups;
-    private HashMap<String, List<DummyContent.DummyItem>> mValues;
-    private HashMap<String, List<DummyContent.DummyItem>> mAllValues;
+    private HashMap<String, List<DummyItem>> mValues;
+    private HashMap<String, List<DummyItem>> mAllValues;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyContent.DummyItem>> itemMap, HashMap<String, List<DummyContent.DummyItem>> allItemMap, Context context) {
+    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context) {
         mGroups = groupList;
         mValues = itemMap;
         mAllValues = allItemMap;
@@ -34,7 +34,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setValues(HashMap<String, List<DummyContent.DummyItem>> items) {
+    public void setValues(HashMap<String, List<DummyItem>> items) {
         mValues = items;
     }
 
@@ -95,7 +95,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String group = mGroups.get(groupPosition);
-        List<DummyContent.DummyItem> dummyItemList = mValues.get(group);
+        List<DummyItem> dummyItemList = mValues.get(group);
         SingleDayListViewAdapter singleDayListViewAdapter = new SingleDayListViewAdapter(dummyItemList, this.mContext);
         return singleDayListViewAdapter.getView(childPosition, convertView, parent);
     }

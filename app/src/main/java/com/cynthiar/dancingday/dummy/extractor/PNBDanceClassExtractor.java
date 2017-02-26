@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
+import com.cynthiar.dancingday.dummy.DummyItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,17 +54,17 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public List<DummyContent.DummyItem> Extract(Document doc) throws IOException {
+    public List<DummyItem> Extract(Document doc) throws IOException {
         Elements classes = doc.select(mainSelector);
 
         // Return empty list if nothing extracted
         if (null == classes || classes.size() == 0)
             return new ArrayList<>();
 
-        List<DummyContent.DummyItem> dummyItemList = new ArrayList<>();
+        List<DummyItem> dummyItemList = new ArrayList<>();
         for (Element classRow:classes
              ) {
-            List<DummyContent.DummyItem> classItemList = this.parseClassElement(classRow);
+            List<DummyItem> classItemList = this.parseClassElement(classRow);
             if (null != classItemList && classItemList.size() > 0)
                 dummyItemList.addAll(classItemList);
         }
@@ -71,7 +72,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         return dummyItemList;
     }
 
-    private List<DummyContent.DummyItem> parseClassElement(Element classElement) {
+    private List<DummyItem> parseClassElement(Element classElement) {
         try {
 
             //Element firstChild = (Element) classElement.childNode(0);
@@ -88,7 +89,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
             if (level.equals(""))
                 return null;
 
-            List<DummyContent.DummyItem> classItemList = new ArrayList<>();
+            List<DummyItem> classItemList = new ArrayList<>();
             int i=1;   // 6 days (no classes on Sunday)
             while (i <= 6) {
                 nextElement = findNextChildElement(classElement, nextElement.getNextN());
@@ -111,7 +112,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
                     TextNode classInLevelElement = (TextNode)dayClassElement.childNode(j);
                     String classInLevelText = classInLevelElement.text();
                     if (null != classInLevelText && !classInLevelText.equals("")) {
-                        DummyContent.DummyItem classInLevel = parseClassText(classInLevelText, i, level);
+                        DummyItem classInLevel = parseClassText(classInLevelText, i, level);
                         if (null != classInLevel)
                             classItemList.add(classInLevel);
                     }
@@ -126,7 +127,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         }
     }
 
-    private DummyContent.DummyItem parseClassText(String classText, int i, DanceClassLevel level) {
+    private DummyItem parseClassText(String classText, int i, DanceClassLevel level) {
         int indexOfOpeningParenthesis = classText.indexOf('(');
         int indexOfClosingParenthesis = classText.indexOf(')');
         if (indexOfOpeningParenthesis < 0 || indexOfClosingParenthesis <= 0)
@@ -145,7 +146,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         String day = DummyContent.DAYS_OF_THE_WEEK[i-1];
 
         // Build and return the dummy item
-        return new DummyContent.DummyItem(day, time, school, teacher, level);
+        return new DummyItem(day, time, school, teacher, level);
     }
 
     private DanceClassLevel parseLevel(String levelText) {
