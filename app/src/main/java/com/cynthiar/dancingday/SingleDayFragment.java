@@ -11,6 +11,8 @@ import android.widget.ListView;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
+import org.joda.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,9 +106,11 @@ public class SingleDayFragment extends Fragment {
                 DummyUtils.getTomorrow()
                 : DummyUtils.getCurrentDay();
         List<DummyItem> filteredList = new ArrayList<>();
+        LocalTime currentTime = new LocalTime();
         for (DummyItem dummyItem:unfilteredList
                 ) {
-            if (dayToKeep.equals(dummyItem.day))
+            if (dayToKeep.equals(dummyItem.day)
+                    && ((1 == position || (dummyItem.danceClassTime.endTime.isAfter(currentTime)))))
                 filteredList.add(dummyItem);
         }
         return filteredList;
