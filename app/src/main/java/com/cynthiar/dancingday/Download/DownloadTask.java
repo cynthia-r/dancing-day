@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 
@@ -164,14 +165,14 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             connection.setDoInput(true);
             // Open communications link (network traffic occurs here).
             connection.connect();
-            this.publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.CONNECT_SUCCESS));
+            this.publishProgress(new DownloadTaskProgress(IProgress.CONNECT_SUCCESS));
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
-            publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
+            publishProgress(new DownloadTaskProgress(IProgress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
             if (stream != null) {
                 // Converts Stream to String
                 //result = DummyUtils.readAllStream(stream);
@@ -205,7 +206,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         while (numChars < maxLength && readSize != -1) {
             numChars += readSize;
             int pct = (100 * numChars) / maxLength;
-            publishProgress(new DownloadTaskProgress(IDownloadCallback.Progress.PROCESS_INPUT_STREAM_IN_PROGRESS), new DownloadTaskProgress(pct));
+            publishProgress(new DownloadTaskProgress(IProgress.PROCESS_INPUT_STREAM_IN_PROGRESS), new DownloadTaskProgress(pct));
             readSize = reader.read(buffer, numChars, buffer.length - numChars);
         }
         if (numChars != -1) {

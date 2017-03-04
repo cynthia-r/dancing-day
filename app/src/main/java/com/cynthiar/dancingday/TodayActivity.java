@@ -24,9 +24,13 @@ import android.widget.ListView;
 import com.cynthiar.dancingday.data.DanceClassDataProvider;
 import com.cynthiar.dancingday.data.DataCache;
 import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
+import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
@@ -36,12 +40,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodayActivity extends AppCompatActivity
-        implements IDownloadCallback<List<DummyItem>>/*, DataProvider<List<DummyContent.DummyItem>>*/
-        , IConsumerCallback<List<DummyItem>> {
+        implements IDownloadCallback<List<DummyItem>>,
+        IConsumerCallback<List<DummyItem>> {
+
+    private class DistanceComponent implements IConsumerCallback<DistanceResult> {
+
+        private Context mContext;
+
+        // Boolean telling us whether a distance estimate is in progress, so we don't trigger overlapping
+        // estimations with consecutive button clicks.
+        private boolean mEstimating = false;
+
+        public DistanceComponent(Context context){
+            mContext = context;
+        }
+
+        public void updateFromResult(DistanceResult distanceResult) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(distanceResult.getEstimatedTime());
+            DummyUtils.toast(mContext, stringBuilder.toString());
+            mEstimating = false;
+        }
+
+        public boolean isEstimating(){
+            return mEstimating;
+        }
+
+        public void setIsEstimating(boolean isEstimating){
+            mEstimating = isEstimating;
+        }
+    }
 
     public static final String TODAY_KEY = "Today";
     public static final String TOMORROW_KEY = "Tomorrow";
     public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
+    public static final String G_DISTANCE_MATRIX_API_KEY = "AIzaSyAciWtCnB8EdadekShFPBzCirE065e2inQ";
+
     private String[] timeFrames;
 
     private DrawerLayout mDrawerLayout;
@@ -62,6 +96,9 @@ public class TodayActivity extends AppCompatActivity
 
     private DataCache<List<DummyItem>> mDanceClassCache;
     private List<DummyItem> mDummyItemList;
+
+    // Distance component
+    private DistanceComponent mDistanceComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +164,10 @@ public class TodayActivity extends AppCompatActivity
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
+
+        // Setup the distance component
+        mDistanceComponent = new DistanceComponent(this);
+        mNetworkFragment.setEstimateConsumerCallback(mDistanceComponent);
     }
 
     @Override
@@ -262,10 +303,19 @@ public class TodayActivity extends AppCompatActivity
 
     public void startDownload(String key) {
         if (!mDownloading && mNetworkFragment != null) {
-            // Execute the async download.
+            // Execute the async download
             DanceClassExtractor danceClassExtractor = Extractors.getInstance(this).getExtractor(key);
             mNetworkFragment.startDownload(key, danceClassExtractor);
             mDownloading = true;
+        }
+    }
+
+    public void getEstimate(View view) {
+        if (!mDistanceComponent.isEstimating() && mNetworkFragment != null) {
+            // Execute the async estimate
+            DistanceQuery distanceQuery = new DistanceQuery("fpp", "bar");
+            mNetworkFragment.startEstimate(distanceQuery);
+            mDistanceComponent.setIsEstimating(true);
         }
     }
 
@@ -301,19 +351,19 @@ public class TodayActivity extends AppCompatActivity
     public void onProgressUpdate(DownloadTaskProgress progressCode, DownloadTaskProgress percentComplete) {
         switch(progressCode.GetProgressCode()) {
             // You can add UI behavior for progress updates here.
-            case Progress.ERROR:
+            case IProgress.ERROR:
 
                 break;
-            case Progress.CONNECT_SUCCESS:
+            case IProgress.CONNECT_SUCCESS:
 
                 break;
-            case Progress.GET_INPUT_STREAM_SUCCESS:
+            case IProgress.GET_INPUT_STREAM_SUCCESS:
 
                 break;
-            case Progress.PROCESS_INPUT_STREAM_IN_PROGRESS:
+            case IProgress.PROCESS_INPUT_STREAM_IN_PROGRESS:
 
                 break;
-            case Progress.PROCESS_INPUT_STREAM_SUCCESS:
+            case IProgress.PROCESS_INPUT_STREAM_SUCCESS:
 
                 break;
         }

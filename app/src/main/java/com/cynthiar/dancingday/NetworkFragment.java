@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
+import com.cynthiar.dancingday.distance.matrix.DistanceTask;
 import com.cynthiar.dancingday.download.DownloadTask;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
@@ -24,6 +26,9 @@ public class NetworkFragment extends Fragment {
     private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
     //private String mUrlString;
+
+    private IConsumerCallback mEstimateConsumerCallback;
+    private DistanceTask mDistanceTask;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
@@ -48,6 +53,10 @@ public class NetworkFragment extends Fragment {
 
     public void setConsumerCallback(IConsumerCallback consumerCallback) {
         mConsumerCallback = consumerCallback;
+    }
+
+    public void setEstimateConsumerCallback(IConsumerCallback consumerCallback) {
+        mEstimateConsumerCallback = consumerCallback;
     }
 
     @Override
@@ -102,4 +111,21 @@ public class NetworkFragment extends Fragment {
         }
     }
 
+    /**
+     * Start non-blocking execution of DistanceTask.
+     */
+    public void startEstimate(DistanceQuery distanceQuery) {
+        cancelEstimate();
+        mDistanceTask = new DistanceTask(mEstimateConsumerCallback);
+        mDistanceTask.execute(distanceQuery);
+    }
+
+    /**
+     * Cancel (and interrupt if necessary) any ongoing DistanceTask execution.
+     */
+    public void cancelEstimate() {
+        if (mDistanceTask != null) {
+            mDistanceTask.cancel(true);
+        }
+    }
 }

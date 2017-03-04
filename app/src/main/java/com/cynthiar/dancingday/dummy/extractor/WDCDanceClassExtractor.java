@@ -57,22 +57,20 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
         if (null == classes || classes.size() == 0) {
             List<DummyItem> dummyItemList = new ArrayList<>();
             dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("10:00-11:30am"), "WDC", "Heather Dawson", DanceClassLevel.BeginnerIntermediate));
-            dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("4:00-5:30 pm"), "WDC", "Erin Krall", DanceClassLevel.BeginnerIntermediate));
-            /*dummyItemList.add(new DummyContent.DummyItem("Monday", "7-8 pm", "WDC", "Elbert/Cody", "Open Level"));
-            dummyItemList.add(new DummyContent.DummyItem("Tuesday", "6-7 pm", "WDC", "Lindsay", "Beginner"));
-            dummyItemList.add(new DummyContent.DummyItem("Tuesday", "7-8 pm", "WDC", "Mustafa", "Open Level"));
-            dummyItemList.add(new DummyContent.DummyItem("Wednesday", "7-8 pm", "WDC", "Mari", "Beg/Int"));
-            dummyItemList.add(new DummyContent.DummyItem("Thursday", "6-7 pm", "WDC", "Jerri", "Beginner"));
-            dummyItemList.add(new DummyContent.DummyItem("Saturday", "10-11:30 am", "WDC", "Jerri", "Beg/Int"));
-            dummyItemList.add(new DummyContent.DummyItem("Saturday", "11:30 am-12:30 pm", "WDC", "Jerri", "Pointe"));*/
+            dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("4:00-5:30 pm"), "WDC", "Erin Krall", DanceClassLevel.Intermediate));
+            dummyItemList.add(new DummyItem("Tuesday", DanceClassTime.create("4:00-5:30pm"), "WDC", "Thomas Phelan", DanceClassLevel.Advanced));
+            dummyItemList.add(new DummyItem("Tuesday", DanceClassTime.create("5:30-6:30pm"), "WDC", "Sandy Brown", DanceClassLevel.Beginner));
+            dummyItemList.add(new DummyItem("Wednesday", DanceClassTime.create("5:30-6:30pm"), "WDC", "Kim Gockel", DanceClassLevel.Beginner));
+            dummyItemList.add(new DummyItem("Thursday", DanceClassTime.create("4:00-5:30pm"), "WDC", "Thomas Phelan", DanceClassLevel.Advanced));
+            dummyItemList.add(new DummyItem("Thursday", DanceClassTime.create("5:30-6:30pm"), "WDC", "Sandy Brown", DanceClassLevel.Beginner));
+            dummyItemList.add(new DummyItem("Friday", DanceClassTime.create("6:30-8:00pm"), "WDC", "Kim Gockel", DanceClassLevel.Intermediate));
+            dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("10:00-11:30am"), "WDC", "Kim Gockel", DanceClassLevel.Intermediate));
             dummyItemList.add(new DummyItem("Sunday", DanceClassTime.create("1:00-2:00 pm"), "WDC", "Melissa Brown", DanceClassLevel.Beginner));
             return dummyItemList;
         }
         else {
             DummyUtils.toast(mContext, "WDC found something!");
         }
-
-
 
         List<DummyItem> dummyItemList = new ArrayList<>();
         for (Element classRow:classes
