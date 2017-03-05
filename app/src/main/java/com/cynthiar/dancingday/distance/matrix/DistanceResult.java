@@ -40,6 +40,8 @@ public class DistanceResult {
     }
 
     private void initialize(String distanceMatrixResponseString) {
+        if (null == distanceMatrixResponseString || distanceMatrixResponseString.isEmpty())
+            return;
         try {
             // Get the JSON object
             JSONObject jsonObject = new JSONObject(distanceMatrixResponseString);

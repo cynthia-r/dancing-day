@@ -5,6 +5,7 @@ import android.content.Context;
 import com.cynthiar.dancingday.dummy.DanceClassLevel;
 import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.Schools;
 import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 
 import org.jsoup.Jsoup;
@@ -141,7 +142,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         String teacher = classText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
 
         // Get the school
-        String school = getSchool();
+        Schools.DanceSchool school = getSchool();
 
         // Get the day
         String day = DummyContent.DAYS_OF_THE_WEEK[i-1];
@@ -162,12 +163,12 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
         return DanceClassLevel.Unknown;
     }
 
-    private String getSchool() {
+    private Schools.DanceSchool getSchool() {
         if (0 == mSchoolNumber)
-            return "PNB Seattle";
+            return Schools.PNB_SEATTLE_SCHOOL;
         if (1 == mSchoolNumber)
-            return "PNB Bellevue";
-        return "";
+            return Schools.PNB_BELLEVUE_SCHOOL;
+        return null;
     }
 
     private NextElement findNextChildElement(Element parentElement, int n) {

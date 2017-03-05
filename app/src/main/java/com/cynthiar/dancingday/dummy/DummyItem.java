@@ -7,12 +7,13 @@ import com.cynthiar.dancingday.dummy.time.DanceClassTime;
  */
 public class DummyItem {
     public final String day;
-    public final String school;
+    //public final String school;
     public final String teacher;
     public final DanceClassLevel level;
-    public final DanceClassTime danceClassTime; // TODO set at constructor time
+    public final DanceClassTime danceClassTime;
+    public Schools.DanceSchool school;
 
-    public DummyItem(String day, DanceClassTime time, String school, String teacher, DanceClassLevel level) {
+    public DummyItem(String day, DanceClassTime time, Schools.DanceSchool school, String teacher, DanceClassLevel level) {
         this.day = day;
         this.danceClassTime = time;
         this.school = school;
@@ -22,6 +23,6 @@ public class DummyItem {
 
     @Override
     public String toString() {
-        return school;
+        return school.Name;
     }
 }

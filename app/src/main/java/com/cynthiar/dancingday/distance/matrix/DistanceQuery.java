@@ -17,4 +17,32 @@ public class DistanceQuery {
         mOrigins = new String[] { origin };
         mDestinations = new String[] { destination };
     }
+
+    public String[] getOrigins() {
+        return mOrigins;
+    }
+
+    public String[] getDestinations() {
+        return mDestinations;
+    }
+
+    public String getMode() {
+        return mMode;
+    }
+
+    public String getLanguage() {
+        return mLanguage;
+    }
+
+    public String getUnit() {
+        return mUnit;
+    }
+
+    public String getDepartureTime() {
+        return mDepartureTime;
+    }
+
+    public String getTrafficModel() {
+        return mTrafficModel;
+    }
 }

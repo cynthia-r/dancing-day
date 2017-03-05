@@ -310,9 +310,15 @@ public class TodayActivity extends AppCompatActivity
     }
 
     public void getEstimate(View view) {
+        String destinationAddress = "8001 Greenwood Ave N, Seattle, WA 98103";
+        getEstimate(destinationAddress);
+    }
+
+    public void getEstimate(String destinationAddress) {
         if (!mDistanceComponent.isEstimating() && mNetworkFragment != null) {
             // Execute the async estimate
-            DistanceQuery distanceQuery = new DistanceQuery("fpp", "bar");
+            String originAddress = "3933 Lake Washington Blvd NE #200, Kirkland, WA 98033";
+            DistanceQuery distanceQuery = new DistanceQuery(originAddress, destinationAddress);
             mNetworkFragment.startEstimate(distanceQuery);
             mDistanceComponent.setIsEstimating(true);
         }

@@ -23,7 +23,8 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by Robert on 08/02/2017.
  * Implementation of AsyncTask designed to fetch data from the network.
  */
-public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result> {
+public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result>
+    implements IHttpUser {
     private IDownloadCallback<List<DummyItem>> mCallback;
     private IConsumerCallback<Pair<String, List<DummyItem>>> mConsumerCallback;
     private String mKey;
@@ -46,6 +47,22 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
 
     void setCallback(IDownloadCallback<List<DummyItem>> callback) {
         mCallback = callback;
+    }
+
+    public void onProgress(int... progressCodes) {
+        DownloadTaskProgress[] downloadTaskProgresses = new DownloadTaskProgress[progressCodes.length];
+        for (int i=0; i < progressCodes.length; i++)
+            downloadTaskProgresses[i] = new DownloadTaskProgress(progressCodes[i]);
+        this.publishProgress(downloadTaskProgresses);
+    }
+
+    public Object processStream(InputStream inputStream, URL url){
+        try {
+            return mExtractor.processDownload(inputStream, url.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -88,11 +105,11 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     protected DownloadTask.Result doInBackground(String... urls) {
         Result result = null;
         if (!isCancelled() && urls != null && urls.length > 0) {
-        //if (!isCancelled()) {
             String urlString = urls[0];
             try {
                 URL url = new URL(urlString);
-                Object processedResult = downloadUrl(url);
+                HttpClient httpClient = new HttpClient(this);
+                Object processedResult = httpClient.getResponse(url);
                 /*if (resultString != null) {
                     result = new Result(new Pair<>(mKey, resultString));*/
                 if (processedResult != null) {
@@ -135,61 +152,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     protected void onCancelled(Result result) {
     }
 
-    /**
-     * Given a URL, sets up a connection and gets the HTTP response body from the server.
-     * If the network request is successful, it returns the response body in String form. Otherwise,
-     * it will throw an IOException.
-     */
-    public Object downloadUrl(URL url) throws IOException {
-    //public String downloadUrl() throws IOException {
-        InputStream stream = null;
-        HttpURLConnection connection = null;
-        //HttpURLConnection httpConnection = null;
-        //HttpsURLConnection httpsConnection = null;
-        String result = null;
-        Object processedInput = null;
-        try {
-            //URL url = new URL(mUrl);
-            if (url.getProtocol().equals("https"))
-                connection = (HttpsURLConnection) url.openConnection();
-            else
-                connection = (HttpURLConnection) url.openConnection();
-            // Timeout for reading InputStream arbitrarily set to 3000ms.
-            connection.setReadTimeout(600000);
-            // Timeout for connection.connect() arbitrarily set to 3000ms.
-            connection.setConnectTimeout(600000);
-            // For this use case, set HTTP method to GET.
-            connection.setRequestMethod("GET");
-            // Already true by default but setting just in case; needs to be true since this request
-            // is carrying an input (response) body.
-            connection.setDoInput(true);
-            // Open communications link (network traffic occurs here).
-            connection.connect();
-            this.publishProgress(new DownloadTaskProgress(IProgress.CONNECT_SUCCESS));
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
-            // Retrieve the response body as an InputStream.
-            stream = connection.getInputStream();
-            publishProgress(new DownloadTaskProgress(IProgress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
-            if (stream != null) {
-                // Converts Stream to String
-                //result = DummyUtils.readAllStream(stream);
-                processedInput = mExtractor.processDownload(stream, url.toString());
-            }
-        } finally {
-            // Close the stream
-            if (stream != null)
-                stream.close();
 
-            // Disconnect HTTPS connection.
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        return processedInput;
-    }
 
     /**
      * Converts the contents of an InputStream to a String.

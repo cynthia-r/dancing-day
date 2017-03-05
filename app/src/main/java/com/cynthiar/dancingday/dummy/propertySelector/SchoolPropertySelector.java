@@ -6,7 +6,7 @@ import com.cynthiar.dancingday.dummy.comparer.StringComparer;
 
 public class SchoolPropertySelector implements DanceClassPropertySelector {
     public String getProperty(DummyItem dummyItem){
-        return dummyItem.school;
+        return dummyItem.school.Key;
     }
 
     @Override

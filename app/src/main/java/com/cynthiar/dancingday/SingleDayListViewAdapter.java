@@ -62,11 +62,13 @@ public class SingleDayListViewAdapter extends BaseAdapter{
         TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
         TextView mLevelView = (TextView) convertView.findViewById(R.id.level);
 
-        DanceClassTime danceClassTime = mValues.get(position).danceClassTime;
+        final DummyItem dummyItem = mValues.get(position);
+
+        DanceClassTime danceClassTime = dummyItem.danceClassTime;
         String time = null == danceClassTime ? "" : danceClassTime.toString();
 
         mTimeView.setText(time);
-        mSchoolView.setText(mValues.get(position).school);
+        mSchoolView.setText(mValues.get(position).school.Key);
         mLevelView.setText(mValues.get(position).level.toString());
         mTeacherView.setText(mValues.get(position).teacher);
 
@@ -77,7 +79,9 @@ public class SingleDayListViewAdapter extends BaseAdapter{
 
             @Override
             public void onClick(View v) {
-                DummyUtils.toast(mContext, "Doing something");
+            TodayActivity parentActivity = (TodayActivity)mContext;
+            parentActivity.getEstimate(dummyItem.school.Address);
+            //DummyUtils.toast(mContext, "Doing something");
             }
 
         });

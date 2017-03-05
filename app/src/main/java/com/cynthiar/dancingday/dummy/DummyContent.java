@@ -19,7 +19,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public final DummyItem[] ITEMS =
+    /*public final DummyItem[] ITEMS =
     {
         new DummyItem("Monday", DanceClassTime.create("7PM-8:30PM"),"KDC","Lindsay",DanceClassLevel.BeginnerIntermediate),
         new DummyItem("Tuesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
@@ -31,7 +31,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public final DummyItem[] ITEMS2 =
+    /*public final DummyItem[] ITEMS2 =
     {
         new DummyItem("Monday",DanceClassTime.create("7PM-8:30PM"),"KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
         new DummyItem("Wednesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
@@ -42,7 +42,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public final DummyItem[] ITEMS3 =
+    /*public final DummyItem[] ITEMS3 =
     {
             new DummyItem("Wednesday", DanceClassTime.create("6:30PM-8PM"),"PNB Bellevue","Landis",DanceClassLevel.BeginnerIntermediate),
             new DummyItem("Wednesday", DanceClassTime.create("8PM-9PM"),"KDC","Amy",DanceClassLevel.BeginnerIntermediate),
@@ -50,7 +50,7 @@ public class DummyContent {
             new DummyItem("Saturday",DanceClassTime.create("10AM-11:30AM"),"PNB Seattle","Landis",DanceClassLevel.BeginnerIntermediate),
             new DummyItem("Saturday",DanceClassTime.create("10AM-11:30AM"),"KDC","Jerri",DanceClassLevel.BeginnerIntermediate),
             new DummyItem("Saturday",DanceClassTime.create("11-20AM-12:50PM"),"ADI","Kara",DanceClassLevel.Intermediate)
-    };
+    };*/
 
     public static final Pair<String, String>[] CLASS_AND_SELECTORS = new Pair[]{
             new Pair<>("https://www.americandanceinstitute.com/ballet-classes/",
