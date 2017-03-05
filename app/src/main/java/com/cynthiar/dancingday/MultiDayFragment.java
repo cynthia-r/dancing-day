@@ -29,7 +29,6 @@ import java.util.List;
 public class MultiDayFragment extends Fragment {
 
     // TODO: Customize parameters
-    private int mColumnCount = 1;
     private Spinner mSchoolSpinner;
     private Spinner mLevelSpinner;
     private HashMap<String, List<DummyItem>> mAllItemMap;
@@ -37,8 +36,6 @@ public class MultiDayFragment extends Fragment {
     public static final String ALL_KEY = "All";
     public static final String SCHOOL_SPINNER_PREFIX = "SCHOOL";
     public static final String LEVEL_SPINNER_PREFIX = "LEVEL";
-
-//    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -51,28 +48,17 @@ public class MultiDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.multi_day_fragment_item_list, container, false);
-
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set the adapter
-        //setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, DummyContent.ITEMS2));
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        int itemCount;
-        if (getArguments() != null) {
-            //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
-        else
-            itemCount = 1;
 
         TodayActivity parentActivity = (TodayActivity)getActivity();
 

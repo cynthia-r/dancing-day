@@ -30,8 +30,6 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     private String mKey;
     private DanceClassExtractor mExtractor;
 
-   // private DataCache<List<DummyContent.DummyItem>> mDanceClassCache;
-
     public DownloadTask(IDownloadCallback<List<DummyItem>> callback,
                  IConsumerCallback<Pair<String, List<DummyItem>>> consumerCallback,
                  String key, DanceClassExtractor danceClassExtractor) {
@@ -39,10 +37,6 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         mKey = key;
         mConsumerCallback = consumerCallback;
         mExtractor = danceClassExtractor;
-
-        // Setup cache
-        /*DataProvider<List<DummyContent.DummyItem>> danceClassDataProvider = new DanceClassDataProvider(this);
-        mDanceClassCache = new DataCache<List<DummyContent.DummyItem>>(danceClassDataProvider);*/
     }
 
     void setCallback(IDownloadCallback<List<DummyItem>> callback) {

@@ -88,7 +88,9 @@ public class Extractors {
         propertyList.add(MultiDayFragment.ALL_KEY.concat(" levels"));
         for (DanceClassLevel danceClassLevel : DanceClassLevel.values()
                 ) {
-            propertyList.add(danceClassLevel.toString());
+            if ((DanceClassLevel.Unknown != danceClassLevel)
+                && (DanceClassLevel.Children != danceClassLevel))
+                propertyList.add(danceClassLevel.toString());
         }
         return propertyList;
     }
