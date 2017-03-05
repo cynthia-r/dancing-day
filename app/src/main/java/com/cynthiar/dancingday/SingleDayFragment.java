@@ -26,12 +26,6 @@ public class SingleDayFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static final String ARG_NUMBER = "number";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    //private DataCache<List<DummyItem>> mDataCache;
-    //private OnListFragmentIn
-    // teractionListener mListener;
-    private List<DummyItem> mItemList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,21 +35,12 @@ public class SingleDayFragment extends Fragment {
     }
 
 
-    public static SingleDayFragment newInstance(int position/*, DataCache<List<DummyItem>> dataCache*/, List<DummyItem> dummyItemList) {
+    public static SingleDayFragment newInstance(int position) {
         SingleDayFragment fragment = new SingleDayFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_NUMBER, position);
         fragment.setArguments(args);
-        //fragment.setDataCache(dataCache);
-        fragment.setData(dummyItemList);
         return fragment;
-    }
-
-    /*private void setDataCache(DataCache<List<DummyItem>> dataCache) {
-        mDataCache = dataCache;
-    }*/
-    public void setData(List<DummyItem> data) {
-        mItemList = data;
     }
 
     @Override
@@ -68,8 +53,6 @@ public class SingleDayFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -80,7 +63,6 @@ public class SingleDayFragment extends Fragment {
 
         int position;
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             position = getArguments().getInt(ARG_NUMBER);
         }
         else
@@ -91,6 +73,12 @@ public class SingleDayFragment extends Fragment {
 
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);
+
+        // Display empty state if no results
+        if (0 == dummyItemList.size()) {
+            parentActivity.displayEmptyList();
+            return;
+        }
 
         // Sort list
         dummyItemList = DummyUtils.sortItemList(dummyItemList);
@@ -115,16 +103,6 @@ public class SingleDayFragment extends Fragment {
         }
         return filteredList;
     }
-
-
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
-        return view;
-    }*/
-
 
     /*@Override
     public void onAttach(Context context) {

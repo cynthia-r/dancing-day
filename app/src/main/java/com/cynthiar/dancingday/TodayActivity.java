@@ -99,6 +99,8 @@ public class TodayActivity extends AppCompatActivity
     // Distance component
     private DistanceComponent mDistanceComponent;
 
+    private boolean mAllListsLoaded;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,7 +159,7 @@ public class TodayActivity extends AppCompatActivity
 
         // Add the fragment to the 'fragment_container' FrameLayout
         mDummyItemList = new ArrayList<>();
-        SingleDayFragment firstFragment = SingleDayFragment.newInstance(0, mDummyItemList);
+        SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
         // Setup the network fragment
@@ -226,24 +228,26 @@ public class TodayActivity extends AppCompatActivity
         String fragmentTag;
         if (position < 2)
         {
-            fragment = SingleDayFragment.newInstance(position, mDummyItemList);
+            fragment = SingleDayFragment.newInstance(position);
             fragmentTag = SingleDayFragment.TAG;
         }
         else
         {
             fragment = new MultiDayFragment();
-            fragmentTag = "MultiDayFragment";
+            fragmentTag = MultiDayFragment.TAG;
         }
 
-        /*Bundle args = new Bundle();
-        args.putInt(SingleDayFragment.ARG_NUMBER, position + 1);
-        fragment.setArguments(args);*/
+        // Switch fragment
+        this.switchToFragment(fragment, fragmentTag);
 
-        /*// Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_frame, fragment)
-                .commit();*/
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(timeFrames[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void switchToFragment(Fragment fragment, String fragmentTag) {
+        // Start fragment transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -253,11 +257,6 @@ public class TodayActivity extends AppCompatActivity
 
         // Commit the transaction
         transaction.commit();
-
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(timeFrames[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     @Override
@@ -269,6 +268,7 @@ public class TodayActivity extends AppCompatActivity
     public List<DummyItem> getCurrentList() {
         Extractors extractorsInstance = Extractors.getInstance(this);
         List<List<DummyItem>> schoolLists = new ArrayList<>(extractorsInstance.EXTRACTORS.length);
+        mAllListsLoaded = true;
         for (int i = 0; i < extractorsInstance.EXTRACTORS.length; i++
              ) {
             DanceClassExtractor danceClassExtractor = extractorsInstance.EXTRACTORS[i];
@@ -277,6 +277,7 @@ public class TodayActivity extends AppCompatActivity
             List<DummyItem>[] data = new List[1];
             if (!mDanceClassCache.Load(danceClassExtractor.getKey(), data)) {
                 schoolLists.add(new ArrayList<DummyItem>());
+                mAllListsLoaded = false;
                 continue;
             }
 
@@ -291,9 +292,21 @@ public class TodayActivity extends AppCompatActivity
              ) {
             dummyItemList.addAll(schoolList);
         }
-        // TODO sort by time
 
+        // Hide loading circle when all lists are loaded
+        if (mAllListsLoaded) {
+            findViewById(R.id.loadingCircle).setVisibility(View.GONE);
+        }
+
+        // Return the list of dummy items
         return dummyItemList;
+    }
+
+    public void displayEmptyList() {
+        if (mAllListsLoaded) {
+            Fragment fragment = new EmptyFragment();
+            this.switchToFragment(fragment, EmptyFragment.TAG);
+        }
     }
 
     public void updateFromDownload(List<DummyItem> result) {
@@ -326,23 +339,25 @@ public class TodayActivity extends AppCompatActivity
 
     public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.
-        /*TextView downloadResultTextView = (TextView) findViewById(R.id.downloadResult);
-        downloadResultTextView.setText(result);*/
-        mDummyItemList = result;
 
         // Reload current fragment
-        Fragment frg = null;
-        frg = getSupportFragmentManager().findFragmentByTag(SingleDayFragment.TAG);
+        Fragment myFragment = getSupportFragmentManager().findFragmentByTag(SingleDayFragment.TAG);
+        if (myFragment != null && myFragment.isVisible()) {
+            this.reloadFragment(myFragment);
+        }
+        else {
+            myFragment = getSupportFragmentManager().findFragmentByTag(MultiDayFragment.TAG);
+            if (myFragment != null && myFragment.isVisible()) {
+                this.reloadFragment(myFragment);
+            }
+        }
+    }
+
+    private void reloadFragment(Fragment fragment) {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.detach(frg);
+        ft.detach(fragment);
 
-        // TODO reload MultiDayFragment if multi day
-
-        // setArguments();
-        SingleDayFragment singleDayFragment = (SingleDayFragment)frg;
-        singleDayFragment.setData(result);
-
-        ft.attach(frg);
+        ft.attach(fragment);
         ft.commit();
     }
 

@@ -33,6 +33,7 @@ public class MultiDayFragment extends Fragment {
     private Spinner mLevelSpinner;
     private HashMap<String, List<DummyItem>> mAllItemMap;
 
+    public static final String TAG = "MultiDayFragment";
     public static final String ALL_KEY = "All";
     public static final String SCHOOL_SPINNER_PREFIX = "SCHOOL";
     public static final String LEVEL_SPINNER_PREFIX = "LEVEL";
@@ -65,6 +66,12 @@ public class MultiDayFragment extends Fragment {
         // Retrieve list of items
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
 
+        // Display empty state if no results
+        if (0 == dummyItemList.size()) {
+            parentActivity.displayEmptyList();
+            return;
+        }
+
         // Group by the selector
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
@@ -78,8 +85,7 @@ public class MultiDayFragment extends Fragment {
         mListView.setAdapter(adapter);
 
         // Expand groups the first time
-        for (int i=0; i < groupList.size(); i++)
-        {
+        for (int i=0; i < groupList.size(); i++) {
             mListView.expandGroup(i);
         }
 

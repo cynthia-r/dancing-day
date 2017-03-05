@@ -17,7 +17,7 @@ public class DataCache<T> implements IConsumerCallback<Pair<String, T>> {
     public static final int CACHE_EXPIRY_IN_MINUTES = 15;
 
     public DataCache(DataProvider<Pair<String, T>> dataProvider, IConsumerCallback<T> consumerCallback) {
-        mCache = new HashMap<String, Pair<T, Date>>();
+        mCache = new HashMap<>();
         mDataProvider = dataProvider;
         mDataProvider.setConsumerCallback(this);
         mConsumerCallback = consumerCallback;
