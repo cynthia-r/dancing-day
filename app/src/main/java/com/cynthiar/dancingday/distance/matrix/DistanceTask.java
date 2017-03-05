@@ -12,9 +12,11 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 
 public class DistanceTask extends AsyncTask<DistanceQuery, DistanceTaskProgress, DistanceResult> {
 
+    private static final String G_DISTANCE_MATRIX_API_KEY = "AIzaSyAciWtCnB8EdadekShFPBzCirE065e2inQ";
     private IConsumerCallback<DistanceResult> mConsumerCallback;
     /*private String mOrigin;
     private String mDestination;*/
+    private DistanceMatrixClient mDistanceMatrixClient = new DistanceMatrixClient(DistanceTask.G_DISTANCE_MATRIX_API_KEY);
 
     public DistanceTask(IConsumerCallback<DistanceResult> consumerCallback) {
         mConsumerCallback = consumerCallback;
@@ -22,7 +24,7 @@ public class DistanceTask extends AsyncTask<DistanceQuery, DistanceTaskProgress,
 
     @Override
     protected DistanceResult doInBackground(DistanceQuery... params) {
-        return new DistanceResult(1);
+        return mDistanceMatrixClient.getDistance(params[0]);
     }
 
     @Override

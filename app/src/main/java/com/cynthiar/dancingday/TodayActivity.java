@@ -74,7 +74,6 @@ public class TodayActivity extends AppCompatActivity
     public static final String TODAY_KEY = "Today";
     public static final String TOMORROW_KEY = "Tomorrow";
     public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
-    public static final String G_DISTANCE_MATRIX_API_KEY = "AIzaSyAciWtCnB8EdadekShFPBzCirE065e2inQ";
 
     private String[] timeFrames;
 

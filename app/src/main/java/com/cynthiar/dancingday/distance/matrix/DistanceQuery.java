@@ -5,11 +5,16 @@ package com.cynthiar.dancingday.distance.matrix;
  */
 
 public class DistanceQuery {
-    private String mOrigin;
-    private String mDestination;
+    private String[] mOrigins;
+    private String[] mDestinations;
+    private String mMode = "driving"; // Only support driving
+    private String mLanguage = "en";
+    private String mUnit = "metrics";
+    private String mDepartureTime = "now";
+    private String mTrafficModel = "best_guess";
 
     public DistanceQuery(String origin, String destination){
-        mOrigin = origin;
-        mDestination = destination;
+        mOrigins = new String[] { origin };
+        mDestinations = new String[] { destination };
     }
 }
