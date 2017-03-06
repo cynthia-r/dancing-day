@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.dummy.time.TimeHalf;
 import com.cynthiar.dancingday.dummy.time.TimeParts;
@@ -60,6 +61,61 @@ public class DummyUtils<T> {
             dummyItemDictionary.put(property, dummyItemListForGroup);
         }
         return dummyItemDictionary;
+    }
+
+    public static List<String> sortAndRotateGroups(Context context, HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
+        List<String> groupList = new ArrayList<>(dummyItemMap.keySet());
+
+        // Sort the list
+        String[] unsortedGroups = new String[groupList.size()];
+        String[] sortedGroups = dummyItemMap.keySet().toArray(unsortedGroups);
+        new DummyUtils<>(sortedGroups, propertySelector.getComparer()).quickSort();
+
+        // Rotate days (tomorrow should be first)
+        if (propertySelector instanceof DayPropertySelector) {
+            String tomorrow = DummyUtils.getTomorrow();
+            // Find the position of tomorrow
+            int k=0;
+            while (k < sortedGroups.length && !sortedGroups[k].equals(tomorrow)) {
+                k++;
+            }
+            if (k == sortedGroups.length) {
+                DummyUtils.toast(context, "Tomorrow not found");
+            }
+
+            // Copy to the list back again
+            groupList = new ArrayList<>();
+            for (int j=k; j < sortedGroups.length; j++
+                    ) {
+                String group = sortedGroups[j];
+                groupList.add(group);
+            }
+            for (int j=0; j < k; j++
+                    ) {
+                String group = sortedGroups[j];
+                groupList.add(group);
+            }
+        }
+        else {
+            // Just copy the list back again
+            groupList = new ArrayList<>();
+            for (int j=0; j < sortedGroups.length; j++
+                    ) {
+                String group = sortedGroups[j];
+                groupList.add(group);
+            }
+        }
+
+        // Return the group list
+        return groupList;
+    }
+
+    public static void sortItemMap(HashMap<String, List<DummyItem>> dummyItemMap) {
+        for (String key:dummyItemMap.keySet()
+                ) {
+            List<DummyItem> sortedItemList = DummyUtils.sortItemList(dummyItemMap.get(key));
+            dummyItemMap.put(key, sortedItemList);
+        }
     }
 
     public void quickSort() {

@@ -97,14 +97,14 @@
             android:layout_centerVertical="true"
             android:orientation="vertical"
             android:padding="16dp"
-            android:background="@color/colorPrimaryDark">
+            android:background="@color/colorPrimaryDarker">
 
             <ImageView
                 android:id="@+id/nav_image"
                 android:layout_width="@dimen/nav_image_width"
                 android:layout_height="@dimen/nav_image_height"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@mipmap/ic_ballet_shoes" />
 
             <TextView
                 android:id="@+id/nav_app_name"
@@ -124,7 +124,7 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
-            android:background="#111"/>
+            android:background="#fff"/>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

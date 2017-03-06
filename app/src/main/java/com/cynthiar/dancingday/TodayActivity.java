@@ -34,6 +34,7 @@ import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
+import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -142,7 +143,7 @@ public class TodayActivity extends AppCompatActivity
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
+                //getSupportActionBar().setTitle(mDrawerTitle);
             }
         };
 
@@ -345,16 +346,35 @@ public class TodayActivity extends AppCompatActivity
         // Update your UI here based on result of download.
 
         // Reload current fragment
+        Fragment currentFragment = this.getCurrentFragment();
+        this.reloadFragment(currentFragment);
+    }
+
+    public DanceClassPropertySelector getCurrentPropertySelector() {
+        Fragment currentFragment = this.getCurrentFragment();
+        if (currentFragment instanceof MultiDayFragment)
+            return ((MultiDayFragment) currentFragment).getCurrentPropertySelector();
+        else return null;
+    }
+
+    public void setCurrentPropertySelector(DanceClassPropertySelector propertySelector) {
+        Fragment currentFragment = this.getCurrentFragment();
+        if (currentFragment instanceof MultiDayFragment)
+            ((MultiDayFragment) currentFragment).setCurrentPropertySelector(propertySelector);
+    }
+
+    private Fragment getCurrentFragment() {
         Fragment myFragment = getSupportFragmentManager().findFragmentByTag(SingleDayFragment.TAG);
         if (myFragment != null && myFragment.isVisible()) {
-            this.reloadFragment(myFragment);
+            return myFragment;
         }
         else {
             myFragment = getSupportFragmentManager().findFragmentByTag(MultiDayFragment.TAG);
             if (myFragment != null && myFragment.isVisible()) {
-                this.reloadFragment(myFragment);
+                return myFragment;
             }
         }
+        return null;
     }
 
     private void reloadFragment(Fragment fragment) {

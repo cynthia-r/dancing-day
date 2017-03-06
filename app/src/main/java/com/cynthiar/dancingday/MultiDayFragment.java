@@ -30,9 +30,11 @@ import java.util.List;
 public class MultiDayFragment extends Fragment {
 
     // TODO: Customize parameters
+    private Spinner mViewBySpinner;
     private Spinner mSchoolSpinner;
     private Spinner mLevelSpinner;
     private HashMap<String, List<DummyItem>> mAllItemMap;
+    private DanceClassPropertySelector mCurrentPropertySelector;
 
     public static final String TAG = "MultiDayFragment";
     public static final String ALL_KEY = "All";
@@ -44,6 +46,14 @@ public class MultiDayFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public MultiDayFragment() {
+    }
+
+    public DanceClassPropertySelector getCurrentPropertySelector() {
+        return mCurrentPropertySelector;
+    }
+
+    public void setCurrentPropertySelector(DanceClassPropertySelector propertySelector) {
+        mCurrentPropertySelector = propertySelector;
     }
 
     @Override
@@ -73,16 +83,16 @@ public class MultiDayFragment extends Fragment {
             return;
         }
 
-        // Group by the selector
-        DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector(); // TODO select in UI
+        // Group by the selector - default: by day
+        DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector();
         HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
-        sortItemMap(dummyItemMap);
+        DummyUtils.sortItemMap(dummyItemMap);
         mAllItemMap = dummyItemMap;
-        List<String> groupList = sortAndRotateGroups(dummyItemMap, danceClassPropertySelector);
+        List<String> groupList = DummyUtils.sortAndRotateGroups(getActivity(), dummyItemMap, danceClassPropertySelector);
 
         // Set up list view
         ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
-        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity, danceClassPropertySelector);
+        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
         mListView.setAdapter(adapter);
 
         // Expand groups the first time
@@ -91,6 +101,12 @@ public class MultiDayFragment extends Fragment {
         }
 
         // Setup spinners
+        // View by spinner
+        mViewBySpinner = (Spinner)parentActivity.findViewById(R.id.viewBySpinner);
+        List<String> viewByList = new ArrayList<>();
+        viewByList.add("Day");viewByList.add("School");viewByList.add("Level");
+        this.setupSpinner(parentActivity, mViewBySpinner, viewByList);
+
         // School spinner
         mSchoolSpinner = (Spinner)parentActivity.findViewById(R.id.schoolSpinner);
         List<String> schoolList = Extractors.getInstance(parentActivity).getSchoolList();
@@ -110,61 +126,9 @@ public class MultiDayFragment extends Fragment {
                 new SpinnerItemsSelectedListener(parentActivity, spinners, adapter);
         mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
         mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
-    }
-
-    private List<String> sortAndRotateGroups(HashMap<String, List<DummyItem>> dummyItemMap, DanceClassPropertySelector propertySelector) {
-        List<String> groupList = new ArrayList<>(dummyItemMap.keySet());
-
-        // Sort the list
-        String[] unsortedGroups = new String[groupList.size()];
-        String[] sortedGroups = dummyItemMap.keySet().toArray(unsortedGroups);
-        new DummyUtils<>(sortedGroups, propertySelector.getComparer()).quickSort();
-
-        // Rotate days (tomorrow should be first)
-        if (propertySelector instanceof DayPropertySelector) {
-            String tomorrow = DummyUtils.getTomorrow();
-            // Find the position of tomorrow
-            int k=0;
-            while (k < sortedGroups.length && !sortedGroups[k].equals(tomorrow)) {
-                k++;
-            }
-            if (k == sortedGroups.length) {
-                DummyUtils.toast(getActivity().getApplicationContext(), "Tomorrow not found");
-            }
-
-            // Copy to the list back again
-            groupList = new ArrayList<>();
-            for (int j=k; j < sortedGroups.length; j++
-                    ) {
-                String group = sortedGroups[j];
-                groupList.add(group);
-            }
-            for (int j=0; j < k; j++
-                    ) {
-                String group = sortedGroups[j];
-                groupList.add(group);
-            }
-        }
-        else {
-            // Just copy the list back again
-            groupList = new ArrayList<>();
-            for (int j=0; j < sortedGroups.length; j++
-                    ) {
-                String group = sortedGroups[j];
-                groupList.add(group);
-            }
-        }
-
-        // Return the group list
-        return groupList;
-    }
-
-    private void sortItemMap(HashMap<String, List<DummyItem>> dummyItemMap) {
-        for (String key:dummyItemMap.keySet()
-             ) {
-            List<DummyItem> sortedItemList = DummyUtils.sortItemList(dummyItemMap.get(key));
-            dummyItemMap.put(key, sortedItemList);
-        }
+        ViewBySpinnerItemsSelectedListener viewBySpinnerItemsSelectedListener =
+                new ViewBySpinnerItemsSelectedListener(parentActivity, mViewBySpinner, dummyItemList, adapter);
+        mViewBySpinner.setOnItemSelectedListener(viewBySpinnerItemsSelectedListener);
     }
 
     private MultiDaySpinnerAdapter setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {

@@ -1,17 +1,13 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.time.DanceClassTime;
-
-import java.util.List;
 
 /**
  * Created by CynthiaR on 3/5/2017.
@@ -58,11 +54,19 @@ public class DrawerListViewAdapter extends BaseAdapter {
 
         String menuItemValue = mValues[position];
         mMenuItemView.setText(menuItemValue);
-        mMenuImageView.setImageResource(R.mipmap.ic_launcher);
-
-        /*convertView.setClickable(true);
-        convertView.setFocusable(true);*/
+        mMenuImageView.setImageResource(this.getImageResource(menuItemValue));
 
         return convertView;
+    }
+
+    private int getImageResource(String menuItemValue) {
+        Resources resources = mContext.getResources();
+        if (menuItemValue.equals(resources.getString(R.string.nav_today)))
+            return R.mipmap.ic_hourglass;
+        if (menuItemValue.equals(resources.getString(R.string.nav_tomorrow)))
+            return R.mipmap.ic_alarm_clock;
+        if (menuItemValue.equals(resources.getString(R.string.nav_next7days)))
+            return R.mipmap.ic_calendar;
+        return -1;
     }
 }

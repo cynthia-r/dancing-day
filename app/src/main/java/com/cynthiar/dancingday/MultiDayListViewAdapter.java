@@ -27,21 +27,23 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     private List<String> mGroups;
     private HashMap<String, List<DummyItem>> mValues;
     private HashMap<String, List<DummyItem>> mAllValues;
-    private DanceClassPropertySelector mDanceClassPropertySelector;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context, DanceClassPropertySelector propertySelector) {
+    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context) {
         mGroups = groupList;
         mValues = itemMap;
         mAllValues = allItemMap;
         mContext = context;
-        mDanceClassPropertySelector = propertySelector;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void setValues(HashMap<String, List<DummyItem>> items) {
         mValues = items;
+    }
+
+    public void setGroups(List<String> groupList) {
+        mGroups = groupList;
     }
 
     @Override
@@ -94,7 +96,8 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
         String groupValue = mGroups.get(groupPosition);
 
         // Check if group is a day
-        if (mDanceClassPropertySelector instanceof DayPropertySelector)
+        TodayActivity todayActivity = (TodayActivity)mContext;
+        if (todayActivity.getCurrentPropertySelector() instanceof DayPropertySelector)
             groupValue = getDayGroupValue(groupPosition, groupValue);
 
         // Set text in the view
