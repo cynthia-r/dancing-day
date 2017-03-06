@@ -293,10 +293,12 @@ public class TodayActivity extends AppCompatActivity
             dummyItemList.addAll(schoolList);
         }
 
-        // Hide loading circle when all lists are loaded
+        // Show/Hide loading circle depending on whether all lists are loaded
         if (mAllListsLoaded) {
             findViewById(R.id.loadingCircle).setVisibility(View.GONE);
         }
+        else
+            findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
 
         // Return the list of dummy items
         return dummyItemList;

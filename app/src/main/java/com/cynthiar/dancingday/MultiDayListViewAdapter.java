@@ -10,8 +10,12 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
+import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.filter.MultiDayFilter;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,14 +27,16 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     private List<String> mGroups;
     private HashMap<String, List<DummyItem>> mValues;
     private HashMap<String, List<DummyItem>> mAllValues;
+    private DanceClassPropertySelector mDanceClassPropertySelector;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context) {
+    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context, DanceClassPropertySelector propertySelector) {
         mGroups = groupList;
         mValues = itemMap;
         mAllValues = allItemMap;
         mContext = context;
+        mDanceClassPropertySelector = propertySelector;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -84,9 +90,15 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
         }
 
         // Set text based on the property that was used for the group by
-        TextView mDayView = (TextView) convertView.findViewById(R.id.multi_day_group);
+        TextView mGroupView = (TextView) convertView.findViewById(R.id.multi_day_group);
         String groupValue = mGroups.get(groupPosition);
-        mDayView.setText(groupValue);
+
+        // Check if group is a day
+        if (mDanceClassPropertySelector instanceof DayPropertySelector)
+            groupValue = getDayGroupValue(groupPosition, groupValue);
+
+        // Set text in the view
+        mGroupView.setText(groupValue);
 
         // Return the row view
         return convertView;
@@ -108,5 +120,25 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     @Override
     public Filter getFilter() {
         return new MultiDayFilter(this, mAllValues);
+    }
+
+    private String getDayGroupValue(int groupPosition, String initialValue) {
+        // Move the calendar to tomorrow (first element)
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+
+        // Move the calendar as many days forward
+        // as the group position
+        for (int i=0; i < groupPosition; i++) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        // Build group string: Day_Name Day_Of_Month
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        StringBuilder builder = new StringBuilder();
+        builder.append(initialValue).append(" ").append(dayOfMonth);
+
+        // Return group value
+        return builder.toString();
     }
 }

@@ -7,4 +7,8 @@
     </string-array>
     <string name="drawer_open">Open the drawer</string>
     <string name="drawer_close">Close the drawer</string>
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_today">Today</string>
+    <string name="nav_tomorrow">Tomorrow</string>
+    <string name="nav_next7days">Next 7 days</string>
 </resources>

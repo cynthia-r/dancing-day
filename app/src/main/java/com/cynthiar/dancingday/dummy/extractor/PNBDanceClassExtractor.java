@@ -88,7 +88,7 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
                 mSchoolNumber++;
 
             DanceClassLevel level = this.parseLevel(firstChildText);
-            if (level.equals(""))
+            if (DanceClassLevel.Unknown == level)
                 return null;
 
             List<DummyItem> classItemList = new ArrayList<>();

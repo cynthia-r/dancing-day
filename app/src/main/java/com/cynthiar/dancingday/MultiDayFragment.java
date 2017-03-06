@@ -19,6 +19,7 @@ import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
 import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class MultiDayFragment extends Fragment {
 
         // Set up list view
         ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
-        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
+        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity, danceClassPropertySelector);
         mListView.setAdapter(adapter);
 
         // Expand groups the first time

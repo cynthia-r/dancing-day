@@ -9,7 +9,6 @@ public class DayPropertySelector implements DanceClassPropertySelector{
         return dummyItem.day;
     }
 
-    @Override
     public DummyUtils.IComparer getComparer() {
         return new DayComparer();
     }

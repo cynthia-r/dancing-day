@@ -9,7 +9,6 @@ public class LevelPropertySelector implements DanceClassPropertySelector {
         return dummyItem.level.toString();
     }
 
-    @Override
     public DummyUtils.IComparer getComparer() {
         return new StringComparer(); // TODO
     }
