@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.cynthiar.dancingday.data.DanceClassDataProvider;
@@ -79,6 +80,7 @@ public class TodayActivity extends AppCompatActivity
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private LinearLayout mLeftDrawerLayout;
 
     private Toolbar myToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -115,11 +117,11 @@ public class TodayActivity extends AppCompatActivity
         // Setup navigation drawer
         timeFrames = getResources().getStringArray(R.array.timeframes_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mLeftDrawerLayout = (LinearLayout) findViewById(R.id.left_drawer);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
         // Set the adapter for the drawer list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, timeFrames));
+        mDrawerList.setAdapter(new DrawerListViewAdapter(timeFrames, this));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -243,7 +245,7 @@ public class TodayActivity extends AppCompatActivity
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(timeFrames[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        mDrawerLayout.closeDrawer(mLeftDrawerLayout);
     }
 
     private void switchToFragment(Fragment fragment, String fragmentTag) {
