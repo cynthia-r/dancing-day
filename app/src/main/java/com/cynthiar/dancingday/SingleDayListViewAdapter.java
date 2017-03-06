@@ -8,11 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
+import com.cynthiar.dancingday.dummy.propertySelector.LevelPropertySelector;
+import com.cynthiar.dancingday.dummy.propertySelector.SchoolPropertySelector;
 import com.cynthiar.dancingday.dummy.time.DanceClassTime;
-
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
@@ -52,25 +52,44 @@ public class SingleDayListViewAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
         }
 
         TextView mTimeView = (TextView) convertView.findViewById(R.id.time);
-        TextView mSchoolView = (TextView) convertView.findViewById(R.id.school);
+        TextView mClassItemTopRightView = (TextView) convertView.findViewById(R.id.class_item_top_right);
         TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
-        TextView mLevelView = (TextView) convertView.findViewById(R.id.level);
+        TextView mClassItemBottomLeftView = (TextView) convertView.findViewById(R.id.class_item_bottom_left);
 
         final DummyItem dummyItem = mValues.get(position);
 
         DanceClassTime danceClassTime = dummyItem.danceClassTime;
         String time = null == danceClassTime ? "" : danceClassTime.toString();
 
+        // Set time and teacher view texts
         mTimeView.setText(time);
-        mSchoolView.setText(mValues.get(position).school.Key);
-        mLevelView.setText(mValues.get(position).level.toString());
-        mTeacherView.setText(mValues.get(position).teacher);
+        mTeacherView.setText(dummyItem.teacher);
+
+        // Set corner view texts
+        DanceClassPropertySelector currentPropertySelector = ((TodayActivity) mContext).getCurrentPropertySelector();
+        String topRightViewText = "";
+        String bottomLeftViewText = "";
+
+        if (null == currentPropertySelector || currentPropertySelector instanceof DayPropertySelector) {
+            topRightViewText = dummyItem.school.Key;
+            bottomLeftViewText = dummyItem.level.toString();
+        }
+        else if (currentPropertySelector instanceof SchoolPropertySelector) {
+            topRightViewText = dummyItem.day;
+            bottomLeftViewText = dummyItem.level.toString();
+        }
+        else if (currentPropertySelector instanceof LevelPropertySelector) {
+            topRightViewText = dummyItem.school.Key;
+            bottomLeftViewText = dummyItem.day;
+        }
+
+        mClassItemTopRightView.setText(topRightViewText);
+        mClassItemBottomLeftView.setText(bottomLeftViewText);
 
         convertView.setClickable(true);
         convertView.setFocusable(true);

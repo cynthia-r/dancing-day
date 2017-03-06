@@ -23,7 +23,7 @@
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/level"
+        android:id="@+id/class_item_bottom_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
@@ -34,7 +34,7 @@
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/school"
+        android:id="@+id/class_item_top_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/text_margin"
@@ -52,7 +52,7 @@
         android:layout_marginTop="3dp"
         android:text="Jerri"
         android:textStyle="italic"
-        android:layout_below="@id/school"
+        android:layout_below="@id/class_item_top_right"
         android:layout_alignParentRight="true"
         android:textAppearance="?attr/textAppearanceListItem" />
 </RelativeLayout>
