@@ -45,34 +45,6 @@ public class TodayActivity extends AppCompatActivity
         implements IDownloadCallback<List<DummyItem>>,
         IConsumerCallback<List<DummyItem>> {
 
-    private class DistanceComponent implements IConsumerCallback<DistanceResult> {
-
-        private Context mContext;
-
-        // Boolean telling us whether a distance estimate is in progress, so we don't trigger overlapping
-        // estimations with consecutive button clicks.
-        private boolean mEstimating = false;
-
-        public DistanceComponent(Context context){
-            mContext = context;
-        }
-
-        public void updateFromResult(DistanceResult distanceResult) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(distanceResult.getEstimatedTime());
-            DummyUtils.toast(mContext, stringBuilder.toString());
-            mEstimating = false;
-        }
-
-        public boolean isEstimating(){
-            return mEstimating;
-        }
-
-        public void setIsEstimating(boolean isEstimating){
-            mEstimating = isEstimating;
-        }
-    }
-
     public static final String TODAY_KEY = "Today";
     public static final String TOMORROW_KEY = "Tomorrow";
     public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
@@ -98,10 +70,6 @@ public class TodayActivity extends AppCompatActivity
 
     private DataCache<List<DummyItem>> mDanceClassCache;
     private List<DummyItem> mDummyItemList;
-
-    // Distance component
-    private DistanceComponent mDistanceComponent;
-
     private boolean mAllListsLoaded;
 
     @Override
@@ -168,10 +136,6 @@ public class TodayActivity extends AppCompatActivity
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
         mNetworkFragment.setConsumerCallback(danceClassDataProvider);
-
-        // Setup the distance component
-        mDistanceComponent = new DistanceComponent(this);
-        mNetworkFragment.setEstimateConsumerCallback(mDistanceComponent);
     }
 
     @Override
@@ -327,20 +291,10 @@ public class TodayActivity extends AppCompatActivity
         }
     }
 
-    public void getEstimate(View view) {
+/*    public void getEstimate(View view) {
         String destinationAddress = "8001 Greenwood Ave N, Seattle, WA 98103";
         getEstimate(destinationAddress);
-    }
-
-    public void getEstimate(String destinationAddress) {
-        if (!mDistanceComponent.isEstimating() && mNetworkFragment != null) {
-            // Execute the async estimate
-            String originAddress = "3933 Lake Washington Blvd NE #200, Kirkland, WA 98033";
-            DistanceQuery distanceQuery = new DistanceQuery(originAddress, destinationAddress);
-            mNetworkFragment.startEstimate(distanceQuery);
-            mDistanceComponent.setIsEstimating(true);
-        }
-    }
+    }*/
 
     public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.

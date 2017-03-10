@@ -111,21 +111,4 @@ public class NetworkFragment extends Fragment {
         }
     }
 
-    /**
-     * Start non-blocking execution of DistanceTask.
-     */
-    public void startEstimate(DistanceQuery distanceQuery) {
-        cancelEstimate();
-        mDistanceTask = new DistanceTask(mEstimateConsumerCallback);
-        mDistanceTask.execute(distanceQuery);
-    }
-
-    /**
-     * Cancel (and interrupt if necessary) any ongoing DistanceTask execution.
-     */
-    public void cancelEstimate() {
-        if (mDistanceTask != null) {
-            mDistanceTask.cancel(true);
-        }
-    }
 }

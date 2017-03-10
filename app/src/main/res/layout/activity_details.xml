@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <!--android:focusable="true"
+        android:focusable="false"
+        android:clickable="true"
+        android:descendantFocusability="blocksDescendants"-->
+
+        <TextView
+            android:id="@+id/school"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/text_margin"
+            android:text="KDC"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:layout_below="@id/school"
+            android:text="6:30PM-8PM"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:text="Beginner"
+            android:layout_below="@id/time"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
+            android:id="@+id/teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="3dp"
+            android:text="Jerri"
+            android:textStyle="italic"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/level"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+
+        <TextView
+            android:id="@+id/eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:text="14 mins"
+            android:textStyle="italic"
+            android:layout_below="@id/level"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eta"
+            android:layout_marginTop="@dimen/text_margin">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Go now"
+                android:textColor="#fff"
+                android:background="@color/colorBlue"
+                android:onClick="goNow"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

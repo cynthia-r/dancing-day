@@ -1,6 +1,8 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,8 +101,20 @@ public class SingleDayListViewAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
             TodayActivity parentActivity = (TodayActivity)mContext;
-            parentActivity.getEstimate(dummyItem.school.Address);
+            //parentActivity.getEstimate(dummyItem.school.Address);
             //DummyUtils.toast(mContext, "Doing something");
+
+            Intent intent = new Intent(parentActivity, DetailsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(DetailsActivity.LEVEL_KEY, dummyItem.level.toString());
+            bundle.putString(DetailsActivity.SCHOOL_KEY, dummyItem.school.Key);
+            bundle.putString(DetailsActivity.SCHOOL_ADDRESS_KEY, dummyItem.school.Address);
+            bundle.putString(DetailsActivity.SCHOOL_COORDINATES_KEY, dummyItem.school.Coordinates);
+            bundle.putString(DetailsActivity.TEACHER_KEY, dummyItem.teacher.toString());
+            bundle.putString(DetailsActivity.TIME_KEY, dummyItem.danceClassTime.toString());
+            intent.putExtra(DetailsActivity.DANCE_CLASS_KEY, bundle);
+
+            parentActivity.startActivity(intent);
             }
 
         });
