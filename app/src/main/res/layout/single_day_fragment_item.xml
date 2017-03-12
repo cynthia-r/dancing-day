@@ -5,12 +5,6 @@
     android:layout_marginBottom="4dp"
     android:foreground="?android:attr/selectableItemBackground">
 
-    <!--android:focusable="true"
-    android:focusable="false"
-    android:clickable="true"
-    android:descendantFocusability="blocksDescendants"-->
-
-
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"

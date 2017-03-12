@@ -6,9 +6,18 @@
     android:orientation="vertical"
     tools:context="com.cynthiar.dancingday.SingleDayFragment">
 
-    <ListView
-        android:id="@+id/single_day_list_view"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Show list when one result or more -->
+        <ListView
+            android:id="@+id/single_day_list_view"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"/>
+
+        <!-- Show empty state when no results -->
+        <include layout="@layout/empty_list"/>
+    </FrameLayout>
 
 </LinearLayout>

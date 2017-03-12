@@ -7,14 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import org.joda.time.LocalTime;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.View.GONE;
 
 /**
  * A fragment representing a list of single day items.
@@ -73,19 +77,30 @@ public class SingleDayFragment extends Fragment {
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);
 
+        // Get the list view and the empty state view
+        ListView listView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
+        TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
+
         // Display empty state if no results
-        if (0 == dummyItemList.size()) {
-            parentActivity.displayEmptyList(position);
+        if (0 == dummyItemList.size() && parentActivity.areAllListsLoaded()) {
+            listView.setVisibility(GONE);
+            emptyStateTextView.setVisibility(View.VISIBLE);
+
+            // Set title
+            parentActivity.setTitle(position);
             return;
         }
+
+        // Otherwise show the list view
+        listView.setVisibility(View.VISIBLE);
+        emptyStateTextView.setVisibility(View.GONE);
 
         // Sort list
         dummyItemList = DummyUtils.sortItemList(dummyItemList);
 
         // Setup list adapter
-        ListView mListView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
-        mListView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
         // Set title
         parentActivity.setTitle(position);

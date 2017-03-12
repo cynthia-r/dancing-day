@@ -34,8 +34,7 @@
                 android:layout_height="25dp"
                 android:spinnerMode="dropdown"
                 android:layout_marginBottom="10dp"
-                android:dropDownSelector="@android:drawable/btn_dropdown"
-                />
+                android:dropDownSelector="@android:drawable/btn_dropdown"/>
         </LinearLayout>
 
         <Spinner
@@ -45,8 +44,7 @@
             android:spinnerMode="dropdown"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:dropDownSelector="@android:drawable/btn_dropdown"
-            />
+            android:dropDownSelector="@android:drawable/btn_dropdown"/>
 
         <Spinner
             android:id="@+id/levelSpinner"
@@ -55,15 +53,22 @@
             android:spinnerMode="dropdown"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:dropDownSelector="@android:drawable/btn_dropdown"
-            />
+            android:dropDownSelector="@android:drawable/btn_dropdown"/>
 
     </LinearLayout>
 
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <!-- Show the list if one or more results -->
     <ExpandableListView
         android:id="@+id/multi_day_list_view"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
+
+    <!-- Show empty state when no results -->
+    <include layout="@layout/empty_list"/>
+</FrameLayout>
 
 </LinearLayout>

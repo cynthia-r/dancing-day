@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
@@ -21,6 +22,8 @@ import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.view.View.GONE;
 
 /**
  * A fragment representing a list of Items.
@@ -76,11 +79,23 @@ public class MultiDayFragment extends Fragment {
         // Retrieve list of items
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
 
+        // Get the list view and the empty state view
+        ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
+        TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
+
         // Display empty state if no results
-        if (0 == dummyItemList.size()) {
-            parentActivity.displayEmptyList(2);
+        if (0 == dummyItemList.size() && parentActivity.areAllListsLoaded()) {
+            expandableListView.setVisibility(GONE);
+            emptyStateTextView.setVisibility(View.VISIBLE);
+
+            // Set title
+            parentActivity.setTitle(2);
             return;
         }
+
+        // Otherwise show the expandable list view
+        expandableListView.setVisibility(View.VISIBLE);
+        emptyStateTextView.setVisibility(View.GONE);
 
         // Group by the selector - default: by day
         DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector();
@@ -90,14 +105,13 @@ public class MultiDayFragment extends Fragment {
         List<String> groupList = DummyUtils.sortAndRotateGroups(getActivity(), dummyItemMap, danceClassPropertySelector);
 
         // Set up list view
-        ExpandableListView mListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
         MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
-        mListView.setAdapter(adapter);
+        expandableListView.setAdapter(adapter);
 
         // Expand groups the first time
         int groupCount = groupList.size();
         for (int i=0; i < groupCount; i++) {
-            mListView.expandGroup(i);
+            expandableListView.expandGroup(i);
         }
 
         // Setup spinners
@@ -119,9 +133,9 @@ public class MultiDayFragment extends Fragment {
 
         // Setup spinners listener
         MultiDaySpinner[] spinners = {
-             new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
-             new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
-            new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
+                new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
+                new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
+                new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
         };
         SpinnerItemsSelectedListener spinnerItemsSelectedListener =
                 new SpinnerItemsSelectedListener(spinners, adapter);
