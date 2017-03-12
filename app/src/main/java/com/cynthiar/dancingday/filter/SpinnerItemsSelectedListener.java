@@ -14,11 +14,9 @@ import com.cynthiar.dancingday.MultiDayListViewAdapter;
 public class SpinnerItemsSelectedListener implements AdapterView.OnItemSelectedListener {
 
     private MultiDaySpinner[] mSpinners;
-    private Context mContext;
     private MultiDayListViewAdapter mMultiDayListViewAdapter;
 
-    public SpinnerItemsSelectedListener(Context context, MultiDaySpinner[] spinners, MultiDayListViewAdapter multiDayListViewAdapter) {
-        mContext = context;
+    public SpinnerItemsSelectedListener(MultiDaySpinner[] spinners, MultiDayListViewAdapter multiDayListViewAdapter) {
         mMultiDayListViewAdapter = multiDayListViewAdapter;
         mSpinners = spinners;
     }
@@ -31,7 +29,7 @@ public class SpinnerItemsSelectedListener implements AdapterView.OnItemSelectedL
             int selectedPosition = spinner.getSelectedItemPosition();
             String groupSelected = (String)spinner.getAdapter().getItem(selectedPosition);
             String filterStringForSpinner = multiDaySpinner.getPrefix().concat("-").concat(groupSelected);
-            filterString = filterString.concat("|").concat(filterStringForSpinner);
+            filterString = filterString.concat(MultiDayFilter.FILTER_SEPARATOR).concat(filterStringForSpinner);
         }
 
         mMultiDayListViewAdapter.getFilter().filter(filterString);

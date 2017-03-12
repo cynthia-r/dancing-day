@@ -9,6 +9,7 @@ import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.time.DanceClassTime;
 import com.cynthiar.dancingday.dummy.time.TimeHalf;
 import com.cynthiar.dancingday.dummy.time.TimeParts;
+import com.cynthiar.dancingday.filter.IItemFilter;
 
 import org.joda.time.LocalTime;
 
@@ -45,7 +46,7 @@ public class DummyUtils<T> {
 
     public static HashMap<String, List<DummyItem>> GroupBy(DanceClassPropertySelector danceClassPropertySelector, List<DummyItem> dummyItemList)
     {
-        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<String, List<DummyItem>>();
+        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<>();
         for (DummyItem dummyItem:dummyItemList
                 ) {
             // Retrieve the property that we group by on
@@ -54,7 +55,31 @@ public class DummyUtils<T> {
             // Initialize the list of items for this entry if needed
             List<DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
             if (null == dummyItemListForGroup)
-                dummyItemListForGroup = new ArrayList<DummyItem>();
+                dummyItemListForGroup = new ArrayList<>();
+
+            // Add the current item to this entry
+            dummyItemListForGroup.add(dummyItem);
+            dummyItemDictionary.put(property, dummyItemListForGroup);
+        }
+        return dummyItemDictionary;
+    }
+
+    public static HashMap<String, List<DummyItem>> GroupByWithFilter(DanceClassPropertySelector danceClassPropertySelector, List<DummyItem> dummyItemList, IItemFilter itemFilter)
+    {
+        HashMap<String, List<DummyItem>> dummyItemDictionary = new HashMap<>();
+        for (DummyItem dummyItem:dummyItemList
+                ) {
+            // Check if the item should be filtered
+            if (itemFilter.shouldFilter(dummyItem))
+                continue;
+
+            // Retrieve the property that we group by on
+            String property = danceClassPropertySelector.getProperty(dummyItem);
+
+            // Initialize the list of items for this entry if needed
+            List<DummyItem> dummyItemListForGroup = dummyItemDictionary.get(property);
+            if (null == dummyItemListForGroup)
+                dummyItemListForGroup = new ArrayList<>();
 
             // Add the current item to this entry
             dummyItemListForGroup.add(dummyItem);
@@ -78,9 +103,6 @@ public class DummyUtils<T> {
             int k=0;
             while (k < sortedGroups.length && !sortedGroups[k].equals(tomorrow)) {
                 k++;
-            }
-            if (k == sortedGroups.length) {
-                DummyUtils.toast(context, "Tomorrow not found");
             }
 
             // Copy to the list back again

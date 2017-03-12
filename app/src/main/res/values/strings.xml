@@ -11,4 +11,5 @@
     <string name="nav_today">Today</string>
     <string name="nav_tomorrow">Tomorrow</string>
     <string name="nav_next7days">Next 7 days</string>
+    <string name="go_now">Go now</string>
 </resources>

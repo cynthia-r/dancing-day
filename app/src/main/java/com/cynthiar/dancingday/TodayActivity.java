@@ -118,6 +118,10 @@ public class TodayActivity extends AppCompatActivity
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        // Check first item in drawer
+        mDrawerList.setItemChecked(0, true);
+
+        // Setup action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -143,7 +147,6 @@ public class TodayActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
-        //startDownload();
     }
 
     @Override
@@ -209,7 +212,6 @@ public class TodayActivity extends AppCompatActivity
 
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(timeFrames[position]);
         mDrawerLayout.closeDrawer(mLeftDrawerLayout);
     }
 
@@ -230,6 +232,10 @@ public class TodayActivity extends AppCompatActivity
     public void setTitle(CharSequence title) {
         mTitle = title.toString();
         myToolbar.setTitle(title);
+    }
+
+    public void setTitle(int position) {
+        setTitle(timeFrames[position]);
     }
 
     public List<DummyItem> getCurrentList() {
@@ -290,11 +296,6 @@ public class TodayActivity extends AppCompatActivity
             mDownloading = true;
         }
     }
-
-/*    public void getEstimate(View view) {
-        String destinationAddress = "8001 Greenwood Ave N, Seattle, WA 98103";
-        getEstimate(destinationAddress);
-    }*/
 
     public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.
@@ -371,22 +372,6 @@ public class TodayActivity extends AppCompatActivity
         mDownloading = false;
         if (mNetworkFragment != null) {
             mNetworkFragment.cancelDownload();
-        }
-    }
-
-    public void startDownload(View view) {
-        try
-        {
-            //String url = "waze://?q=Kirkland%20Dance%20Center%20835%207th%20Ave&navigate=yes";
-            String url = "waze://?ll=47.680279, -122.191947&z=10&navigate=yes";
-            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
-            startActivity( intent );
-        }
-        catch ( ActivityNotFoundException ex  )
-        {
-            Intent intent =
-                    new Intent( Intent.ACTION_VIEW, Uri.parse( "market://details?id=com.waze" ) );
-            startActivity(intent);
         }
     }
 }

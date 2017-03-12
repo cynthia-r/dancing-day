@@ -48,7 +48,7 @@ public class MultiDaySpinnerAdapter extends ArrayAdapter<String> {
         return view;
     }
 
-    //View of Spinner on dropdown Popping
+    // View of Spinner on dropdown Popping
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {

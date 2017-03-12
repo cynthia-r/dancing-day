@@ -62,16 +62,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
-        // Setup the network fragment
-        //mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
-        //mNetworkFragment.setConsumerCallback(danceClassDataProvider);
-
-        // Setup the distance component
-        //mDistanceComponent = new DistanceComponent(this);
-        //mNetworkFragment.setEstimateConsumerCallback(mDistanceComponent);
-        //mNetworkFragment.setEstimateConsumerCallback(this);
-
         // Calculate ETA
         mDistanceTask = new DistanceTask(this);
         String destinationAddress = bundle.getString(DetailsActivity.SCHOOL_ADDRESS_KEY);
@@ -88,8 +78,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         TextView etaView = (TextView) findViewById(R.id.eta);
         schoolView.setText(bundle.getString(DetailsActivity.SCHOOL_KEY));
         teacherView.setText(bundle.getString(DetailsActivity.TEACHER_KEY));
-        levelView.setText(bundle.getString(DetailsActivity.TIME_KEY));
-        timeView.setText(bundle.getString(DetailsActivity.LEVEL_KEY));
+        levelView.setText(bundle.getString(DetailsActivity.LEVEL_KEY));
+        timeView.setText(bundle.getString(DetailsActivity.TIME_KEY));
 
         // Set ETA to empty initially
         etaView.setText("");

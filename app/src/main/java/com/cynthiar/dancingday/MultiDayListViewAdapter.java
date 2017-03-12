@@ -122,7 +122,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
 
     @Override
     public Filter getFilter() {
-        return new MultiDayFilter(this, mAllValues);
+        return new MultiDayFilter(mContext, this, mAllValues);
     }
 
     private String getDayGroupValue(int groupPosition, String initialValue) {

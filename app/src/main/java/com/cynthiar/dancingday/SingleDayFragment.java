@@ -87,6 +87,9 @@ public class SingleDayFragment extends Fragment {
         ListView mListView = (ListView) parentActivity.findViewById(R.id.single_day_list_view);
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         mListView.setAdapter(adapter);
+
+        // Set title
+        parentActivity.setTitle(position);
     }
 
     private List<DummyItem> filterList(int position, List<DummyItem> unfilteredList) {

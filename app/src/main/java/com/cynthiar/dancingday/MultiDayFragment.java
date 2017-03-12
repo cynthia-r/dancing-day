@@ -19,7 +19,6 @@ import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
 import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import java.util.List;
  */
 public class MultiDayFragment extends Fragment {
 
-    // TODO: Customize parameters
     private Spinner mViewBySpinner;
     private Spinner mSchoolSpinner;
     private Spinner mLevelSpinner;
@@ -40,6 +38,7 @@ public class MultiDayFragment extends Fragment {
     public static final String ALL_KEY = "All";
     public static final String SCHOOL_SPINNER_PREFIX = "SCHOOL";
     public static final String LEVEL_SPINNER_PREFIX = "LEVEL";
+    public static final String VIEW_BY_SPINNER_PREFIX = "VIEW_BY";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -96,7 +95,8 @@ public class MultiDayFragment extends Fragment {
         mListView.setAdapter(adapter);
 
         // Expand groups the first time
-        for (int i=0; i < groupList.size(); i++) {
+        int groupCount = groupList.size();
+        for (int i=0; i < groupCount; i++) {
             mListView.expandGroup(i);
         }
 
@@ -120,15 +120,17 @@ public class MultiDayFragment extends Fragment {
         // Setup spinners listener
         MultiDaySpinner[] spinners = {
              new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
-             new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX)
+             new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
+            new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
         };
         SpinnerItemsSelectedListener spinnerItemsSelectedListener =
-                new SpinnerItemsSelectedListener(parentActivity, spinners, adapter);
+                new SpinnerItemsSelectedListener(spinners, adapter);
         mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
         mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
-        ViewBySpinnerItemsSelectedListener viewBySpinnerItemsSelectedListener =
-                new ViewBySpinnerItemsSelectedListener(parentActivity, mViewBySpinner, dummyItemList, adapter);
-        mViewBySpinner.setOnItemSelectedListener(viewBySpinnerItemsSelectedListener);
+        mViewBySpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+
+        // Set title
+        parentActivity.setTitle(2);
     }
 
     private MultiDaySpinnerAdapter setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {
