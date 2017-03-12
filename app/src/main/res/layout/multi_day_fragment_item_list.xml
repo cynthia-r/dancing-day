@@ -35,7 +35,7 @@
                 android:spinnerMode="dropdown"
                 android:layout_marginBottom="10dp"
                 android:dropDownSelector="@android:drawable/btn_dropdown"
-                android:background="@color/colorBlue"/>
+                />
         </LinearLayout>
 
         <Spinner
@@ -46,7 +46,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"
-            android:background="@color/colorBlue"/>
+            />
 
         <Spinner
             android:id="@+id/levelSpinner"
@@ -56,7 +56,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"
-            android:background="@color/colorBlue"/>
+            />
 
     </LinearLayout>
 

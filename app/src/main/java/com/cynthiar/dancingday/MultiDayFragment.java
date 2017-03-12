@@ -78,7 +78,7 @@ public class MultiDayFragment extends Fragment {
 
         // Display empty state if no results
         if (0 == dummyItemList.size()) {
-            parentActivity.displayEmptyList();
+            parentActivity.displayEmptyList(2);
             return;
         }
 
@@ -133,12 +133,11 @@ public class MultiDayFragment extends Fragment {
         parentActivity.setTitle(2);
     }
 
-    private MultiDaySpinnerAdapter setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {
+    private void setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {
         MultiDaySpinnerAdapter spinnerAdapter = new MultiDaySpinnerAdapter(
-                context, android.R.layout.simple_spinner_dropdown_item, spinnerItemList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                context, R.layout.spinner_item, spinnerItemList);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerAdapter);
-        return spinnerAdapter;
     }
 
 /*

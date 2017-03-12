@@ -13,12 +13,21 @@ import android.view.ViewGroup;
 public class EmptyFragment extends Fragment {
 
     public static final String TAG = "EmptyFragment";
+    private static final String POSITION = "Position";
+    private int mPosition;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public EmptyFragment() {
+    public EmptyFragment() {}
+
+    public static EmptyFragment newInstance(int position) {
+        EmptyFragment fragment = new EmptyFragment();
+        Bundle args = new Bundle();
+        args.putInt(POSITION, position);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -31,5 +40,14 @@ public class EmptyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Set title
+        TodayActivity parentActivity = (TodayActivity) getActivity();
+        parentActivity.setTitle(mPosition);
     }
 }

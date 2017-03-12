@@ -34,7 +34,6 @@ public class SingleDayFragment extends Fragment {
     public SingleDayFragment() {
     }
 
-
     public static SingleDayFragment newInstance(int position) {
         SingleDayFragment fragment = new SingleDayFragment();
         Bundle args = new Bundle();
@@ -76,7 +75,7 @@ public class SingleDayFragment extends Fragment {
 
         // Display empty state if no results
         if (0 == dummyItemList.size()) {
-            parentActivity.displayEmptyList();
+            parentActivity.displayEmptyList(position);
             return;
         }
 

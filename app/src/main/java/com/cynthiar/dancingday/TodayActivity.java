@@ -277,9 +277,9 @@ public class TodayActivity extends AppCompatActivity
         return dummyItemList;
     }
 
-    public void displayEmptyList() {
+    public void displayEmptyList(int position) {
         if (mAllListsLoaded) {
-            Fragment fragment = new EmptyFragment();
+            Fragment fragment = EmptyFragment.newInstance(position);
             this.switchToFragment(fragment, EmptyFragment.TAG);
         }
     }
