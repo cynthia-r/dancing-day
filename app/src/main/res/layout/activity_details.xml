@@ -77,6 +77,16 @@
             android:layout_alignParentLeft="true"
             android:textAppearance="?attr/textAppearanceListItem" />
 
+        <ImageButton android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/btn_star"
+            android:background="#fff"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:onClick="onToggleStar"/>
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
@@ -27,6 +28,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TIME_KEY = "Time";
 
     private Toolbar myToolbar;
+    private boolean mIsFavorite;
 
     // Distance component
     //private DistanceComponent mDistanceComponent;
@@ -82,7 +84,11 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         timeView.setText(bundle.getString(DetailsActivity.TIME_KEY));
 
         // Set ETA to empty initially
-        etaView.setText("");
+
+        // TODO retrieve if dummy item is a favorite
+        mIsFavorite = false;
+        ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
+        imageButton.setPressed(mIsFavorite);
     }
 
     @Override
@@ -140,6 +146,15 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             DummyUtils.toast(this, "Failed to start navigation");
         }
     }
+
+    public void onToggleStar(View view) {
+        DummyUtils.toast(this, "Star");
+        ImageButton imageButton = (ImageButton)view;
+        //imageButton.setSelected(true);
+        imageButton.setSelected(!mIsFavorite); // todo set button on
+        mIsFavorite = !mIsFavorite;
+    }
+
     /*private class DistanceComponent implements IConsumerCallback<DistanceResult> {
 
     public DistanceComponent(Context context){
