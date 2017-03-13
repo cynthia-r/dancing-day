@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -86,7 +87,10 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                     (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
                             && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
                 // If no connectivity, cancel task and update Callback with null data.
-                mCallback.updateFromDownload(null); // todo set exception message for no connectivity?
+                mCallback.onProgressUpdate(new DownloadTaskProgress(IProgress.NO_NETWORK_CONNECTION), new DownloadTaskProgress(IProgress.ERROR)); // todo set exception message for no connectivity?
+                Result result = new Result(new Pair<String, List<DummyItem>>(mKey, new ArrayList<DummyItem>()));
+                mConsumerCallback.updateFromResult(result.mResultValue);
+                mCallback.finishDownloading();
                 cancel(true);
             }
         }

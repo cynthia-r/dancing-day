@@ -69,7 +69,6 @@ public class TodayActivity extends AppCompatActivity
     private boolean mDownloading = false;
 
     private DataCache<List<DummyItem>> mDanceClassCache;
-    private List<DummyItem> mDummyItemList;
     private boolean mAllListsLoaded;
 
     @Override
@@ -133,7 +132,6 @@ public class TodayActivity extends AppCompatActivity
         mDanceClassCache = new DataCache<List<DummyItem>>(danceClassDataProvider, this);
 
         // Add the fragment to the 'fragment_container' FrameLayout
-        mDummyItemList = new ArrayList<>();
         SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
@@ -289,8 +287,8 @@ public class TodayActivity extends AppCompatActivity
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download
             DanceClassExtractor danceClassExtractor = Extractors.getInstance(this).getExtractor(key);
-            mNetworkFragment.startDownload(key, danceClassExtractor);
             mDownloading = true;
+            mNetworkFragment.startDownload(key, danceClassExtractor);
         }
     }
 
@@ -299,7 +297,13 @@ public class TodayActivity extends AppCompatActivity
 
         // Reload current fragment
         Fragment currentFragment = this.getCurrentFragment();
-        this.reloadFragment(currentFragment);
+        if (null != currentFragment)
+            this.reloadFragment(currentFragment);
+        else {
+            // Add the "Today" fragment to the 'fragment_container' FrameLayout
+            SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
+        }
     }
 
     public DanceClassPropertySelector getCurrentPropertySelector() {
@@ -361,6 +365,9 @@ public class TodayActivity extends AppCompatActivity
                 break;
             case IProgress.PROCESS_INPUT_STREAM_SUCCESS:
 
+                break;
+            case IProgress.NO_NETWORK_CONNECTION:
+                DummyUtils.toast(this, "No network connection");
                 break;
         }
     }

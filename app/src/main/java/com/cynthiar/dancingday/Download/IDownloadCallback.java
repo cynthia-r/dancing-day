@@ -19,7 +19,7 @@ public interface IDownloadCallback<T> {
 
     /**
      * Indicate to callback handler any progress update.
-     * @param progressCode must be one of the constants defined in IDownloadCallback.Progress.
+     * @param progressCode must be one of the constants defined in IProgress.
      * @param percentComplete must be 0-100.
      */
     void onProgressUpdate(DownloadTaskProgress progressCode, DownloadTaskProgress percentComplete);

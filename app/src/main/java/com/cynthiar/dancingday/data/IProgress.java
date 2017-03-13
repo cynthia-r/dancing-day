@@ -9,5 +9,6 @@ public interface IProgress {
     int GET_INPUT_STREAM_SUCCESS = 1;
     int PROCESS_INPUT_STREAM_IN_PROGRESS = 2;
     int PROCESS_INPUT_STREAM_SUCCESS = 3;
+    int NO_NETWORK_CONNECTION = 4;
     int GetProgressCode();
 }

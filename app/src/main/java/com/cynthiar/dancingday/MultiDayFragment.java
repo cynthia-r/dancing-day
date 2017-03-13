@@ -74,45 +74,9 @@ public class MultiDayFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        TodayActivity parentActivity = (TodayActivity)getActivity();
-
         // Retrieve list of items
+        TodayActivity parentActivity = (TodayActivity)getActivity();
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
-
-        // Get the list view and the empty state view
-        ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
-        TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
-
-        // Display empty state if no results
-        if (0 == dummyItemList.size() && parentActivity.areAllListsLoaded()) {
-            expandableListView.setVisibility(GONE);
-            emptyStateTextView.setVisibility(View.VISIBLE);
-
-            // Set title
-            parentActivity.setTitle(2);
-            return;
-        }
-
-        // Otherwise show the expandable list view
-        expandableListView.setVisibility(View.VISIBLE);
-        emptyStateTextView.setVisibility(View.GONE);
-
-        // Group by the selector - default: by day
-        DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector();
-        HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
-        DummyUtils.sortItemMap(dummyItemMap);
-        mAllItemMap = dummyItemMap;
-        List<String> groupList = DummyUtils.sortAndRotateGroups(getActivity(), dummyItemMap, danceClassPropertySelector);
-
-        // Set up list view
-        MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
-        expandableListView.setAdapter(adapter);
-
-        // Expand groups the first time
-        int groupCount = groupList.size();
-        for (int i=0; i < groupCount; i++) {
-            expandableListView.expandGroup(i);
-        }
 
         // Setup spinners
         // View by spinner
@@ -131,17 +95,49 @@ public class MultiDayFragment extends Fragment {
         List<String> levelList = Extractors.getInstance(parentActivity).getLevelList();
         this.setupSpinner(parentActivity, mLevelSpinner, levelList);
 
-        // Setup spinners listener
-        MultiDaySpinner[] spinners = {
-                new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
-                new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
-                new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
-        };
-        SpinnerItemsSelectedListener spinnerItemsSelectedListener =
-                new SpinnerItemsSelectedListener(spinners, adapter);
-        mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
-        mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
-        mViewBySpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+        // Get the list view and the empty state view
+        ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
+        TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
+
+        // Display empty state if no results
+        if (0 == dummyItemList.size() && parentActivity.areAllListsLoaded()) {
+            expandableListView.setVisibility(GONE);
+            emptyStateTextView.setVisibility(View.VISIBLE);
+        }
+        else {
+            // Otherwise show the expandable list view
+            expandableListView.setVisibility(View.VISIBLE);
+            emptyStateTextView.setVisibility(View.GONE);
+
+            // Group by the selector - default: by day
+            DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector();
+            HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);
+            DummyUtils.sortItemMap(dummyItemMap);
+            mAllItemMap = dummyItemMap;
+            List<String> groupList = DummyUtils.sortAndRotateGroups(getActivity(), dummyItemMap, danceClassPropertySelector);
+
+            // Set up list view
+            MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
+            expandableListView.setAdapter(adapter);
+
+            // Expand groups the first time
+            int groupCount = groupList.size();
+            for (int i=0; i < groupCount; i++) {
+                expandableListView.expandGroup(i);
+            }
+
+            // Setup spinners listener
+            MultiDaySpinner[] spinners = {
+                    new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
+                    new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
+                    new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
+            };
+            SpinnerItemsSelectedListener spinnerItemsSelectedListener =
+                    new SpinnerItemsSelectedListener(spinners, adapter);
+            mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+            mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+            mViewBySpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+        }
 
         // Set title
         parentActivity.setTitle(2);
