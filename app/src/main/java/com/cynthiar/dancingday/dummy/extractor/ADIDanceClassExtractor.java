@@ -23,7 +23,7 @@ import java.util.List;
  * Created by Robert on 12/02/2017.
  */
 
-public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
+public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
     //private static final String mainSelector = ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)";
     private static final String mainSelector = ".tve_tfo p";
 
@@ -47,46 +47,18 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public Document processDownload(InputStream inputStream, String baseUri) throws IOException {
-        Document doc = Jsoup.parse(inputStream, null, baseUri);
-        return doc;
+    protected String getSelector() {
+        return ADIDanceClassExtractor.mainSelector;
     }
 
     @Override
-    public List<DummyItem> Extract(Document doc) throws IOException {
-
-        Elements classes = doc.select(mainSelector);
-
-        // Return empty list if nothing extracted
-        if (null == classes || classes.size() == 0)
-            return new ArrayList<>();
-
-        // Keep the ballet classes only
-        List<DummyItem> dummyItemList = new ArrayList<>();
-        for (Element classElement:classes
-             ) {
-            DummyItem classItem = this.parseClassElement(classElement);
-            if (null != classItem)
-                dummyItemList.add(classItem);
-
-        }
-        return dummyItemList;
-    }
-
-    private DummyItem parseClassElement(Element classElement) {
+    protected List<DummyItem> parseBaseElement(int elementIndex, Element classElement) {
         String classType = "";
         String classText = "";
         String levelText = "";
         String classDescription = "";
         String classElementText = classElement.text();
         try {
-            /*Element classTypeElement = (Element) classElement.childNode(0);
-            TextNode classTypeTextNode = (TextNode) classTypeElement.childNode(0);
-            classType = classTypeTextNode.text();
-
-
-            TextNode classTextNode = (TextNode) classElement.childNode(1);
-            classText = classTextNode.text();*/
 
             // Find the colon delimiter
             int indexOfColon = classElementText.indexOf(':');
@@ -135,16 +107,6 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
                 return null;
             }
 
-            /*int indexOfComma = classDescription.indexOf(',');
-            if (0 > indexOfComma)
-            {
-                System.out.print("Excluded:" + classDescription + " because doesn't contain ','");
-                return null;
-            }*/
-
-            //String day = classDescription.substring(0, indexOfComma); // TODO this should be an enum
-            //String classTimeText = classDescription.substring(indexOfComma + 1);
-
             int indexOfOpeningParenthesis = classTimeText.indexOf('(');
             int indexOfClosingParenthesis = classTimeText.indexOf(')');
 
@@ -155,7 +117,9 @@ public class ADIDanceClassExtractor extends DanceClassExtractor<Document> {
             String teacher = classTimeText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
 
             // Build and return the class object
-            return new DummyItem(day, DanceClassTime.create(time), Schools.ADI_SCHOOL, teacher, level);
+            List<DummyItem> dummyItemList = new ArrayList<>();
+            dummyItemList.add(new DummyItem(day, DanceClassTime.create(time), Schools.ADI_SCHOOL, teacher, level));
+            return dummyItemList;
         }
         catch (Exception e) {
             String a = classElement.text();

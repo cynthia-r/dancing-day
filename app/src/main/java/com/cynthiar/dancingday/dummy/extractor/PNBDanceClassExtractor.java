@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * Created by Robert on 13/02/2017.
  */
 
-public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
+public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     private static final String mainSelector = "table tr";
     private int mSchoolNumber = -1;
 
@@ -50,34 +50,14 @@ public class PNBDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public Document processDownload(InputStream downloadStream, String baseUri) throws IOException {
-        Document doc = Jsoup.parse(downloadStream, null, baseUri);
-        return doc;
+    protected String getSelector() {
+        return PNBDanceClassExtractor.mainSelector;
     }
 
     @Override
-    public List<DummyItem> Extract(Document doc) throws IOException {
-        Elements classes = doc.select(mainSelector);
-
-        // Return empty list if nothing extracted
-        if (null == classes || classes.size() == 0)
-            return new ArrayList<>();
-
-        List<DummyItem> dummyItemList = new ArrayList<>();
-        for (Element classRow:classes
-             ) {
-            List<DummyItem> classItemList = this.parseClassElement(classRow);
-            if (null != classItemList && classItemList.size() > 0)
-                dummyItemList.addAll(classItemList);
-        }
-
-        return dummyItemList;
-    }
-
-    private List<DummyItem> parseClassElement(Element classElement) {
+    protected List<DummyItem> parseBaseElement(int elementIndex, Element classElement) {
         try {
 
-            //Element firstChild = (Element) classElement.childNode(0);
             NextElement nextElement = findNextChildElement(classElement, 0);
             Element firstChild = nextElement.getElement();
             if (null == firstChild)

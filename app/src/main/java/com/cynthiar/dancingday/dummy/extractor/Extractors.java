@@ -47,7 +47,8 @@ public class Extractors {
                 new ADIDanceClassExtractor(context),
                 new PNBDanceClassExtractor(context),
                 new KDCDanceClassExtractor(context),
-                new WDCDanceClassExtractor(context)
+                new WDCDanceClassExtractor(context),
+                new ExitSpaceDanceClassExtractor(context)
         };
         return danceClassExtractors;
     }
