@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -30,12 +31,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     private Toolbar myToolbar;
     private boolean mIsFavorite;
 
-    // Distance component
-    //private DistanceComponent mDistanceComponent;
-
-    // Keep a reference to the NetworkFragment, which owns the AsyncTask object
-    // that is used to execute network ops.
-    //private NetworkFragment mNetworkFragment;
     private Context mContext;
     private DistanceTask mDistanceTask;
 
@@ -67,7 +62,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         // Calculate ETA
         mDistanceTask = new DistanceTask(this);
         String destinationAddress = bundle.getString(DetailsActivity.SCHOOL_ADDRESS_KEY);
-        getEstimate(destinationAddress);
+        startEstimate(destinationAddress);
 
         // Save coordinates
         mSchoolCoordinates = bundle.getString(DetailsActivity.SCHOOL_COORDINATES_KEY);
@@ -77,18 +72,35 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         TextView teacherView = (TextView) findViewById(R.id.teacher);
         TextView levelView = (TextView) findViewById(R.id.level);
         TextView timeView = (TextView) findViewById(R.id.time);
-        TextView etaView = (TextView) findViewById(R.id.eta);
         schoolView.setText(bundle.getString(DetailsActivity.SCHOOL_KEY));
         teacherView.setText(bundle.getString(DetailsActivity.TEACHER_KEY));
         levelView.setText(bundle.getString(DetailsActivity.LEVEL_KEY));
         timeView.setText(bundle.getString(DetailsActivity.TIME_KEY));
 
         // Set ETA to empty initially
+        TextView etaView = (TextView) findViewById(R.id.eta);
+        etaView.setText("");
 
         // TODO retrieve if dummy item is a favorite
-        mIsFavorite = false;
-        ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
+        mIsFavorite = (bundle.getString(DetailsActivity.SCHOOL_KEY).contains("PNB"));
+        final ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
         imageButton.setPressed(mIsFavorite);
+       imageButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO see if can remove this
+                // show interest in events resulting from ACTION_DOWN
+                if(event.getAction()==MotionEvent.ACTION_DOWN) return true;
+
+                // don't handle event unless its ACTION_UP so "doSomething()" only runs once.
+                if(event.getAction()!=MotionEvent.ACTION_UP) return false;
+                // doSomething();
+                //v.setActivated(mIsFavorite);
+                mIsFavorite = !mIsFavorite;
+                v.setPressed(mIsFavorite);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -96,14 +108,19 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         onBackPressed();
         return true;
     }
+
     /**
      * Start non-blocking execution of DistanceTask.
      */
-    /*public void startEstimate(DistanceQuery distanceQuery) {
-        cancelEstimate();
-        mDistanceTask = new DistanceTask(this);
-        mDistanceTask.execute(distanceQuery);
-    }*/
+    private void startEstimate(String destinationAddress) {
+        if (!mEstimating && mDistanceTask != null) {
+            // Execute the async estimate
+            String originAddress = "3933 Lake Washington Blvd NE #200, Kirkland, WA 98033";
+            DistanceQuery distanceQuery = new DistanceQuery(originAddress, destinationAddress);
+            mDistanceTask.execute(distanceQuery);
+            mEstimating = true;
+        }
+    }
 
     /**
      * Cancel (and interrupt if necessary) any ongoing DistanceTask execution.
@@ -111,16 +128,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public void cancelEstimate() {
         if (mDistanceTask != null) {
             mDistanceTask.cancel(true);
-        }
-    }
-
-    private void getEstimate(String destinationAddress) {
-        if (!mEstimating && mDistanceTask != null) {
-            // Execute the async estimate
-            String originAddress = "3933 Lake Washington Blvd NE #200, Kirkland, WA 98033";
-            DistanceQuery distanceQuery = new DistanceQuery(originAddress, destinationAddress);
-            mDistanceTask.execute(distanceQuery);
-            mEstimating = true;
         }
     }
 
@@ -151,24 +158,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         DummyUtils.toast(this, "Star");
         ImageButton imageButton = (ImageButton)view;
         //imageButton.setSelected(true);
-        imageButton.setSelected(!mIsFavorite); // todo set button on
-        mIsFavorite = !mIsFavorite;
+        //imageButton.setPressed(!mIsFavorite); // todo set button on
+        //imageButton.setPressed(true);
+//        mIsFavorite = !mIsFavorite;
     }
-
-    /*private class DistanceComponent implements IConsumerCallback<DistanceResult> {
-
-    public DistanceComponent(Context context){
-        mContext = context;
-    }
-
-
-    public boolean isEstimating(){
-        return mEstimating;
-    }
-
-    public void setIsEstimating(boolean isEstimating){
-        mEstimating = isEstimating;
-    }
-
-    }*/
 }

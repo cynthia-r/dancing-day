@@ -1,12 +1,9 @@
 package com.cynthiar.dancingday;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -26,8 +22,6 @@ import com.cynthiar.dancingday.data.DanceClassDataProvider;
 import com.cynthiar.dancingday.data.DataCache;
 import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
-import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
-import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.DummyItem;
@@ -41,6 +35,9 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    Main activity.
+ */
 public class TodayActivity extends AppCompatActivity
         implements IDownloadCallback<List<DummyItem>>,
         IConsumerCallback<List<DummyItem>> {
@@ -49,16 +46,18 @@ public class TodayActivity extends AppCompatActivity
     public static final String TOMORROW_KEY = "Tomorrow";
     public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
 
-    private String[] timeFrames;
+    // Time frames
+    private String[] mTimeFrames;
 
+    // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private LinearLayout mLeftDrawerLayout;
 
+    // Toolbar
     private Toolbar myToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mTitle;
-    private String mDrawerTitle = "Timeframes";
 
     // Keep a reference to the NetworkFragment, which owns the AsyncTask object
     // that is used to execute network ops.
@@ -68,29 +67,35 @@ public class TodayActivity extends AppCompatActivity
     // downloads with consecutive button clicks.
     private boolean mDownloading = false;
 
+    // Cache for the dance classes
     private DataCache<List<DummyItem>> mDanceClassCache;
     private boolean mAllListsLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Call base and set view
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
 
         // Setup toolbar
-        mTitle = "Today";
+        mTitle = mTimeFrames[0];
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(mTitle);
         setSupportActionBar(myToolbar);
 
+        // Setup action bar buttons
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         // Setup navigation drawer
-        timeFrames = getResources().getStringArray(R.array.timeframes_array);
+        mTimeFrames = getResources().getStringArray(R.array.timeframes_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mLeftDrawerLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
         // Set the adapter for the drawer list view
-        mDrawerList.setAdapter(new DrawerListViewAdapter(timeFrames, this));
-        // Set the list's click listener
+        mDrawerList.setAdapter(new DrawerListViewAdapter(mTimeFrames, this));
+        // Set the drawer list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // Setup drawer toggle
@@ -110,28 +115,24 @@ public class TodayActivity extends AppCompatActivity
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle(mDrawerTitle);
             }
         };
 
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         // Check first item in drawer
         mDrawerList.setItemChecked(0, true);
-
-        // Setup action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         // Setup joda time library
         JodaTimeAndroid.init(this);
 
         // Setup cache
         DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
-        mDanceClassCache = new DataCache<List<DummyItem>>(danceClassDataProvider, this);
+        mDanceClassCache = new DataCache<>(danceClassDataProvider, this);
 
         // Add the fragment to the 'fragment_container' FrameLayout
+        // Default fragment is for "Today"
         SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
 
@@ -173,14 +174,19 @@ public class TodayActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        // Return true if the settings button was touched
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
+        // Call base
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+        Listener for the drawer item list.
+    */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -188,19 +194,18 @@ public class TodayActivity extends AppCompatActivity
         }
     }
 
-    /** Swaps fragments in the main school view */
+    /*
+        Swaps fragments in the main school view.
+    */
     private void selectItem(int position) {
-
         // Create a new fragment and specify the title to show based on position
         Fragment fragment;
         String fragmentTag;
-        if (position < 2)
-        {
+        if (position < 2) { // 0: Today, 1: Tomorrow
             fragment = SingleDayFragment.newInstance(position);
             fragmentTag = SingleDayFragment.TAG;
         }
-        else
-        {
+        else { // 2: Next 7 days
             fragment = new MultiDayFragment();
             fragmentTag = MultiDayFragment.TAG;
         }
@@ -208,7 +213,7 @@ public class TodayActivity extends AppCompatActivity
         // Switch fragment
         this.switchToFragment(fragment, fragmentTag);
 
-        // Highlight the selected item, update the title, and close the drawer
+        // Highlight the selected item, and close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mLeftDrawerLayout);
     }
@@ -233,7 +238,7 @@ public class TodayActivity extends AppCompatActivity
     }
 
     public void setTitle(int position) {
-        setTitle(timeFrames[position]);
+        setTitle(mTimeFrames[position]);
     }
 
     public List<DummyItem> getCurrentList() {
