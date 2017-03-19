@@ -84,6 +84,7 @@ public class MultiDayFilter extends Filter {
         }
 
         // Group by the view by selected
+        boolean allItemsFiltered = false;
         if (null != viewBySelected && !viewBySelected.isEmpty()) {
             // Get the property selector
             DanceClassPropertySelector viewBySelector = null;
@@ -98,6 +99,7 @@ public class MultiDayFilter extends Filter {
             if (null != viewBySelector) {
                 SpinnerItemFilter spinnerItemFilter = new SpinnerItemFilter(spinnerFilterList);
                 itemToKeepMap = DummyUtils.GroupByWithFilter(viewBySelector, allItemList, spinnerItemFilter);
+                allItemsFiltered = itemToKeepMap.isEmpty();
                 DummyUtils.sortItemMap(itemToKeepMap);
                 mGroupList = DummyUtils.sortAndRotateGroups(mContext, itemToKeepMap, viewBySelector);
 
@@ -106,9 +108,9 @@ public class MultiDayFilter extends Filter {
             }
         }
 
-        // Print if mGroupList has no elements // TODO check when valid to print
-        /*if (0 == mGroupList.size())
-            DummyUtils.toast(mContext, "No groups found");*/
+        // Print if mGroupList has no elements
+        if (!allItemsFiltered && 0 == mGroupList.size())
+            DummyUtils.toast(mContext, "No groups found");
 
         // Set the results and return
         filterResults.count = itemToKeepMap.size();

@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     private static final String mainSelector = "table tr";
-    private int mSchoolNumber = -1;
+    private int mSchoolNumber;
 
     public PNBDanceClassExtractor(Context context) { super(context); }
 
@@ -52,6 +52,12 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     @Override
     protected String getSelector() {
         return PNBDanceClassExtractor.mainSelector;
+    }
+
+    @Override
+    protected void initializeExtraction() {
+        // Reset school number
+        mSchoolNumber = -1;
     }
 
     @Override

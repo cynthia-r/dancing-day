@@ -70,7 +70,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     }
 
     @Override
-    public List<DummyItem> Extract(String okay) {
+    public List<DummyItem> extract(String okay) {
         List<DummyItem> dummyItemList = new ArrayList<>();
         dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), Schools.KDC_SCHOOL, "Jerri", DanceClassLevel.BeginnerIntermediate));
         dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), Schools.KDC_SCHOOL, "Beinna", DanceClassLevel.BeginnerIntermediate));

@@ -264,11 +264,12 @@ public class TodayActivity extends AppCompatActivity
 
     public List<DummyItem> getCurrentList() {
         Extractors extractorsInstance = Extractors.getInstance(this);
-        List<List<DummyItem>> schoolLists = new ArrayList<>(extractorsInstance.EXTRACTORS.length);
+        DanceClassExtractor[] extractors = extractorsInstance.getExtractors();
+        List<List<DummyItem>> schoolLists = new ArrayList<>(extractors.length);
         mAllListsLoaded = true;
-        for (int i = 0; i < extractorsInstance.EXTRACTORS.length; i++
+        for (int i = 0; i < extractors.length; i++
              ) {
-            DanceClassExtractor danceClassExtractor = extractorsInstance.EXTRACTORS[i];
+            DanceClassExtractor danceClassExtractor = extractors[i];
 
             // Continue if the list is not ready
             List<DummyItem>[] data = new List[1];

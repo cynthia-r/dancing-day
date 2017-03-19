@@ -17,6 +17,20 @@ public class Schools {
             Address = address;
             Coordinates = coordinates;
         }
+
+        @Override
+        public String toString() {
+            return this.Key;
+        }
+
+        public static DanceSchool fromString(String schoolKey) {
+            for (DanceSchool school:Schools.SCHOOLS
+                    ) {
+                if (schoolKey.equals(school.toString()))
+                    return school;
+            }
+            return null;
+        }
     }
 
     public static final DanceSchool ADI_SCHOOL = new DanceSchool("ADI", "American Dance Institute", "8001 Greenwood Ave N, Seattle, WA 98103", "47.687170, -122.355662");

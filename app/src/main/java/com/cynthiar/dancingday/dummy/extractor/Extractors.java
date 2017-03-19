@@ -22,10 +22,10 @@ public class Extractors {
     private static volatile Object syncObject = new Object();
 
     private Extractors(DanceClassExtractor[] danceClassExtractors) {
-        EXTRACTORS = danceClassExtractors;
+        this.extractors = danceClassExtractors;
     }
 
-    public DanceClassExtractor[] EXTRACTORS;
+    private DanceClassExtractor[] extractors;
 
     public static Extractors getInstance(Context context) {
         if (null != mExtractorsInstance)
@@ -53,10 +53,16 @@ public class Extractors {
         return danceClassExtractors;
     }
 
+    public DanceClassExtractor[] getExtractors() {
+        DanceClassExtractor[] extractorsCopy = new DanceClassExtractor[this.extractors.length];
+        System.arraycopy(this.extractors, 0, extractorsCopy, 0, this.extractors.length);
+        return extractorsCopy;
+    }
+
     public DanceClassExtractor getExtractor(String key) {
-        for (int i=0; i < EXTRACTORS.length; i++
+        for (int i = 0; i < this.extractors.length; i++
              ) {
-            DanceClassExtractor extractor = EXTRACTORS[i];
+            DanceClassExtractor extractor = this.extractors[i];
             if (extractor.getKey().equals(key))
                 return extractor;
         }
@@ -77,7 +83,7 @@ public class Extractors {
     public List<String> getSchoolList() {
         List<String> propertyList = new ArrayList<>();
         propertyList.add(MultiDayFragment.ALL_KEY.concat(" schools"));
-        for (DanceClassExtractor danceClassExtractor : EXTRACTORS
+        for (DanceClassExtractor danceClassExtractor : this.extractors
              ) {
             propertyList.addAll(danceClassExtractor.getSchoolList());
         }

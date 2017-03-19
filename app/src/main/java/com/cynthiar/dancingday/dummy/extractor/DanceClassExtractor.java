@@ -30,5 +30,12 @@ public abstract class DanceClassExtractor<T> {
 
     public abstract T processDownload(InputStream downloadStream, String baseUri) throws IOException;
 
-    public abstract List<DummyItem> Extract(T htmlContent) throws IOException;
+    protected abstract List<DummyItem> extract(T htmlContent) throws IOException;
+
+    protected void initializeExtraction() {}
+
+    public List<DummyItem> extractItems(T htmlContent) throws IOException {
+        initializeExtraction();
+        return extract(htmlContent);
+    }
 }

@@ -114,8 +114,9 @@ public class SingleDayFragment extends Fragment {
         LocalTime currentTime = new LocalTime();
         for (DummyItem dummyItem:unfilteredList
                 ) {
-            if (dayToKeep.equals(dummyItem.day)
-                    && ((1 == position || (dummyItem.danceClassTime.endTime.isAfter(currentTime)))))
+            if (dayToKeep.equals(dummyItem.day) // only keep the current day (today/tomorrow)
+                    // and if the day is today, only keep the classes that haven't started yet (with a 10 min margin)
+                    && ((1 == position || (dummyItem.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime)))))
                 filteredList.add(dummyItem);
         }
         return filteredList;

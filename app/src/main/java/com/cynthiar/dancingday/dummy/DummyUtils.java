@@ -388,4 +388,25 @@ public class DummyUtils<T> {
     public static String clean(String inputString) {
         return inputString.trim().replaceAll("[^a-zA-Z0-9\\-:]", "");
     }
+
+    public static String join(Character separator, String... stringParams) {
+        if (null == stringParams || 0 == stringParams.length)
+            return "";
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String stringParam:stringParams
+             ) {
+            stringBuilder.append(stringParam);
+            stringBuilder.append(separator);
+        }
+        return stringBuilder.toString();
+    }
+
+    public static DanceClassLevel tryParseLevel(String levelString) {
+        for (DanceClassLevel danceClassLevel : DanceClassLevel.values()) {
+            if (levelString.equals(danceClassLevel.toString()))
+                return danceClassLevel;
+        }
+        return DanceClassLevel.Unknown;
+    }
 }

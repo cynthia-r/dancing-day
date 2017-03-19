@@ -51,7 +51,7 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public List<DummyItem> Extract(Document doc) throws IOException {
+    public List<DummyItem> extract(Document doc) throws IOException {
         Elements classes = doc.select(mainSelector);
 
         // Return empty list if nothing extracted

@@ -36,7 +36,7 @@ public abstract class HtmlDanceClassExtractor extends DanceClassExtractor<Docume
     }
 
     @Override
-    public List<DummyItem> Extract(Document doc) throws IOException {
+    public List<DummyItem> extract(Document doc) throws IOException {
         String mainSelector = this.getSelector();
         Elements baseElements = doc.select(mainSelector);
 

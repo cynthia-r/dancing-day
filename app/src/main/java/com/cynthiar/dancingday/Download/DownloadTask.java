@@ -111,7 +111,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                 /*if (resultString != null) {
                     result = new Result(new Pair<>(mKey, resultString));*/
                 if (processedResult != null) {
-                    List<DummyItem> dummyItemList = mExtractor.Extract(processedResult);
+                    List<DummyItem> dummyItemList = mExtractor.extractItems(processedResult);
                     result = new Result(new Pair<>(mKey, dummyItemList));
                 } else {
                     throw new IOException("No response received.");

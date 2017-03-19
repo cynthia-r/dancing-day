@@ -101,11 +101,9 @@ public class SingleDayListViewAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
             TodayActivity parentActivity = (TodayActivity)mContext;
-            //parentActivity.getEstimate(dummyItem.school.Address);
-            //DummyUtils.toast(mContext, "Doing something");
-
             Intent intent = new Intent(parentActivity, DetailsActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putString(DetailsActivity.DAY_KEY, dummyItem.day);
             bundle.putString(DetailsActivity.LEVEL_KEY, dummyItem.level.toString());
             bundle.putString(DetailsActivity.SCHOOL_KEY, dummyItem.school.Key);
             bundle.putString(DetailsActivity.SCHOOL_ADDRESS_KEY, dummyItem.school.Address);

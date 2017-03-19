@@ -3,6 +3,7 @@ package com.cynthiar.dancingday;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,10 +17,13 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
 import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.distance.matrix.DistanceTask;
+import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
-public class DetailsActivity extends AppCompatActivity implements IConsumerCallback<DistanceResult> {
+import java.util.HashSet;
+import java.util.Set;
 
+public class DetailsActivity extends AppCompatActivity implements IConsumerCallback<DistanceResult> {
     public static final String DANCE_CLASS_KEY = "Dance_Class";
     public static final String SCHOOL_ADDRESS_KEY = "School_Address";
     public static final String SCHOOL_COORDINATES_KEY = "School_Coordinates";
@@ -27,8 +31,10 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String LEVEL_KEY = "Level";
     public static final String TEACHER_KEY = "Teacher";
     public static final String TIME_KEY = "Time";
+    public static final String DAY_KEY = "Day";
 
     private static final String WAZE_SCHEME = "waze";
+    private static final String TITLE = "Class";
 
     private Toolbar myToolbar;
     private boolean mIsFavorite;
@@ -40,6 +46,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     // estimations with consecutive button clicks.
     private boolean mEstimating = false;
 
+    private DummyItem mDanceClass;
+
     // Save the school coordinates
     private String mSchoolCoordinates;
 
@@ -48,14 +56,13 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-
         // Get the Intent that started this activity and extract the bundle
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(DetailsActivity.DANCE_CLASS_KEY);
 
         // Setup toolbar
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("Class");
+        myToolbar.setTitle(DetailsActivity.TITLE);
         setSupportActionBar(myToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,6 +73,14 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         String destinationAddress = bundle.getString(DetailsActivity.SCHOOL_ADDRESS_KEY);
         startEstimate(destinationAddress);
 
+        // Save the dance class information
+        String day = bundle.getString(DetailsActivity.DAY_KEY);
+        String time = bundle.getString(DetailsActivity.TIME_KEY);
+        String school = bundle.getString(DetailsActivity.SCHOOL_KEY);
+        String teacher = bundle.getString(DetailsActivity.TEACHER_KEY);
+        String level = bundle.getString(DetailsActivity.LEVEL_KEY);
+        mDanceClass = DummyItem.fromStrings(day, time, school, teacher, level);
+
         // Save coordinates
         mSchoolCoordinates = bundle.getString(DetailsActivity.SCHOOL_COORDINATES_KEY);
 
@@ -74,35 +89,27 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         TextView teacherView = (TextView) findViewById(R.id.teacher);
         TextView levelView = (TextView) findViewById(R.id.level);
         TextView timeView = (TextView) findViewById(R.id.time);
-        schoolView.setText(bundle.getString(DetailsActivity.SCHOOL_KEY));
-        teacherView.setText(bundle.getString(DetailsActivity.TEACHER_KEY));
-        levelView.setText(bundle.getString(DetailsActivity.LEVEL_KEY));
-        timeView.setText(bundle.getString(DetailsActivity.TIME_KEY));
+        schoolView.setText(school);
+        teacherView.setText(teacher);
+        levelView.setText(level);
+        timeView.setText(time);
 
         // Set ETA to empty initially
         TextView etaView = (TextView) findViewById(R.id.eta);
         etaView.setText("");
 
-        // TODO retrieve if dummy item is a favorite
-        mIsFavorite = (bundle.getString(DetailsActivity.SCHOOL_KEY).contains("PNB"));
-        final ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
-        imageButton.setPressed(mIsFavorite);
-       imageButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO see if can remove this
-                // show interest in events resulting from ACTION_DOWN
-                if(event.getAction()==MotionEvent.ACTION_DOWN) return true;
+        // Retrieve if dummy item is a favorite
+        String danceClassKey = mDanceClass.toKey();
+        SharedPreferences sharedPreferences = getSharedPreferences(
+            getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
+        String favoritesPreferencesKey = getString(R.string.favorites_key);
+        Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
+        mIsFavorite = favoriteSet.contains(danceClassKey);
 
-                // don't handle event unless its ACTION_UP so "doSomething()" only runs once.
-                if(event.getAction()!=MotionEvent.ACTION_UP) return false;
-                // doSomething();
-                //v.setActivated(mIsFavorite);
-                mIsFavorite = !mIsFavorite;
-                v.setPressed(mIsFavorite);
-                return true;
-            }
-        });
+        // Set star button accordingly
+        ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
+        imageButton.setPressed(mIsFavorite);
+        imageButton.setOnTouchListener(new StarTouchListener());
     }
 
     @Override
@@ -159,12 +166,40 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         }
     }
 
-    public void onToggleStar(View view) {
-        DummyUtils.toast(this, "Star");
-        ImageButton imageButton = (ImageButton)view;
-        //imageButton.setSelected(true);
-        //imageButton.setPressed(!mIsFavorite); // todo set button on
-        //imageButton.setPressed(true);
-//        mIsFavorite = !mIsFavorite;
+    private class StarTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            // Show interest in events resulting from ACTION_DOWN
+            if(event.getAction()== MotionEvent.ACTION_DOWN) return true;
+
+            // Don't handle event unless its ACTION_UP so "doSomething()" only runs once.
+            if(event.getAction() != MotionEvent.ACTION_UP) return false;
+
+            // Do something - mark the dance class as favorite
+            String danceClassKey = mDanceClass.toKey();
+            SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
+
+            // Retrieve previous set of favorites
+            String favoritesPreferencesKey = getString(R.string.favorites_key);
+            Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
+
+            // Un-mark as favorite
+            if (mIsFavorite)
+                favoriteSet.remove(danceClassKey);
+            // Mark as favorite
+            else
+                favoriteSet.add(danceClassKey);
+
+            // Update the preferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putStringSet(favoritesPreferencesKey, favoriteSet);
+            editor.commit();
+
+            // Change the state of the favorite button
+            mIsFavorite = !mIsFavorite;
+            v.setPressed(mIsFavorite);
+            return true;
+        }
     }
 }
