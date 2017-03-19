@@ -28,6 +28,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TEACHER_KEY = "Teacher";
     public static final String TIME_KEY = "Time";
 
+    private static final String WAZE_SCHEME = "waze";
+
     private Toolbar myToolbar;
     private boolean mIsFavorite;
 
@@ -132,19 +134,22 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     }
 
     public void updateFromResult(DistanceResult distanceResult) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(distanceResult.getEstimatedTime());
-
         TextView etaView = (TextView) findViewById(R.id.eta);
-        etaView.setText(stringBuilder.toString());
-
+        etaView.setText(distanceResult.getEstimatedTime());
         mEstimating = false;
     }
 
     public void goNow(View view) {
         try
         {
-            String url = "waze://?ll=" + mSchoolCoordinates + "&z=10&navigate=yes"; // todo build query properly
+            // Build url
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme(DetailsActivity.WAZE_SCHEME);
+            builder.authority("");
+            builder.appendQueryParameter("ll", mSchoolCoordinates);
+            builder.appendQueryParameter("z", "10");
+            builder.appendQueryParameter("navigate", "yes");
+            String url = builder.build().toString();
             Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
             startActivity( intent );
         }

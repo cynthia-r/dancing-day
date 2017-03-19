@@ -71,6 +71,9 @@ public class TodayActivity extends AppCompatActivity
     private DataCache<List<DummyItem>> mDanceClassCache;
     private boolean mAllListsLoaded;
 
+    private boolean mIsInForeground = false;
+    private boolean mReloadFragmentOnResume = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Call base and set view
@@ -78,6 +81,7 @@ public class TodayActivity extends AppCompatActivity
         setContentView(R.layout.activity_today);
 
         // Setup toolbar
+        mTimeFrames = getResources().getStringArray(R.array.timeframes_array);
         mTitle = mTimeFrames[0];
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(mTitle);
@@ -88,7 +92,6 @@ public class TodayActivity extends AppCompatActivity
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // Setup navigation drawer
-        mTimeFrames = getResources().getStringArray(R.array.timeframes_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mLeftDrawerLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
@@ -135,6 +138,7 @@ public class TodayActivity extends AppCompatActivity
         // Default fragment is for "Today"
         SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
+        mReloadFragmentOnResume = false;
 
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
@@ -146,6 +150,23 @@ public class TodayActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+        mIsInForeground = true;
+        if (mReloadFragmentOnResume) {
+            this.reloadCurrentFragment();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+
+        mIsInForeground = false;
     }
 
     @Override
@@ -289,6 +310,8 @@ public class TodayActivity extends AppCompatActivity
     }
 
     public void startDownload(String key) {
+        // TODO this implementation only allows a single download at a time
+        // We could download in parallel and make sure the today activity is thread-safe
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download
             DanceClassExtractor danceClassExtractor = Extractors.getInstance(this).getExtractor(key);
@@ -299,16 +322,14 @@ public class TodayActivity extends AppCompatActivity
 
     public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.
+        // TODO activity may not be visible anymore
+        if (!mIsInForeground) {
+            mReloadFragmentOnResume = true;
+            return;
+        }
 
         // Reload current fragment
-        Fragment currentFragment = this.getCurrentFragment();
-        if (null != currentFragment)
-            this.reloadFragment(currentFragment);
-        else {
-            // Add the "Today" fragment to the 'fragment_container' FrameLayout
-            SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
-        }
+        this.reloadCurrentFragment();
     }
 
     public DanceClassPropertySelector getCurrentPropertySelector() {
@@ -344,6 +365,19 @@ public class TodayActivity extends AppCompatActivity
 
         ft.attach(fragment);
         ft.commit();
+    }
+
+    private void reloadCurrentFragment() {
+        // Reload current fragment
+        Fragment currentFragment = this.getCurrentFragment();
+        if (null != currentFragment)
+            this.reloadFragment(currentFragment);
+        /*else {
+            // Add the "Today" fragment to the 'fragment_container' FrameLayout
+            SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
+        }*/
+        mReloadFragmentOnResume = false;
     }
 
     public NetworkInfo getActiveNetworkInfo() {

@@ -106,9 +106,9 @@ public class MultiDayFilter extends Filter {
             }
         }
 
-        // Print if mGroupList has no elements
-        if (0 == mGroupList.size())
-            DummyUtils.toast(mContext, "No groups found");
+        // Print if mGroupList has no elements // TODO check when valid to print
+        /*if (0 == mGroupList.size())
+            DummyUtils.toast(mContext, "No groups found");*/
 
         // Set the results and return
         filterResults.count = itemToKeepMap.size();
