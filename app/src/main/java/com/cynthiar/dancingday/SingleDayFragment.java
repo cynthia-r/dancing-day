@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -15,7 +17,9 @@ import com.cynthiar.dancingday.dummy.DummyUtils;
 import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static android.view.View.GONE;
 
@@ -94,6 +98,9 @@ public class SingleDayFragment extends Fragment {
 
         // Sort list
         dummyItemList = DummyUtils.sortItemList(dummyItemList);
+
+        // Mark favorite items
+        //parentActivity.markFavorites(dummyItemList);
 
         // Setup list adapter
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);

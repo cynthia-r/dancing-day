@@ -16,6 +16,15 @@
         android:layout_alignParentLeft="true"
         android:textAppearance="?attr/textAppearanceListItem" />
 
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="@dimen/small_star"
+        android:layout_height="@dimen/small_star"
+        android:background="@drawable/star"
+        android:layout_marginTop="@dimen/small_text_margin"
+        android:layout_marginLeft="@dimen/small_text_margin"
+        android:layout_toEndOf="@+id/time"/>
+
     <TextView
         android:id="@+id/class_item_bottom_left"
         android:layout_width="wrap_content"

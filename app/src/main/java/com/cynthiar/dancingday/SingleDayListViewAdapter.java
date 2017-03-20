@@ -2,14 +2,17 @@ package com.cynthiar.dancingday;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.dummy.Preferences;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.LevelPropertySelector;
@@ -92,6 +95,21 @@ public class SingleDayListViewAdapter extends BaseAdapter{
 
         mClassItemTopRightView.setText(topRightViewText);
         mClassItemBottomLeftView.setText(bottomLeftViewText);
+
+        /*// Retrieve preferences
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(
+                mContext.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
+        String favoritesKey = mContext.getString(R.string.favorites_key);*/
+
+        // Display whether the item is a favorite
+        ImageView starView = (ImageView)convertView.findViewById(R.id.star);
+        //if (dummyItem.isMarkedAsFavorite(sharedPreferences, favoritesKey)) {
+        if (Preferences.getInstance(mContext).isFavorite(dummyItem.toKey())) {
+            starView.setVisibility(View.VISIBLE);
+            starView.setPressed(true);
+        }
+        else
+            starView.setVisibility(View.GONE);
 
         convertView.setClickable(true);
         convertView.setFocusable(true);

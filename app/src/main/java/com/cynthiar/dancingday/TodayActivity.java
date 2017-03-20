@@ -1,6 +1,7 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,6 +27,7 @@ import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.Preferences;
 import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
@@ -33,7 +35,9 @@ import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Main activity.
@@ -166,6 +170,7 @@ public class TodayActivity extends AppCompatActivity
         super.onPause();  // Always call the superclass method first
 
         mIsInForeground = false;
+        Preferences.getInstance(this).save(this);
     }
 
     @Override
@@ -308,6 +313,27 @@ public class TodayActivity extends AppCompatActivity
 
     public boolean areAllListsLoaded() {
         return mAllListsLoaded;
+    }
+
+    public void markFavorites(List<DummyItem> dummyItemList) {
+        // Return early if the list is empty
+        if (null == dummyItemList || 0 == dummyItemList.size())
+            return;
+
+        // Retrieve preferences
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
+
+        // Retrieve previous set of favorites
+        String favoritesPreferencesKey = getString(R.string.favorites_key);
+        Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
+
+        // Mark the favorite items in the list
+        for (DummyItem dummyItem:dummyItemList
+                ) {
+            if (favoriteSet.contains(dummyItem.toKey()))
+                dummyItem.markAsFavorite();
+        }
     }
 
     public void updateFromDownload(List<DummyItem> result) {

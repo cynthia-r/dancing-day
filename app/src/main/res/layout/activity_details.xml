@@ -28,7 +28,6 @@
             android:layout_alignParentLeft="true"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
@@ -63,7 +62,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/level"
             android:textAppearance="?attr/textAppearanceListItem" />
-
 
         <TextView
             android:id="@+id/eta"

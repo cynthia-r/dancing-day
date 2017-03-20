@@ -19,6 +19,7 @@ import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.distance.matrix.DistanceTask;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.Preferences;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -113,7 +114,13 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         // Set star button accordingly
         ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
         imageButton.setPressed(mIsFavorite);
-        imageButton.setOnTouchListener(new StarTouchListener());
+        imageButton.setOnTouchListener(new StarTouchListener(this));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+        Preferences.getInstance(this).save(this);
     }
 
     @Override
@@ -183,6 +190,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
      * Touch listener for the star button.
      */
     private class StarTouchListener implements View.OnTouchListener {
+        private Context mContext;
+        public StarTouchListener(Context context) {mContext = context;}
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             // Show interest in events resulting from ACTION_DOWN
@@ -193,7 +202,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
             // Do something - mark the dance class as favorite
             String danceClassKey = mDanceClass.toKey();
-            SharedPreferences sharedPreferences = getSharedPreferences(
+            /*SharedPreferences sharedPreferences = getSharedPreferences(
                 getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
 
             // Retrieve previous set of favorites
@@ -210,7 +219,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             // Update the preferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putStringSet(favoritesPreferencesKey, favoriteSet);
-            editor.commit();
+            editor.commit();*/
+            Preferences.getInstance(mContext).changeFavoriteStatus(mContext, danceClassKey, mIsFavorite);
 
             // Change the state of the favorite button
             mIsFavorite = !mIsFavorite;
