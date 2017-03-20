@@ -3,12 +3,6 @@ package com.cynthiar.dancingday.distance.matrix;
 import android.os.AsyncTask;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
-import com.cynthiar.dancingday.download.HttpClient;
-import com.cynthiar.dancingday.download.IHttpUser;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-
-import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Created by CynthiaR on 3/4/2017.

@@ -17,24 +17,21 @@ import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
  * Created by Robert on 08/02/2017.
  */
 
+/**
+ * Network fragment used for downloading.
+ */
 public class NetworkFragment extends Fragment {
     public static final String TAG = "NetworkFragment";
-
-    //private static final String URL_KEY = "UrlKey";
 
     private IDownloadCallback mDownloadCallback;
     private IConsumerCallback mConsumerCallback;
     private DownloadTask mDownloadTask;
-    //private String mUrlString;
-
-    private IConsumerCallback mEstimateConsumerCallback;
-    private DistanceTask mDistanceTask;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static NetworkFragment getInstance(FragmentManager fragmentManager/*, String url*/) {
+    public static NetworkFragment getInstance(FragmentManager fragmentManager, IConsumerCallback consumerCallback) {
         // Recover NetworkFragment in case we are re-creating the Activity due to a config change.
         // This is necessary because NetworkFragment might have a task that began running before
         // the config change occurred and has not finished yet.
@@ -43,32 +40,22 @@ public class NetworkFragment extends Fragment {
                 .findFragmentByTag(NetworkFragment.TAG);
         if (networkFragment == null) {
             networkFragment = new NetworkFragment();
-            /*Bundle args = new Bundle();
-            args.putString(URL_KEY, url);
-            networkFragment.setArguments(args);*/
+            networkFragment.setConsumerCallback(consumerCallback);
             fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
         }
         return networkFragment;
     }
 
-    public void setConsumerCallback(IConsumerCallback consumerCallback) {
+    private void setConsumerCallback(IConsumerCallback consumerCallback) {
         mConsumerCallback = consumerCallback;
-    }
-
-    public void setEstimateConsumerCallback(IConsumerCallback consumerCallback) {
-        mEstimateConsumerCallback = consumerCallback;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //mUrlString = getArguments().getString(URL_KEY);
-
-        //...
 
         // Retain this Fragment across configuration changes in the host Activity.
         setRetainInstance(true);
-
     }
 
     @Override
@@ -93,7 +80,7 @@ public class NetworkFragment extends Fragment {
     }
 
     /**
-     * Start non-blocking execution of DownloadTask.
+     * Starts non-blocking execution of DownloadTask.
      */
     public void startDownload(String key, DanceClassExtractor danceClassExtractor) {
         cancelDownload();
@@ -103,12 +90,11 @@ public class NetworkFragment extends Fragment {
     }
 
     /**
-     * Cancel (and interrupt if necessary) any ongoing DownloadTask execution.
+     * Cancels (and interrupts if necessary) any ongoing DownloadTask execution.
      */
     public void cancelDownload() {
         if (mDownloadTask != null) {
             mDownloadTask.cancel(true);
         }
     }
-
 }

@@ -2,6 +2,8 @@
     <string name="app_name">DancingDay</string>
     <string name="preferences_file_key">"com.cynthiar.dancingday.preferences"</string>
     <string name="favorites_key">"favorites"</string>
+
+    <!-- Navigation Drawer -->
     <string-array name="timeframes_array">
         <item>Today</item>
         <item>Tomorrow</item>
@@ -9,9 +11,17 @@
     </string-array>
     <string name="drawer_open">Open the drawer</string>
     <string name="drawer_close">Close the drawer</string>
+
     <!-- Navigation Drawer menu labels -->
     <string name="nav_today">Today</string>
     <string name="nav_tomorrow">Tomorrow</string>
     <string name="nav_next7days">Next 7 days</string>
     <string name="go_now">Go now</string>
+
+    <!-- Multi day view -->
+    <string-array name="view_by_array">
+        <item>Day</item>
+        <item>School</item>
+        <item>Level</item>
+    </string-array>
 </resources>

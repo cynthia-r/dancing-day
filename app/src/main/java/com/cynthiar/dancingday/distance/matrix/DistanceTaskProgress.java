@@ -13,7 +13,7 @@ public class DistanceTaskProgress implements IProgress {
     }
 
     @Override
-    public int GetProgressCode() {
+    public int getProgressCode() {
         return 0;
     }
 }

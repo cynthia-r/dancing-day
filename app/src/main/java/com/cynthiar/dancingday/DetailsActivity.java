@@ -23,6 +23,9 @@ import com.cynthiar.dancingday.dummy.DummyUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Activity for the detailed view of a given dance class.
+ */
 public class DetailsActivity extends AppCompatActivity implements IConsumerCallback<DistanceResult> {
     public static final String DANCE_CLASS_KEY = "Dance_Class";
     public static final String SCHOOL_ADDRESS_KEY = "School_Address";
@@ -39,13 +42,13 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     private Toolbar myToolbar;
     private boolean mIsFavorite;
 
-    private Context mContext;
     private DistanceTask mDistanceTask;
 
     // Boolean telling us whether a distance estimate is in progress, so we don't trigger overlapping
     // estimations with consecutive button clicks.
     private boolean mEstimating = false;
 
+    // The dance class this activity is foo
     private DummyItem mDanceClass;
 
     // Save the school coordinates
@@ -65,10 +68,11 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         myToolbar.setTitle(DetailsActivity.TITLE);
         setSupportActionBar(myToolbar);
 
+        // Setup action bar buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        // Calculate ETA
+        // Calculate ETA asynchronously
         mDistanceTask = new DistanceTask(this);
         String destinationAddress = bundle.getString(DetailsActivity.SCHOOL_ADDRESS_KEY);
         startEstimate(destinationAddress);
@@ -119,7 +123,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     }
 
     /**
-     * Start non-blocking execution of DistanceTask.
+     * Starts non-blocking execution of DistanceTask.
      */
     private void startEstimate(String destinationAddress) {
         if (!mEstimating && mDistanceTask != null) {
@@ -132,7 +136,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     }
 
     /**
-     * Cancel (and interrupt if necessary) any ongoing DistanceTask execution.
+     * Cancels (and interrupts if necessary) any ongoing DistanceTask execution.
      */
     public void cancelEstimate() {
         if (mDistanceTask != null) {
@@ -140,12 +144,19 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         }
     }
 
+    /**
+     * Updates the activity from the result of the distance estimate.
+     */
     public void updateFromResult(DistanceResult distanceResult) {
         TextView etaView = (TextView) findViewById(R.id.eta);
         etaView.setText(distanceResult.getEstimatedTime());
         mEstimating = false;
     }
 
+    /**
+     * Starts the Waze navigation.
+     * @param view: The "Go now" button.
+     */
     public void goNow(View view) {
         try
         {
@@ -157,6 +168,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             builder.appendQueryParameter("z", "10");
             builder.appendQueryParameter("navigate", "yes");
             String url = builder.build().toString();
+
+            // Start the Waze navigation
             Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
             startActivity( intent );
         }
@@ -166,6 +179,9 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         }
     }
 
+    /**
+     * Touch listener for the star button.
+     */
     private class StarTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {

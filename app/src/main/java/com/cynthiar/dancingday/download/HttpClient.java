@@ -11,14 +11,16 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by CynthiaR on 3/4/2017.
+ * Represents a client to perform HTTP calls.
  */
-
 public class HttpClient {
+    private static final int READ_TIMEOUT = 3000;
+    private static final int CONNECT_TIMEOUT = 3000;
 
-    private IHttpUser mHttpUser;
+    private IHttpConsumer mHttpConsumer;
 
-    public HttpClient(IHttpUser httpUser){
-        mHttpUser = httpUser;
+    public HttpClient(IHttpConsumer httpUser){
+        mHttpConsumer = httpUser;
     }
 
     /**
@@ -36,9 +38,9 @@ public class HttpClient {
             else
                 connection = (HttpURLConnection) url.openConnection();
             // Timeout for reading InputStream arbitrarily set to 3000ms.
-            connection.setReadTimeout(600000);
+            connection.setReadTimeout(HttpClient.READ_TIMEOUT);
             // Timeout for connection.connect() arbitrarily set to 3000ms.
-            connection.setConnectTimeout(600000);
+            connection.setConnectTimeout(HttpClient.CONNECT_TIMEOUT);
             // For this use case, set HTTP method to GET.
             connection.setRequestMethod("GET");
             // Already true by default but setting just in case; needs to be true since this request
@@ -46,17 +48,17 @@ public class HttpClient {
             connection.setDoInput(true);
             // Open communications link (network traffic occurs here).
             connection.connect();
-            mHttpUser.onProgress(IProgress.CONNECT_SUCCESS);
+            mHttpConsumer.onProgress(new DownloadTaskProgress(IProgress.CONNECT_SUCCESS));
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
-            mHttpUser.onProgress(IProgress.GET_INPUT_STREAM_SUCCESS, 0);
+            mHttpConsumer.onProgress(new DownloadTaskProgress(IProgress.GET_INPUT_STREAM_SUCCESS), new DownloadTaskProgress(0));
             if (stream != null) {
                 // Process the stream
-                processedInput = mHttpUser.processStream(stream, url);
+                processedInput = mHttpConsumer.processStream(stream, url);
             }
         } finally {
             // Close the stream

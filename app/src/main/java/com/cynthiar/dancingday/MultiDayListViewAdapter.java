@@ -86,8 +86,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         // Get view for row item
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = mInflater.inflate(R.layout.multi_day_fragment_item_group, parent, false);
         }
 
@@ -98,7 +97,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
         // Check if group is a day
         TodayActivity todayActivity = (TodayActivity)mContext;
         if (todayActivity.getCurrentPropertySelector() instanceof DayPropertySelector)
-            groupValue = getDayGroupValue(groupPosition, groupValue);
+            groupValue = this.getDayGroupValue(groupPosition, groupValue);
 
         // Set text in the view
         mGroupView.setText(groupValue);

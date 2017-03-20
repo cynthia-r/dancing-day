@@ -35,8 +35,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-    Main activity.
+/**
+ * Main activity.
  */
 public class TodayActivity extends AppCompatActivity
         implements IDownloadCallback<List<DummyItem>>,
@@ -141,8 +141,7 @@ public class TodayActivity extends AppCompatActivity
         mReloadFragmentOnResume = false;
 
         // Setup the network fragment
-        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
-        mNetworkFragment.setConsumerCallback(danceClassDataProvider);
+        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassDataProvider);
     }
 
     @Override
@@ -205,8 +204,8 @@ public class TodayActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-        Listener for the drawer item list.
+    /**
+    * Listener for the drawer item list.
     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -215,8 +214,8 @@ public class TodayActivity extends AppCompatActivity
         }
     }
 
-    /*
-        Swaps fragments in the main school view.
+    /**
+    * Swaps fragments in the main school view.
     */
     private void selectItem(int position) {
         // Create a new fragment and specify the title to show based on position
@@ -262,13 +261,18 @@ public class TodayActivity extends AppCompatActivity
         setTitle(mTimeFrames[position]);
     }
 
+    /**
+    * Gets the current list of dance classes.
+    */
     public List<DummyItem> getCurrentList() {
+        // Loop through the extractors
         Extractors extractorsInstance = Extractors.getInstance(this);
         DanceClassExtractor[] extractors = extractorsInstance.getExtractors();
         List<List<DummyItem>> schoolLists = new ArrayList<>(extractors.length);
         mAllListsLoaded = true;
         for (int i = 0; i < extractors.length; i++
              ) {
+            // Get the extractor
             DanceClassExtractor danceClassExtractor = extractors[i];
 
             // Continue if the list is not ready
@@ -323,7 +327,7 @@ public class TodayActivity extends AppCompatActivity
 
     public void updateFromResult(List<DummyItem> result) {
         // Update your UI here based on result of download.
-        // TODO activity may not be visible anymore
+        // Remember to reload the fragment next time the activity is resumed
         if (!mIsInForeground) {
             mReloadFragmentOnResume = true;
             return;
@@ -373,11 +377,8 @@ public class TodayActivity extends AppCompatActivity
         Fragment currentFragment = this.getCurrentFragment();
         if (null != currentFragment)
             this.reloadFragment(currentFragment);
-        /*else {
-            // Add the "Today" fragment to the 'fragment_container' FrameLayout
-            SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
-        }*/
+
+        // Mark the reload as done
         mReloadFragmentOnResume = false;
     }
 
@@ -388,11 +389,11 @@ public class TodayActivity extends AppCompatActivity
         return networkInfo;
     }
 
-    public void onProgressUpdate(DownloadTaskProgress progressCode, DownloadTaskProgress percentComplete) {
-        switch(progressCode.GetProgressCode()) {
+    public void onProgressUpdate(DownloadTaskProgress taskProgress, DownloadTaskProgress percentComplete) {
+        switch(taskProgress.getProgressCode()) {
             // You can add UI behavior for progress updates here.
             case IProgress.ERROR:
-
+                DummyUtils.toast(this, "Error happened during downloading");
                 break;
             case IProgress.CONNECT_SUCCESS:
 
@@ -410,6 +411,10 @@ public class TodayActivity extends AppCompatActivity
                 DummyUtils.toast(this, "No network connection");
                 break;
         }
+    }
+
+    public void reportError(Exception exception) {
+        DummyUtils.toast(this, exception.getMessage());
     }
 
     public void finishDownloading() {

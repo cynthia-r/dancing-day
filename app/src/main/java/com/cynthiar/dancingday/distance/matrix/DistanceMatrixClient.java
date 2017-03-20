@@ -2,8 +2,9 @@ package com.cynthiar.dancingday.distance.matrix;
 
 import android.net.Uri;
 
+import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.HttpClient;
-import com.cynthiar.dancingday.download.IHttpUser;
+import com.cynthiar.dancingday.download.IHttpConsumer;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,10 +26,10 @@ public class DistanceMatrixClient {
 
     private String mApiKey;
 
-    private class DistanceHttpComponent implements IHttpUser {
+    private class DistanceHttpComponent implements IHttpConsumer {
 
         @Override
-        public void onProgress(int... progressCode) {
+        public void onProgress(IProgress... progresses) {
         }
 
         @Override

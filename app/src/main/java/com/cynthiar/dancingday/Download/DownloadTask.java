@@ -13,19 +13,16 @@ import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Robert on 08/02/2017.
  * Implementation of AsyncTask designed to fetch data from the network.
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result>
-    implements IHttpUser {
+    implements IHttpConsumer {
     private IDownloadCallback<List<DummyItem>> mCallback;
     private IConsumerCallback<Pair<String, List<DummyItem>>> mConsumerCallback;
     private String mKey;
@@ -40,14 +37,14 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         mExtractor = danceClassExtractor;
     }
 
-    void setCallback(IDownloadCallback<List<DummyItem>> callback) {
+    private void setCallback(IDownloadCallback<List<DummyItem>> callback) {
         mCallback = callback;
     }
 
-    public void onProgress(int... progressCodes) {
-        DownloadTaskProgress[] downloadTaskProgresses = new DownloadTaskProgress[progressCodes.length];
-        for (int i=0; i < progressCodes.length; i++)
-            downloadTaskProgresses[i] = new DownloadTaskProgress(progressCodes[i]);
+    public void onProgress(IProgress... progresses) {
+        DownloadTaskProgress[] downloadTaskProgresses = new DownloadTaskProgress[progresses.length];
+        for (int i=0; i < progresses.length; i++)
+            downloadTaskProgresses[i] = (DownloadTaskProgress)progresses[i];
         this.publishProgress(downloadTaskProgresses);
     }
 
@@ -67,10 +64,8 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      */
     public class Result {
         public Pair<String, List<DummyItem>> mResultValue;
-        public List<DummyItem> mResultList;
         public Exception mException;
         public Result(Pair<String, List<DummyItem>> resultValue) { mResultValue = resultValue; }
-        public Result(List<DummyItem> resultList) { mResultList = resultList; }
         public Result(Exception exception) {
             mException = exception;
         }
@@ -98,18 +93,23 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
 
     /**
      * Defines work to perform on the background thread.
+     * Performs the download in background.
      */
     @Override
     protected DownloadTask.Result doInBackground(String... urls) {
+        // Initialize the result
         Result result = null;
+
+        // Start execution
         if (!isCancelled() && urls != null && urls.length > 0) {
             String urlString = urls[0];
             try {
+                // Use the HTTP client to perform the request
                 URL url = new URL(urlString);
                 HttpClient httpClient = new HttpClient(this);
                 Object processedResult = httpClient.getResponse(url);
-                /*if (resultString != null) {
-                    result = new Result(new Pair<>(mKey, resultString));*/
+
+                // Extract the items from the response
                 if (processedResult != null) {
                     List<DummyItem> dummyItemList = mExtractor.extractItems(processedResult);
                     result = new Result(new Pair<>(mKey, dummyItemList));
@@ -120,6 +120,8 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                 result = new Result(e);
             }
         }
+
+        // Return the result
         return result;
     }
 
@@ -129,15 +131,10 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     @Override
     protected void onPostExecute(Result result) {
         if (result != null && mCallback != null) {
-            if (result.mException != null) {
-                //mCallback.updateFromDownload(result.mException.getMessage());
-                mCallback.updateFromDownload(null);
-            } else if (result.mResultValue != null) {
-                mCallback.updateFromDownload(null);
+            if (result.mException != null)
+                mCallback.reportError(result.mException);
+            if (result.mResultValue != null) {
                 mConsumerCallback.updateFromResult(result.mResultValue);
-            }else if (result.mResultList != null) {
-                mCallback.updateFromDownload(result.mResultList);
-                //mConsumerCallback.updateFromResult(result.mResultList);
             }
             mCallback.finishDownloading();
         }
@@ -148,35 +145,5 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      */
     @Override
     protected void onCancelled(Result result) {
-    }
-
-
-
-    /**
-     * Converts the contents of an InputStream to a String.
-     */
-    private String readStream(InputStream stream, int maxLength) throws IOException {
-        String result = null;
-        // Read InputStream using the UTF-8 charset.
-        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-        // Create temporary buffer to hold Stream data with specified max length.
-        char[] buffer = new char[maxLength];
-        // Populate temporary buffer with Stream data.
-        int numChars = 0;
-        int readSize = 0;
-        while (numChars < maxLength && readSize != -1) {
-            numChars += readSize;
-            int pct = (100 * numChars) / maxLength;
-            publishProgress(new DownloadTaskProgress(IProgress.PROCESS_INPUT_STREAM_IN_PROGRESS), new DownloadTaskProgress(pct));
-            readSize = reader.read(buffer, numChars, buffer.length - numChars);
-        }
-        if (numChars != -1) {
-            // The stream was not empty.
-            // Create String that is actual length of response body if actual length was less than
-            // max length.
-            numChars = Math.min(numChars, maxLength);
-            result = new String(buffer, 0, numChars);
-        }
-        return result;
     }
 }

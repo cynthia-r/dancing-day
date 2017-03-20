@@ -13,7 +13,6 @@ import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
 import org.joda.time.LocalTime;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +21,10 @@ import static android.view.View.GONE;
 
 /**
  * A fragment representing a list of single day items.
- * <p/>
- * interface.
  */
 public class SingleDayFragment extends Fragment {
     public static final String TAG = "SingleDayFragment";
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    public static final String ARG_NUMBER = "number";
+    public static final String ARG_POSITION = "position";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,7 +36,7 @@ public class SingleDayFragment extends Fragment {
     public static SingleDayFragment newInstance(int position) {
         SingleDayFragment fragment = new SingleDayFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_NUMBER, position);
+        args.putInt(ARG_POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,11 +57,13 @@ public class SingleDayFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        // Get the parent activity
         TodayActivity parentActivity = (TodayActivity)getActivity();
 
+        // Retrieve the fragment position
         int position;
         if (getArguments() != null) {
-            position = getArguments().getInt(ARG_NUMBER);
+            position = getArguments().getInt(ARG_POSITION);
         }
         else
             position = 0;
@@ -106,10 +103,14 @@ public class SingleDayFragment extends Fragment {
         parentActivity.setTitle(position);
     }
 
+    /**
+     * Filters the list of items to the selected day.
+     */
     private List<DummyItem> filterList(int position, List<DummyItem> unfilteredList) {
-        String dayToKeep = (1 == position) ?
-                DummyUtils.getTomorrow()
-                : DummyUtils.getCurrentDay();
+        // Get the day to keep
+        String dayToKeep = (1 == position) ? DummyUtils.getTomorrow() : DummyUtils.getCurrentDay();
+
+        // Filter the list to the selected day
         List<DummyItem> filteredList = new ArrayList<>();
         LocalTime currentTime = new LocalTime();
         for (DummyItem dummyItem:unfilteredList
@@ -121,36 +122,4 @@ public class SingleDayFragment extends Fragment {
         }
         return filteredList;
     }
-
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
-    }*/
 }

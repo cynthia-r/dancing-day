@@ -4,6 +4,7 @@ import com.cynthiar.dancingday.data.IProgress;
 
 /**
  * Created by Robert on 08/02/2017.
+ * Represents the progress of a download operation.
  */
 
 public class DownloadTaskProgress implements IProgress {
@@ -12,7 +13,7 @@ public class DownloadTaskProgress implements IProgress {
         mProgressCode = progressCode;
     }
 
-    public int GetProgressCode() {
+    public int getProgressCode() {
         return mProgressCode;
     }
 }
