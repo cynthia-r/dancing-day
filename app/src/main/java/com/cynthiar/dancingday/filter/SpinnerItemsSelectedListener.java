@@ -13,25 +13,16 @@ import com.cynthiar.dancingday.MultiDayListViewAdapter;
 
 public class SpinnerItemsSelectedListener implements AdapterView.OnItemSelectedListener {
 
-    private MultiDaySpinner[] mSpinners;
+    private MultiDayFilterState mFilterState;
     private MultiDayListViewAdapter mMultiDayListViewAdapter;
 
-    public SpinnerItemsSelectedListener(MultiDaySpinner[] spinners, MultiDayListViewAdapter multiDayListViewAdapter) {
+    public SpinnerItemsSelectedListener(MultiDayFilterState filterState, MultiDayListViewAdapter multiDayListViewAdapter) {
         mMultiDayListViewAdapter = multiDayListViewAdapter;
-        mSpinners = spinners;
+        mFilterState = filterState;
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String filterString = "";
-        for (MultiDaySpinner multiDaySpinner:mSpinners
-             ) {
-            Spinner spinner = multiDaySpinner.getSpinner();
-            int selectedPosition = spinner.getSelectedItemPosition();
-            String groupSelected = (String)spinner.getAdapter().getItem(selectedPosition);
-            String filterStringForSpinner = multiDaySpinner.getPrefix().concat("-").concat(groupSelected);
-            filterString = filterString.concat(MultiDayFilter.FILTER_SEPARATOR).concat(filterStringForSpinner);
-        }
-
+        String filterString = mFilterState.getFilterString();
         mMultiDayListViewAdapter.getFilter().filter(filterString);
     }
 

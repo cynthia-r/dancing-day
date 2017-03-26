@@ -55,6 +55,13 @@
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"/>
 
+        <ImageButton android:id="@+id/favoriteFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/star"
+            android:layout_marginTop="@dimen/small_text_margin"/>
+
     </LinearLayout>
 
 <FrameLayout

@@ -57,6 +57,7 @@ public class MultiDayFilter extends Filter {
         // Retrieve the view by spinner
         String viewBySelected = null;
         List<SpinnerFilter> spinnerFilterList = new ArrayList<>();
+        boolean keepFavoriteOnly = false;
         for (String spinnerFilter:spinnerFilters
              ) {
             if (null == spinnerFilter || spinnerFilter.isEmpty())
@@ -72,8 +73,14 @@ public class MultiDayFilter extends Filter {
                 viewBySelected = groupToKeep;
                 continue;
             }
-            else
-                spinnerFilterList.add(new SpinnerFilter(prefix, groupToKeep));
+            else {
+                // Check if the filter is the favorite button
+                if (prefix.equals(MultiDayFragment.FAVORITE_BUTTON_PREFIX)) {
+                    keepFavoriteOnly = (groupToKeep.equals("1"));
+                }
+                else
+                    spinnerFilterList.add(new SpinnerFilter(prefix, groupToKeep));
+            }
         }
 
         // Flatten the list

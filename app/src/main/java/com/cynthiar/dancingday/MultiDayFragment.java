@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.filter.MultiDayFilterState;
 import com.cynthiar.dancingday.filter.MultiDaySpinner;
 import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
 import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
@@ -34,14 +37,18 @@ public class MultiDayFragment extends Fragment {
     private Spinner mViewBySpinner;
     private Spinner mSchoolSpinner;
     private Spinner mLevelSpinner;
+    private ImageButton mStarButton;
     private HashMap<String, List<DummyItem>> mAllItemMap;
     private DanceClassPropertySelector mCurrentPropertySelector;
+
+    private boolean mKeepFavorites = false;
 
     public static final String TAG = "MultiDayFragment";
     public static final String ALL_KEY = "All";
     public static final String SCHOOL_SPINNER_PREFIX = "SCHOOL";
     public static final String LEVEL_SPINNER_PREFIX = "LEVEL";
     public static final String VIEW_BY_SPINNER_PREFIX = "VIEW_BY";
+    public static final String FAVORITE_BUTTON_PREFIX = "STARRED_ONLY";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -98,6 +105,18 @@ public class MultiDayFragment extends Fragment {
         List<String> levelList = Extractors.getInstance(parentActivity).getLevelList();
         this.setupSpinner(parentActivity, mLevelSpinner, levelList);
 
+        // Star button
+        mStarButton = (ImageButton)parentActivity.findViewById(R.id.favoriteFilter);
+        mStarButton.setPressed(mKeepFavorites);
+
+        // Initialize filter state
+        MultiDaySpinner[] spinners = {
+                new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
+                new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
+                new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
+        };
+        MultiDayFilterState filterState = new MultiDayFilterState(spinners, mStarButton);
+
         // Get the list view and the empty state view
         ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.multi_day_list_view);
         TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
@@ -130,16 +149,14 @@ public class MultiDayFragment extends Fragment {
             }
 
             // Setup spinners listener
-            MultiDaySpinner[] spinners = {
-                    new MultiDaySpinner(mSchoolSpinner, MultiDayFragment.SCHOOL_SPINNER_PREFIX),
-                    new MultiDaySpinner(mLevelSpinner, MultiDayFragment.LEVEL_SPINNER_PREFIX),
-                    new MultiDaySpinner(mViewBySpinner, MultiDayFragment.VIEW_BY_SPINNER_PREFIX)
-            };
             SpinnerItemsSelectedListener spinnerItemsSelectedListener =
-                    new SpinnerItemsSelectedListener(spinners, adapter);
+                    new SpinnerItemsSelectedListener(filterState, adapter);
             mSchoolSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
             mLevelSpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
             mViewBySpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
+
+            // Setup favorite filter listener
+            mStarButton.setOnTouchListener(new FavoriteFilterTouchListener(filterState, adapter));
         }
 
         // Set title
@@ -154,5 +171,35 @@ public class MultiDayFragment extends Fragment {
                 context, R.layout.spinner_item, spinnerItemList);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerAdapter);
+    }
+
+    /**
+     * Touch listener for the favorite filter button.
+     */
+    private class FavoriteFilterTouchListener implements View.OnTouchListener {
+        private MultiDayFilterState mFilterState;
+        private MultiDayListViewAdapter mMultiDayListViewAdapter;
+
+        public FavoriteFilterTouchListener(MultiDayFilterState filterState, MultiDayListViewAdapter multiDayListViewAdapter) {
+            mMultiDayListViewAdapter = multiDayListViewAdapter;
+            mFilterState = filterState;
+        }
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            // Show interest in events resulting from ACTION_DOWN
+            if(event.getAction()== MotionEvent.ACTION_DOWN) return true;
+
+            // Don't handle event unless its ACTION_UP so "doSomething()" only runs once.
+            if(event.getAction() != MotionEvent.ACTION_UP) return false;
+
+            // Change the state of the favorite button
+            mKeepFavorites = !mKeepFavorites;
+            v.setPressed(mKeepFavorites);
+
+            // Filter the results
+            String filterString = mFilterState.getFilterString();
+            mMultiDayListViewAdapter.getFilter().filter(filterString);
+            return true;
+        }
     }
 }
