@@ -62,4 +62,8 @@ public class DataCache<T> implements IConsumerCallback<Pair<String, T>> {
         // Update consumer with the result
         mConsumerCallback.updateFromResult(freshData);
     }
+
+    public void clear() {
+        mCache.clear();
+    }
 }

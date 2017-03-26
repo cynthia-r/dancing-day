@@ -303,9 +303,12 @@ public class TodayActivity extends AppCompatActivity
         // Show/Hide loading circle depending on whether all lists are loaded
         if (mAllListsLoaded) {
             findViewById(R.id.loadingCircle).setVisibility(View.GONE);
+            findViewById(R.id.refreshCircle).setVisibility(View.VISIBLE);
         }
-        else
+        else {
             findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
+            findViewById(R.id.refreshCircle).setVisibility(View.GONE);
+        }
 
         // Return the list of dummy items
         return dummyItemList;
@@ -427,5 +430,15 @@ public class TodayActivity extends AppCompatActivity
         if (mNetworkFragment != null) {
             mNetworkFragment.cancelDownload();
         }
+    }
+
+    /**
+     * Refreshes the list of dance classes.
+     * @param view
+     */
+    public void refresh(View view) {
+        // Clear the cache and get the list again
+        mDanceClassCache.clear();
+        this.getCurrentList();
     }
 }

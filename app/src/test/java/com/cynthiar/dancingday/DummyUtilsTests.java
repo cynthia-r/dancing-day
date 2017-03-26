@@ -54,7 +54,8 @@ public class DummyUtilsTests {
                 "8:00 - 9:15PM\n",
                 "11:30 am-12:30 pm",
                 "7:30-9AM",
-                "12-1:30 am"
+                "12-1:30 am",
+                "10:30-12pm"
         };
         DanceClassTime[] expectedDanceClassTimes = {
                 new DanceClassTime(19, 45, 21, 15),
@@ -66,6 +67,7 @@ public class DummyUtilsTests {
                 new DanceClassTime(11, 30, 12, 30),
                 new DanceClassTime(7, 30, 9, 00),
                 new DanceClassTime(0, 0, 1, 30),
+                new DanceClassTime(10, 30, 12, 00),
         };
 
         for (int i=0;i<inputTimes.length;i++

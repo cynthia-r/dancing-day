@@ -83,6 +83,11 @@ public class PdfExtractionTest {
         }
 
         @Override
+        public void reportError(Exception exception) {
+
+        }
+
+        @Override
         public void finishDownloading() {
 
         }

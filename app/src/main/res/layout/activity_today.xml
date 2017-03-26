@@ -49,7 +49,7 @@
 
             <!-- Progress circle -->
             <FrameLayout
-                android:layout_width="35dp"
+                android:layout_width="40dp"
                 android:layout_height="match_parent">
                 <ProgressBar
                     android:id="@+id/loadingCircle"
@@ -60,6 +60,13 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"/>
+                <ImageButton
+                    android:id="@+id/refreshCircle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@android:drawable/stat_notify_sync_noanim"
+                    android:onClick="refresh"/>
             </FrameLayout>
 
         </LinearLayout>

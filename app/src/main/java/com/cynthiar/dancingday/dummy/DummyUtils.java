@@ -329,13 +329,15 @@ public class DummyUtils<T> {
             endTime = new LocalTime(endTimeParts.hours, endTimeParts.minutes);
 
             if (TimeHalf.Undetermined == startTimeParts.timeHalf) {
-                if (TimeHalf.Pm == endTimeParts.timeHalf
-                        && 12 > startTimeParts.hours) {
-                    startTimeParts.hours += 12;
-                } else if (TimeHalf.Am == endTimeParts.timeHalf
-                                && 12 == startTimeParts.hours) {
-                            startTimeParts.hours = 0;
-                        }
+                int diffHours = endTimeParts.hours - startTimeParts.hours;
+                if (diffHours < 0 || diffHours >= 12) {
+                    if (12 > startTimeParts.hours) {
+                        startTimeParts.hours += 12;
+                    }
+                    else { // startTime.hours = 12 since the format is American
+                        startTimeParts.hours = 0;
+                    }
+                }
             }
             startTime = new LocalTime(startTimeParts.hours, startTimeParts.minutes);
         }
