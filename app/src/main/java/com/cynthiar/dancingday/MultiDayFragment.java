@@ -112,9 +112,6 @@ public class MultiDayFragment extends Fragment {
             expandableListView.setVisibility(View.VISIBLE);
             emptyStateTextView.setVisibility(View.GONE);
 
-            // Mark favorite items
-            //parentActivity.markFavorites(dummyItemList);
-
             // Group by the selector - default: by day
             DanceClassPropertySelector danceClassPropertySelector = new DayPropertySelector();
             HashMap<String, List<DummyItem>> dummyItemMap = DummyUtils.GroupBy(danceClassPropertySelector, dummyItemList);

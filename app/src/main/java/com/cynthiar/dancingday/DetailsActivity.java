@@ -105,11 +105,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
         // Retrieve if dummy item is a favorite
         String danceClassKey = mDanceClass.toKey();
-        SharedPreferences sharedPreferences = getSharedPreferences(
-            getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
-        String favoritesPreferencesKey = getString(R.string.favorites_key);
-        Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
-        mIsFavorite = favoriteSet.contains(danceClassKey);
+        mIsFavorite = Preferences.getInstance(this).isFavorite(danceClassKey);
 
         // Set star button accordingly
         ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
@@ -165,8 +161,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
      * @param view: The "Go now" button.
      */
     public void goNow(View view) {
-        try
-        {
+        try {
             // Build url
             Uri.Builder builder = new Uri.Builder();
             builder.scheme(DetailsActivity.WAZE_SCHEME);
@@ -180,8 +175,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
             startActivity( intent );
         }
-        catch ( ActivityNotFoundException ex  )
-        {
+        catch ( ActivityNotFoundException ex ) {
             DummyUtils.toast(this, "Failed to start navigation");
         }
     }
@@ -200,27 +194,9 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             // Don't handle event unless its ACTION_UP so "doSomething()" only runs once.
             if(event.getAction() != MotionEvent.ACTION_UP) return false;
 
-            // Do something - mark the dance class as favorite
+            // Mark the dance class as favorite
             String danceClassKey = mDanceClass.toKey();
-            /*SharedPreferences sharedPreferences = getSharedPreferences(
-                getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
-
-            // Retrieve previous set of favorites
-            String favoritesPreferencesKey = getString(R.string.favorites_key);
-            Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
-
-            // Un-mark as favorite
-            if (mIsFavorite)
-                favoriteSet.remove(danceClassKey);
-            // Mark as favorite
-            else
-                favoriteSet.add(danceClassKey);
-
-            // Update the preferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putStringSet(favoritesPreferencesKey, favoriteSet);
-            editor.commit();*/
-            Preferences.getInstance(mContext).changeFavoriteStatus(mContext, danceClassKey, mIsFavorite);
+            Preferences.getInstance(mContext).changeFavoriteStatus(danceClassKey, mIsFavorite);
 
             // Change the state of the favorite button
             mIsFavorite = !mIsFavorite;

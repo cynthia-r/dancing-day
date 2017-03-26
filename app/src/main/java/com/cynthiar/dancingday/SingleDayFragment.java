@@ -99,9 +99,6 @@ public class SingleDayFragment extends Fragment {
         // Sort list
         dummyItemList = DummyUtils.sortItemList(dummyItemList);
 
-        // Mark favorite items
-        //parentActivity.markFavorites(dummyItemList);
-
         // Setup list adapter
         SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
         listView.setAdapter(adapter);

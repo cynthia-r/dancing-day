@@ -315,27 +315,6 @@ public class TodayActivity extends AppCompatActivity
         return mAllListsLoaded;
     }
 
-    public void markFavorites(List<DummyItem> dummyItemList) {
-        // Return early if the list is empty
-        if (null == dummyItemList || 0 == dummyItemList.size())
-            return;
-
-        // Retrieve preferences
-        SharedPreferences sharedPreferences = getSharedPreferences(
-                getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
-
-        // Retrieve previous set of favorites
-        String favoritesPreferencesKey = getString(R.string.favorites_key);
-        Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
-
-        // Mark the favorite items in the list
-        for (DummyItem dummyItem:dummyItemList
-                ) {
-            if (favoriteSet.contains(dummyItem.toKey()))
-                dummyItem.markAsFavorite();
-        }
-    }
-
     public void updateFromDownload(List<DummyItem> result) {
         // Do nothing
     }

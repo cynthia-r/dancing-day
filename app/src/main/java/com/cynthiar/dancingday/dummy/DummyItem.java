@@ -40,7 +40,7 @@ public class DummyItem {
         Returns a unique representation of this dance class.
      */
     public String toKey() {
-        return DummyUtils.join('-', this.day, this.school.toString(), this.level.toString(), this.danceClassTime.toString());
+        return DummyUtils.join('-', this.day, this.danceClassTime.toString(), this.school.toString(), this.teacher, this.level.toString());
     }
 
     public static DummyItem fromKey(String danceClassKey) {
@@ -56,18 +56,5 @@ public class DummyItem {
 
     public static DummyItem fromStrings(String day, String time, String school, String teacher, String level) {
         return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DummyUtils.tryParseLevel(level));
-    }
-
-    public void markAsFavorite() {
-        mIsMarkedAsFavorite = true;
-    }
-
-    public boolean isFavorite (){ return mIsMarkedAsFavorite; }
-
-    public boolean isMarkedAsFavorite(SharedPreferences sharedPreferences, String favoritesKey) {
-        // Retrieve previous set of favorites
-        String favoritesPreferencesKey = favoritesKey;
-        Set<String> favoriteSet = sharedPreferences.getStringSet(favoritesPreferencesKey, new HashSet<String>());
-        return favoriteSet.contains(this.toKey());
     }
 }
