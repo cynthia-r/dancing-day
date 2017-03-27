@@ -75,9 +75,10 @@
             android:layout_alignParentLeft="true"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-        <ImageButton android:id="@+id/favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ToggleButton android:id="@+id/favorite"
+            android:layout_width="@dimen/big_star"
+            android:layout_height="@dimen/big_star"
+            style="@style/toggleButton"
             android:background="@drawable/star"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/text_margin"

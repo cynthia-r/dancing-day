@@ -10,6 +10,7 @@ import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.Preferences;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
@@ -57,7 +58,7 @@ public class MultiDayFilter extends Filter {
         // Retrieve the view by spinner
         String viewBySelected = null;
         List<SpinnerFilter> spinnerFilterList = new ArrayList<>();
-        boolean keepFavoriteOnly = false;
+        boolean keepFavoritesOnly = false;
         for (String spinnerFilter:spinnerFilters
              ) {
             if (null == spinnerFilter || spinnerFilter.isEmpty())
@@ -76,7 +77,7 @@ public class MultiDayFilter extends Filter {
             else {
                 // Check if the filter is the favorite button
                 if (prefix.equals(MultiDayFragment.FAVORITE_BUTTON_PREFIX)) {
-                    keepFavoriteOnly = (groupToKeep.equals("1"));
+                    keepFavoritesOnly = (groupToKeep.equals("1"));
                 }
                 else
                     spinnerFilterList.add(new SpinnerFilter(prefix, groupToKeep));
@@ -87,7 +88,18 @@ public class MultiDayFilter extends Filter {
         List<DummyItem> allItemList = new ArrayList<>();
         for (List<DummyItem> groupItemList:mUnfilteredValues.values()
              ) {
-            allItemList.addAll(groupItemList);
+            // Keep favorites only if asked for
+            if (keepFavoritesOnly) {
+                for (DummyItem dummyItem:groupItemList
+                        ) {
+                    if (Preferences.getInstance(mContext).isFavorite(dummyItem.toKey())) {
+                        allItemList.add(dummyItem);
+                    }
+                }
+            }
+            // Otherwise just keep all items
+            else
+                allItemList.addAll(groupItemList);
         }
 
         // Group by the view by selected

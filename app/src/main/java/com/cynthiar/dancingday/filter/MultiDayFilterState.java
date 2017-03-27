@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.filter;
 
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.ToggleButton;
 
 import com.cynthiar.dancingday.MultiDayFragment;
 
@@ -11,9 +12,9 @@ import com.cynthiar.dancingday.MultiDayFragment;
 
 public class MultiDayFilterState {
     private MultiDaySpinner[] mSpinners;
-    private ImageButton mStarFilter;
+    private ToggleButton mStarFilter;
 
-    public MultiDayFilterState(MultiDaySpinner[] multiDaySpinners, ImageButton starFilter) {
+    public MultiDayFilterState(MultiDaySpinner[] multiDaySpinners, ToggleButton starFilter) {
         mSpinners = multiDaySpinners;
         mStarFilter = starFilter;
     }
@@ -34,7 +35,7 @@ public class MultiDayFilterState {
 
         // Add the state of the star button
         String filterStringForFavorites = MultiDayFragment.FAVORITE_BUTTON_PREFIX.concat("-")
-                .concat(mStarFilter.isPressed() ? "1" : "0");
+                .concat(mStarFilter.isChecked() ? "1" : "0");
         filterString = filterString.concat(MultiDayFilter.FILTER_SEPARATOR).concat(filterStringForFavorites);
 
         // Return the filter string

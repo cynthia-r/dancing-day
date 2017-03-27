@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
@@ -37,7 +38,7 @@ public class MultiDayFragment extends Fragment {
     private Spinner mViewBySpinner;
     private Spinner mSchoolSpinner;
     private Spinner mLevelSpinner;
-    private ImageButton mStarButton;
+    private ToggleButton mStarButton;
     private HashMap<String, List<DummyItem>> mAllItemMap;
     private DanceClassPropertySelector mCurrentPropertySelector;
 
@@ -106,8 +107,8 @@ public class MultiDayFragment extends Fragment {
         this.setupSpinner(parentActivity, mLevelSpinner, levelList);
 
         // Star button
-        mStarButton = (ImageButton)parentActivity.findViewById(R.id.favoriteFilter);
-        mStarButton.setPressed(mKeepFavorites);
+        mStarButton = (ToggleButton)parentActivity.findViewById(R.id.favoriteFilter);
+        mStarButton.setChecked(mKeepFavorites);
 
         // Initialize filter state
         MultiDaySpinner[] spinners = {
@@ -156,7 +157,7 @@ public class MultiDayFragment extends Fragment {
             mViewBySpinner.setOnItemSelectedListener(spinnerItemsSelectedListener);
 
             // Setup favorite filter listener
-            mStarButton.setOnTouchListener(new FavoriteFilterTouchListener(filterState, adapter));
+            mStarButton.setOnClickListener(new FavoriteFilterClickListener(filterState, adapter));
         }
 
         // Set title
@@ -174,32 +175,24 @@ public class MultiDayFragment extends Fragment {
     }
 
     /**
-     * Touch listener for the favorite filter button.
+     * Click listener for the favorite filter button.
      */
-    private class FavoriteFilterTouchListener implements View.OnTouchListener {
+    private class FavoriteFilterClickListener implements View.OnClickListener {
         private MultiDayFilterState mFilterState;
         private MultiDayListViewAdapter mMultiDayListViewAdapter;
 
-        public FavoriteFilterTouchListener(MultiDayFilterState filterState, MultiDayListViewAdapter multiDayListViewAdapter) {
+        public FavoriteFilterClickListener(MultiDayFilterState filterState, MultiDayListViewAdapter multiDayListViewAdapter) {
             mMultiDayListViewAdapter = multiDayListViewAdapter;
             mFilterState = filterState;
         }
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            // Show interest in events resulting from ACTION_DOWN
-            if(event.getAction()== MotionEvent.ACTION_DOWN) return true;
-
-            // Don't handle event unless its ACTION_UP so "doSomething()" only runs once.
-            if(event.getAction() != MotionEvent.ACTION_UP) return false;
-
-            // Change the state of the favorite button
+        public void onClick(View v) {
+            // Keep track of the new state
             mKeepFavorites = !mKeepFavorites;
-            v.setPressed(mKeepFavorites);
 
             // Filter the results
             String filterString = mFilterState.getFilterString();
             mMultiDayListViewAdapter.getFilter().filter(filterString);
-            return true;
         }
     }
 }

@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
@@ -108,9 +109,12 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         mIsFavorite = Preferences.getInstance(this).isFavorite(danceClassKey);
 
         // Set star button accordingly
-        ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
-        imageButton.setPressed(mIsFavorite);
-        imageButton.setOnTouchListener(new StarTouchListener(this));
+        //ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
+        //imageButton.setPressed(mIsFavorite);
+        //imageButton.setOnTouchListener(new StarTouchListener(this));
+        ToggleButton imageButton = (ToggleButton) this.findViewById(R.id.favorite);
+        imageButton.setChecked(mIsFavorite);
+        imageButton.setOnClickListener(new StarClickListener(this));
     }
 
     @Override
@@ -181,27 +185,19 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     }
 
     /**
-     * Touch listener for the star button.
+     * Click listener for the star button.
      */
-    private class StarTouchListener implements View.OnTouchListener {
+    private class StarClickListener implements View.OnClickListener {
         private Context mContext;
-        public StarTouchListener(Context context) {mContext = context;}
+        public StarClickListener(Context context) {mContext = context;}
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            // Show interest in events resulting from ACTION_DOWN
-            if(event.getAction()== MotionEvent.ACTION_DOWN) return true;
-
-            // Don't handle event unless its ACTION_UP so "doSomething()" only runs once.
-            if(event.getAction() != MotionEvent.ACTION_UP) return false;
-
+        public void onClick(View v) {
             // Mark the dance class as favorite
             String danceClassKey = mDanceClass.toKey();
             Preferences.getInstance(mContext).changeFavoriteStatus(danceClassKey, mIsFavorite);
 
-            // Change the state of the favorite button
+            // Keep track of the new state
             mIsFavorite = !mIsFavorite;
-            v.setPressed(mIsFavorite);
-            return true;
         }
     }
 }

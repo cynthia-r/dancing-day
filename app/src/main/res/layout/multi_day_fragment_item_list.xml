@@ -55,10 +55,11 @@
             android:layout_marginBottom="10dp"
             android:dropDownSelector="@android:drawable/btn_dropdown"/>
 
-        <ImageButton android:id="@+id/favoriteFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ToggleButton android:id="@+id/favoriteFilter"
+            android:layout_width="@dimen/big_star"
+            android:layout_height="@dimen/big_star"
             android:layout_marginLeft="15dp"
+            style="@style/toggleButton"
             android:background="@drawable/star"
             android:layout_marginTop="@dimen/small_text_margin"/>
 

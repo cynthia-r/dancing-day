@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -100,7 +101,6 @@ public class SingleDayListViewAdapter extends BaseAdapter{
         ImageView starView = (ImageView)convertView.findViewById(R.id.star);
         if (Preferences.getInstance(mContext).isFavorite(dummyItem.toKey())) {
             starView.setVisibility(View.VISIBLE);
-            starView.setPressed(true);
         }
         else
             starView.setVisibility(View.GONE);
