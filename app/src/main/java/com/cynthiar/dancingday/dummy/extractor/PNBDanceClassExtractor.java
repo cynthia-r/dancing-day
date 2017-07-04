@@ -63,7 +63,6 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     @Override
     protected List<DummyItem> parseBaseElement(int elementIndex, Element classElement) {
         try {
-
             NextElement nextElement = findNextChildElement(classElement, 0);
             Element firstChild = nextElement.getElement();
             if (null == firstChild)
@@ -87,10 +86,8 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
                     continue; // no class on that day
                 }
 
-
                 String classText = StringEscapeUtils.unescapeHtml4(dayClassElement.text());
-                if (null == classText || classText.equals(""))
-                {
+                if (null == classText || classText.equals("")) {
                     i++;
                     continue; // no class on that day
                 }
@@ -154,7 +151,7 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
             return Schools.PNB_SEATTLE_SCHOOL;
         if (1 == mSchoolNumber)
             return Schools.PNB_BELLEVUE_SCHOOL;
-        return null;
+        return Schools.DanceSchool.Unknown;
     }
 
     private NextElement findNextChildElement(Element parentElement, int n) {

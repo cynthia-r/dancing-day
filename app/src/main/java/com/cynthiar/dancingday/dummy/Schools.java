@@ -18,6 +18,8 @@ public class Schools {
             Coordinates = coordinates;
         }
 
+        public static DanceSchool Unknown = new DanceSchool("Unknown", "", "", "");
+
         @Override
         public String toString() {
             return this.Key;

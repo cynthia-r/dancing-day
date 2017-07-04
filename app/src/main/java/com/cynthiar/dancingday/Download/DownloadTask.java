@@ -12,7 +12,6 @@ import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result>
     implements IHttpConsumer {
-    private IDownloadCallback<List<DummyItem>> mCallback;
+    private IDownloadCallback<List<DummyItem>> mDownloadCallback;
     private IConsumerCallback<Pair<String, List<DummyItem>>> mConsumerCallback;
     private String mKey;
     private DanceClassExtractor mExtractor;
@@ -31,14 +30,14 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     public DownloadTask(IDownloadCallback<List<DummyItem>> callback,
                  IConsumerCallback<Pair<String, List<DummyItem>>> consumerCallback,
                  String key, DanceClassExtractor danceClassExtractor) {
-        setCallback(callback);
+        setDownloadCallback(callback);
         mKey = key;
         mConsumerCallback = consumerCallback;
         mExtractor = danceClassExtractor;
     }
 
-    private void setCallback(IDownloadCallback<List<DummyItem>> callback) {
-        mCallback = callback;
+    private void setDownloadCallback(IDownloadCallback<List<DummyItem>> callback) {
+        mDownloadCallback = callback;
     }
 
     public void onProgress(IProgress... progresses) {
@@ -65,9 +64,12 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
     public class Result {
         public Pair<String, List<DummyItem>> mResultValue;
         public Exception mException;
-        public Result(Pair<String, List<DummyItem>> resultValue) { mResultValue = resultValue; }
+        public Result(Pair<String, List<DummyItem>> resultValue) {
+            mResultValue = resultValue;
+        }
         public Result(Exception exception) {
             mException = exception;
+            mResultValue = new Pair<String, List<DummyItem>>(mKey, new ArrayList<DummyItem>());
         }
     }
 
@@ -76,16 +78,16 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      */
     @Override
     protected void onPreExecute() {
-        if (mCallback != null) {
-            NetworkInfo networkInfo = mCallback.getActiveNetworkInfo();
+        if (mDownloadCallback != null) {
+            NetworkInfo networkInfo = mDownloadCallback.getActiveNetworkInfo();
             if (networkInfo == null || !networkInfo.isConnected() ||
                     (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
                             && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
                 // If no connectivity, cancel task and update Callback with null data.
-                mCallback.onProgressUpdate(new DownloadTaskProgress(IProgress.NO_NETWORK_CONNECTION), new DownloadTaskProgress(IProgress.ERROR)); // todo set exception message for no connectivity?
+                mDownloadCallback.onProgressUpdate(new DownloadTaskProgress(IProgress.NO_NETWORK_CONNECTION), new DownloadTaskProgress(IProgress.ERROR)); // todo set exception message for no connectivity?
                 Result result = new Result(new Pair<String, List<DummyItem>>(mKey, new ArrayList<DummyItem>()));
                 mConsumerCallback.updateFromResult(result.mResultValue);
-                mCallback.finishDownloading();
+                mDownloadCallback.finishDownloading();
                 cancel(true);
             }
         }
@@ -117,7 +119,11 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                     throw new IOException("No response received.");
                 }
             } catch(Exception e) {
-                result = new Result(e);
+                StringBuilder exceptionMessageBuilder = new StringBuilder();
+                exceptionMessageBuilder.append(mKey);
+                exceptionMessageBuilder.append(": ");
+                exceptionMessageBuilder.append(e.getMessage());
+                result = new Result(new Exception(exceptionMessageBuilder.toString()));
             }
         }
 
@@ -130,13 +136,14 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
      */
     @Override
     protected void onPostExecute(Result result) {
-        if (result != null && mCallback != null) {
-            if (result.mException != null)
-                mCallback.reportError(result.mException);
+        if (result != null && mDownloadCallback != null) {
+            if (result.mException != null) {
+                mDownloadCallback.reportError(result.mException);
+            }
             if (result.mResultValue != null) {
                 mConsumerCallback.updateFromResult(result.mResultValue);
             }
-            mCallback.finishDownloading();
+            mDownloadCallback.finishDownloading();
         }
     }
 
