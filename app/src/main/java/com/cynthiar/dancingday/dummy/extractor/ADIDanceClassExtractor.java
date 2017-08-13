@@ -9,6 +9,8 @@ import com.cynthiar.dancingday.dummy.DummyContent;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,7 +38,12 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
 
     @Override
     public String getUrl() {
-        return "https://www.americandanceinstitute.com/winter-spring-2017-greenwood-dance-class-schedule-greenwood/#tab-con-7";
+        LocalDate currentDate = LocalDate.now();
+        LocalDate cutOffDate = new LocalDate(2017, 9, 01);
+        if (currentDate.isBefore(cutOffDate))
+            return "https://www.americandanceinstitute.com/2017-summer-class-schedule-greenwood/";
+        else
+            return "https://www.americandanceinstitute.com/fall-dance-class-schedule-2017-%e2%8b%86-greenwood/";
     }
 
     @Override
