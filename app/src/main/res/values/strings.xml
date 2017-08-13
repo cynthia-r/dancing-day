@@ -9,6 +9,9 @@
         <item>Tomorrow</item>
         <item>Next 7 days</item>
     </string-array>
+    <string-array name="secondary_menu_array">
+        <item>My class cards</item>
+    </string-array>
     <string name="drawer_open">Open the drawer</string>
     <string name="drawer_close">Close the drawer</string>
 
@@ -16,7 +19,7 @@
     <string name="nav_today">Today</string>
     <string name="nav_tomorrow">Tomorrow</string>
     <string name="nav_next7days">Next 7 days</string>
-    <string name="go_now">Go now</string>
+    <string name="nav_my_cards">My class cards</string>
 
     <!-- Multi day view -->
     <string-array name="view_by_array">
@@ -24,4 +27,9 @@
         <item>School</item>
         <item>Level</item>
     </string-array>
+
+    <!-- Details view -->
+    <string name="go_now">Go now</string>
+    <string name="title_activity_cards">CardsActivity</string>
+
 </resources>

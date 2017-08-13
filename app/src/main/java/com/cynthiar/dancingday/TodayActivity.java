@@ -46,10 +46,6 @@ public class TodayActivity extends AppCompatActivity
         implements IDownloadCallback<List<DummyItem>>,
         IConsumerCallback<List<DummyItem>> {
 
-    public static final String TODAY_KEY = "Today";
-    public static final String TOMORROW_KEY = "Tomorrow";
-    public static final String NEXT_SEVEN_DAYS_KEY = "NextSevenDays";
-
     // Time frames
     private String[] mTimeFrames;
 
@@ -57,6 +53,7 @@ public class TodayActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private LinearLayout mLeftDrawerLayout;
+    private String[] mDrawerItems = new String[0];
 
     // Toolbar
     private Toolbar myToolbar;
@@ -100,8 +97,13 @@ public class TodayActivity extends AppCompatActivity
         mLeftDrawerLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
+        // Retrieve the drawer items
+        mDrawerItems = DummyUtils.addStringArray(mDrawerItems, mTimeFrames);
+        String[] secondaryMenuItems = getResources().getStringArray(R.array.secondary_menu_array);
+        mDrawerItems = DummyUtils.addStringArray(mDrawerItems, secondaryMenuItems);
+
         // Set the adapter for the drawer list view
-        mDrawerList.setAdapter(new DrawerListViewAdapter(mTimeFrames, this));
+        mDrawerList.setAdapter(new DrawerListViewAdapter(mDrawerItems, this));
         // Set the drawer list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 

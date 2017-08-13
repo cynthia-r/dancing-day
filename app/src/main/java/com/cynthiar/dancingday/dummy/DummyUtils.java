@@ -173,6 +173,18 @@ public class DummyUtils<T> {
         }
     }
 
+    public static String[] addStringArray(String[] inputArray, String[] arrayToAdd) {
+        List<String> itemList = new ArrayList<>();
+        for (String item:
+                inputArray) {
+            itemList.add(item);
+        }for (String item:
+                arrayToAdd) {
+            itemList.add(item);
+        }
+        return itemList.toArray(new String[0]);
+    }
+
     public static String getCurrentDay() {
         Calendar calendar = Calendar.getInstance();
         int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
