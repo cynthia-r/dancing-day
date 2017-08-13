@@ -39,7 +39,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String DAY_KEY = "Day";
 
     private static final String WAZE_SCHEME = "waze";
-    private static final String TITLE = "Class";
 
     private Toolbar myToolbar;
     private boolean mIsFavorite;
@@ -67,7 +66,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
         // Setup toolbar
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(DetailsActivity.TITLE);
+        myToolbar.setTitle(getResources().getString(R.string.title_activity_details));
         setSupportActionBar(myToolbar);
 
         // Setup action bar buttons

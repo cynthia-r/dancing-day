@@ -1,6 +1,7 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -225,20 +226,31 @@ public class TodayActivity extends AppCompatActivity
     * Swaps fragments in the main school view.
     */
     private void selectItem(int position) {
-        // Create a new fragment and specify the title to show based on position
-        Fragment fragment;
-        String fragmentTag;
-        if (position < 2) { // 0: Today, 1: Tomorrow
-            fragment = SingleDayFragment.newInstance(position);
-            fragmentTag = SingleDayFragment.TAG;
-        }
-        else { // 2: Next 7 days
-            fragment = new MultiDayFragment();
-            fragmentTag = MultiDayFragment.TAG;
-        }
+        // Primary menu
+        if (position < 3) {
+            // Create a new fragment and specify the title to show based on position
+            Fragment fragment;
+            String fragmentTag;
+            if (position < 2) { // 0: Today, 1: Tomorrow
+                fragment = SingleDayFragment.newInstance(position);
+                fragmentTag = SingleDayFragment.TAG;
+            }
+            else { // 2: Next 7 days
+                fragment = new MultiDayFragment();
+                fragmentTag = MultiDayFragment.TAG;
+            }
 
-        // Switch fragment
-        this.switchToFragment(fragment, fragmentTag);
+            // Switch fragment
+            this.switchToFragment(fragment, fragmentTag);
+
+        }
+        // Secondary menu
+        else {
+            if (3 == position) {
+                Intent intent = new Intent(this, CardsActivity.class);
+                this.startActivity(intent);
+            }
+        }
 
         // Highlight the selected item, and close the drawer
         mDrawerList.setItemChecked(position, true);

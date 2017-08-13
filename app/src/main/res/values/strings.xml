@@ -3,6 +3,10 @@
     <string name="preferences_file_key">"com.cynthiar.dancingday.preferences"</string>
     <string name="favorites_key">"favorites"</string>
 
+    <!-- Activity titles -->
+    <string name="title_activity_details">Class</string>
+    <string name="title_activity_cards">My class cards</string>
+
     <!-- Navigation Drawer -->
     <string-array name="timeframes_array">
         <item>Today</item>
@@ -30,6 +34,5 @@
 
     <!-- Details view -->
     <string name="go_now">Go now</string>
-    <string name="title_activity_cards">CardsActivity</string>
 
 </resources>
