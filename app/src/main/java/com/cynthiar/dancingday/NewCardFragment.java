@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.cynthiar.dancingday.dummy.DanceClassCard;
 import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.dummy.Preferences;
 import com.cynthiar.dancingday.dummy.Schools;
 import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
@@ -37,7 +38,7 @@ public class NewCardFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Get the parent activity
-        CardsActivity parentActivity = (CardsActivity)getActivity();
+        final CardsActivity parentActivity = (CardsActivity)getActivity();
 
         // Get the new card view
         LayoutInflater inflater = parentActivity.getLayoutInflater();
@@ -71,6 +72,7 @@ public class NewCardFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         // Save the new card
                         DanceClassCard danceClassCard = new DanceClassCard(mSchool, mNumberOfClasses, currentDate, mExpirationDate);
+                        Preferences.getInstance(parentActivity).saveCard(danceClassCard);
                         DummyUtils.toast(getActivity(), "New card created");
                     }
                 })

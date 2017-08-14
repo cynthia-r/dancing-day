@@ -40,7 +40,7 @@ public class DummyItem {
         Returns a unique representation of this dance class.
      */
     public String toKey() {
-        return DummyUtils.join('-', this.day, this.danceClassTime.toString(), this.school.toString(), this.teacher, this.level.toString());
+        return DummyUtils.join(DummyItem.KEY_SEPARATOR, this.day, this.danceClassTime.toString(), this.school.toString(), this.teacher, this.level.toString());
     }
 
     public static DummyItem fromKey(String danceClassKey) {

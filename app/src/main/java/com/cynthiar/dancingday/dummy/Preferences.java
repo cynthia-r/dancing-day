@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 
 import com.cynthiar.dancingday.R;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,11 +20,14 @@ public class Preferences {
 
     private static volatile Object syncObject = new Object();
 
-    private Preferences(Set<String> favoriteSet) {
-        this.favoriteSet = favoriteSet;
+    private Preferences(PreferencesModel preferencesModel) {
+        this.favoriteSet = preferencesModel.FavoriteSet;
+        this.cardSet = preferencesModel.CardSet;
     }
 
     private Set<String> favoriteSet;
+
+    private Set<String> cardSet;
 
     public static Preferences getInstance(Context context) {
         if (null != mPreferencesInstance)
@@ -30,18 +35,21 @@ public class Preferences {
 
         synchronized (syncObject) {
             if (null == mPreferencesInstance) {
-                Set<String> favoriteSet = load(context);
-                mPreferencesInstance = new Preferences(favoriteSet);
+                PreferencesModel preferencesModel = load(context);
+                mPreferencesInstance = new Preferences(preferencesModel);
             }
         }
         return mPreferencesInstance;
     }
 
-    private static Set<String> load(Context context) {
+    private static PreferencesModel load(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
         Set<String> favoriteSet = sharedPreferences.getStringSet(context.getString(R.string.favorites_key), new HashSet<String>());
-        return favoriteSet;
+        Set<String> cardSet = sharedPreferences.getStringSet(context.getString(R.string.cards_key), new HashSet<String>());
+
+        PreferencesModel preferencesModel = PreferencesModel.instantiate(favoriteSet, cardSet);
+        return preferencesModel;
     }
 
     public boolean isFavorite(String key) {
@@ -57,6 +65,27 @@ public class Preferences {
             favoriteSet.add(key);
     }
 
+    public List<DanceClassCard> getClassCardList() {
+        if (cardSet.isEmpty())
+            return new ArrayList<>();
+        List<DanceClassCard> danceClassCardList = new ArrayList<>();
+        for (String cardKey:cardSet
+             ) {
+            DanceClassCard danceClassCard = DanceClassCard.fromKey(cardKey);
+            if (null != danceClassCard)
+                danceClassCardList.add(danceClassCard);
+        }
+        return danceClassCardList;
+    }
+
+    public void saveCard(DanceClassCard danceClassCard) {
+        if (null == danceClassCard)
+            return;
+
+        String cardKey = danceClassCard.toKey();
+        cardSet.add(cardKey);
+    }
+
     public void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
@@ -66,6 +95,8 @@ public class Preferences {
         editor.clear();
         String favoritesPreferencesKey = context.getString(R.string.favorites_key);
         editor.putStringSet(favoritesPreferencesKey, favoriteSet);
+        String cardsPreferencesKey = context.getString(R.string.cards_key);
+        editor.putStringSet(cardsPreferencesKey, cardSet);
         editor.apply();
     }
 }

@@ -2,6 +2,7 @@
     <string name="app_name">DancingDay</string>
     <string name="preferences_file_key">"com.cynthiar.dancingday.preferences"</string>
     <string name="favorites_key">"favorites"</string>
+    <string name="cards_key">"cards"</string>
 
     <!-- Titles -->
     <string name="title_activity_details">Class</string>

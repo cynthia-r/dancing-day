@@ -432,7 +432,7 @@ public class DummyUtils<T> {
         return inputString.trim().replaceAll("[^a-zA-Z0-9\\-:]", "");
     }
 
-    public static String join(Character separator, String... stringParams) {
+    public static String join(String separator, String... stringParams) {
         if (null == stringParams || 0 == stringParams.length)
             return "";
 
