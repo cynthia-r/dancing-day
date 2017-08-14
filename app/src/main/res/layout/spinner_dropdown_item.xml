@@ -2,10 +2,12 @@
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="?android:attr/spinnerItemStyle"
-    android:id="@+id/base_item"
+    android:id="@+id/dropdown_item"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:textColor="@color/colorWhite"
-    android:gravity="center"
+    android:maxLines="1"
+    android:textColor="@color/colorBlack"
+    android:gravity="left"
     android:paddingLeft="@dimen/text_margin"
+    android:layout_marginTop="3dp"
     />

@@ -1,14 +1,14 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -20,7 +20,6 @@ import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.filter.MultiDayFilterState;
 import com.cynthiar.dancingday.filter.MultiDaySpinner;
-import com.cynthiar.dancingday.filter.MultiDaySpinnerAdapter;
 import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;
 
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ public class MultiDayFragment extends Fragment {
 
         // School spinner
         mSchoolSpinner = (Spinner)parentActivity.findViewById(R.id.schoolSpinner);
-        List<String> schoolList = Extractors.getInstance(parentActivity).getSchoolList();
+        List<String> schoolList = Extractors.getInstance(parentActivity).getSchoolList(true);
         this.setupSpinner(parentActivity, mSchoolSpinner, schoolList);
 
         // Level spinner
@@ -168,9 +167,8 @@ public class MultiDayFragment extends Fragment {
      * Setups a spinner layout and adapter.
      */
     private void setupSpinner(Context context, Spinner spinner, List<String> spinnerItemList) {
-        MultiDaySpinnerAdapter spinnerAdapter = new MultiDaySpinnerAdapter(
-                context, R.layout.spinner_item, spinnerItemList);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
+                context, R.layout.spinner_item, R.layout.spinner_dropdown_item, spinnerItemList);
         spinner.setAdapter(spinnerAdapter);
     }
 

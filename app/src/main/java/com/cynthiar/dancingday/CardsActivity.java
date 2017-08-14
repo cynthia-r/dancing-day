@@ -2,8 +2,11 @@ package com.cynthiar.dancingday;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +27,9 @@ import static android.view.View.GONE;
  * Created by cynthiar on 8/13/2017.
  */
 
+/*
+    Activity showing the list of class cards.
+ */
 public class CardsActivity extends AppCompatActivity {
     private Toolbar myToolbar;
 
@@ -34,7 +40,7 @@ public class CardsActivity extends AppCompatActivity {
 
         // Setup toolbar
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(getResources().getString(R.string.title_activity_cards));
+        myToolbar.setTitle(R.string.title_activity_cards);
         setSupportActionBar(myToolbar);
 
         // Setup action bar buttons
@@ -53,7 +59,7 @@ public class CardsActivity extends AppCompatActivity {
         // Display empty state if no results
         if (0 == danceClassCardList.size()) {
             listView.setVisibility(GONE);
-            emptyStateTextView.setText("No class cards");
+            emptyStateTextView.setText(R.string.cards_empty_state);
             emptyStateTextView.setVisibility(View.VISIBLE);
             return;
         }
@@ -71,5 +77,27 @@ public class CardsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_cards, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_new_card:
+                // User chose the "New card" item, launch the new card activity...
+                new NewCardFragment().show(getSupportFragmentManager(), NewCardFragment.TAG);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

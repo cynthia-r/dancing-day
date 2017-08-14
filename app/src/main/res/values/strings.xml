@@ -3,9 +3,10 @@
     <string name="preferences_file_key">"com.cynthiar.dancingday.preferences"</string>
     <string name="favorites_key">"favorites"</string>
 
-    <!-- Activity titles -->
+    <!-- Titles -->
     <string name="title_activity_details">Class</string>
     <string name="title_activity_cards">My class cards</string>
+    <string name="title_new_card_dialog">New card</string>
 
     <!-- Navigation Drawer -->
     <string-array name="timeframes_array">
@@ -25,6 +26,9 @@
     <string name="nav_next7days">Next 7 days</string>
     <string name="nav_my_cards">My class cards</string>
 
+    <!-- Single day view -->
+    <string name="class_empty_state">No upcoming classes</string>
+
     <!-- Multi day view -->
     <string-array name="view_by_array">
         <item>Day</item>
@@ -34,5 +38,12 @@
 
     <!-- Details view -->
     <string name="go_now">Go now</string>
+
+    <!-- Cards view -->
+    <string name="cards_empty_state">No class cards</string>
+    <string name="action_new_card">New card</string>
+    <string name="confirm_new_card">Ok</string>
+    <string name="cancel_new_card">Cancel</string>
+    <string name="number_of_classes">Number of classes</string>
 
 </resources>

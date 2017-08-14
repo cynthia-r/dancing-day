@@ -80,7 +80,7 @@ public class Extractors {
         }
     }
 
-    public List<String> getSchoolList() {
+    public List<String> getSchoolList(boolean includeAllList) {
         List<String> propertyList = new ArrayList<>();
         propertyList.add(MultiDayFragment.ALL_KEY.concat(" schools"));
         for (DanceClassExtractor danceClassExtractor : this.extractors
