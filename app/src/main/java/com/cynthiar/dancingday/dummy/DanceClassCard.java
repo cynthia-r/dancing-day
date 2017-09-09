@@ -28,7 +28,7 @@ public class DanceClassCard {
         Returns a unique representation of this dance class card.
      */
     public String toKey() {
-        return DummyUtils.join(DanceClassCard.KEY_SEPARATOR, this.school.toString(), this.purchaseDate.toString(DanceClassCard.dateTimeFormatter), this.expirationDate.toString(DanceClassCard.dateTimeFormatter));
+        return DummyUtils.join(DanceClassCard.KEY_SEPARATOR, this.school.toString(), Integer.toString(this.count), this.purchaseDate.toString(DanceClassCard.dateTimeFormatter), this.expirationDate.toString(DanceClassCard.dateTimeFormatter));
     }
 
     /*
@@ -39,11 +39,19 @@ public class DanceClassCard {
             return null;
 
         String[] keyElements = danceClassCard.split(DanceClassCard.KEY_SEPARATOR);
-        if (null == keyElements || 3 != keyElements.length)
+        if (null == keyElements || 4 != keyElements.length)
             return null;
 
-        return new DanceClassCard(Schools.DanceSchool.fromString(keyElements[0]), Integer.parseInt(keyElements[1]),
-                DateTime.parse(keyElements[2], DanceClassCard.dateTimeFormatter),
-                DateTime.parse(keyElements[3], DanceClassCard.dateTimeFormatter));
+        DanceClassCard danceClassCardParsed = null;
+        try {
+            danceClassCardParsed = new DanceClassCard(Schools.DanceSchool.fromString(keyElements[0]),
+                    Integer.parseInt(keyElements[1]),
+                    DateTime.parse(keyElements[2], DanceClassCard.dateTimeFormatter),
+                    DateTime.parse(keyElements[3], DanceClassCard.dateTimeFormatter));
+        }
+        catch (Exception e){
+            return null;
+        }
+        return danceClassCardParsed;
     }
 }

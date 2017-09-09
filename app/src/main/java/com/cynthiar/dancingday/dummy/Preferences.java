@@ -74,6 +74,7 @@ public class Preferences {
             DanceClassCard danceClassCard = DanceClassCard.fromKey(cardKey);
             if (null != danceClassCard)
                 danceClassCardList.add(danceClassCard);
+            else this.cardSet.remove(cardKey);
         }
         return danceClassCardList;
     }

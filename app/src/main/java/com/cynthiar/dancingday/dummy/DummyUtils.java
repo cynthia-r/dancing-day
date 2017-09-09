@@ -3,8 +3,6 @@ package com.cynthiar.dancingday.dummy;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.cynthiar.dancingday.data.IProgress;
-import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.dummy.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
@@ -437,11 +435,17 @@ public class DummyUtils<T> {
             return "";
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (String stringParam:stringParams
-             ) {
-            stringBuilder.append(stringParam);
-            stringBuilder.append(separator);
+        stringBuilder.append(stringParams[0]);
+
+        if (2 <= stringParams.length) {
+            for (int i=1; i < stringParams.length; i++
+                    ) {
+                String stringParam = stringParams[i];
+                stringBuilder.append(separator);
+                stringBuilder.append(stringParam);
+            }
         }
+
         return stringBuilder.toString();
     }
 

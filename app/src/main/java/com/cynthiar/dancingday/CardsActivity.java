@@ -47,12 +47,13 @@ public class CardsActivity extends AppCompatActivity {
         // Setup action bar buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         // Retrieve list of items
-        /*List<DanceClassCard> danceClassCardList = new ArrayList<>();
-        danceClassCardList.add(new DanceClassCard(Schools.DanceSchool.fromString("KDC"), 5, new DateTime(2017, 4, 10, 0, 0), new DateTime(2017, 5, 5, 0, 0)));
-        danceClassCardList.add(new DanceClassCard(Schools.DanceSchool.fromString("ADI"), 2, new DateTime(2017, 3, 27, 0, 0), new DateTime(2017, 4, 30, 0, 0)));
-        */
         List<DanceClassCard> danceClassCardList = Preferences.getInstance(this).getClassCardList();
 
         // Get the list view and the empty state view
