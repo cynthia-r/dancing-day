@@ -5,19 +5,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
-import com.cynthiar.dancingday.dummy.DanceClassCard;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.Schools;
+import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.Schools;
 
 import org.joda.time.DateTime;
-
-import static com.cynthiar.dancingday.dummy.Schools.ADI_SCHOOL;
 
 /*
     Fragment for the new card dialog.
@@ -33,13 +28,8 @@ public class NewCardFragment extends BaseCardFragment {
     }
 
     @Override
-    protected int getViewResourceId() {
-        return R.layout.new_card_fragment;
-    }
-
-    @Override
     protected void initializeData() {
-        mSchool = Schools.ADI_SCHOOL;
+        mCompany = Schools.ADI_COMPANY;
         mNumberOfClasses = 0;
         mExpirationDate = DateTime.now();
     }
@@ -55,7 +45,7 @@ public class NewCardFragment extends BaseCardFragment {
                 .setPositiveButton(R.string.confirm_new_card, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Save the new card
-                        DanceClassCard danceClassCard = new DanceClassCard(mSchool, mNumberOfClasses, DateTime.now(), mExpirationDate);
+                        DanceClassCard danceClassCard = new DanceClassCard(mCompany, mNumberOfClasses, DateTime.now(), mExpirationDate);
                         Preferences.getInstance(parentActivity).saveCard(danceClassCard);
                         mListener.onDialogPositiveClick(NewCardFragment.this);
                         DummyUtils.toast(getActivity(), "New card created");

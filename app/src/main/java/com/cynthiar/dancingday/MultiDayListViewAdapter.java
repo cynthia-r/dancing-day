@@ -9,10 +9,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.filter.MultiDayFilter;
 
 import java.util.Calendar;

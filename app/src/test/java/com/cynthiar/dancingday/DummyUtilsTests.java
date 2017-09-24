@@ -1,8 +1,8 @@
 package com.cynthiar.dancingday;
 
-import com.cynthiar.dancingday.dummy.time.DanceClassTime;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.comparer.IntComparer;
+import com.cynthiar.dancingday.model.time.DanceClassTime;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.comparer.IntComparer;
 
 import org.junit.Test;
 

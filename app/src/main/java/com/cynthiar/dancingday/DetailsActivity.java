@@ -3,14 +3,11 @@ package com.cynthiar.dancingday;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -18,12 +15,9 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
 import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.distance.matrix.DistanceTask;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.Preferences;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.Preferences;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -52,7 +46,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     // The dance class this activity is foo
     private DummyItem mDanceClass;
 
-    // Save the school coordinates
+    // Save the company coordinates
     private String mSchoolCoordinates;
 
     @Override

@@ -5,15 +5,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
-import com.cynthiar.dancingday.dummy.DanceClassCard;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.extractor.Extractors;
+import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.Preferences;
 
 import org.joda.time.DateTime;
 
@@ -45,13 +41,8 @@ public class EditDeleteCardFragment extends BaseCardFragment {
     }
 
     @Override
-    protected int getViewResourceId() {
-        return R.layout.new_card_fragment;
-    }
-
-    @Override
     protected void initializeData() {
-        mSchool = mDanceClassCard.school;
+        mCompany = mDanceClassCard.company;
         mNumberOfClasses = mDanceClassCard.count;
         mExpirationDate = mDanceClassCard.expirationDate;
     }
@@ -67,7 +58,7 @@ public class EditDeleteCardFragment extends BaseCardFragment {
                 .setNeutralButton(R.string.edit_card, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Update the card
-                        DanceClassCard danceClassCard = new DanceClassCard(mSchool, mNumberOfClasses, DateTime.now(), mExpirationDate);
+                        DanceClassCard danceClassCard = new DanceClassCard(mCompany, mNumberOfClasses, DateTime.now(), mExpirationDate);
                         Preferences.getInstance(parentActivity).updateCard(mCardKey, danceClassCard);
                         mListener.onDialogPositiveClick(EditDeleteCardFragment.this);
                         DummyUtils.toast(getActivity(), "Card updated");

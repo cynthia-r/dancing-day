@@ -5,7 +5,7 @@
     <!-- "New Card", should always appear as action button -->
     <item
         android:id="@+id/action_new_card"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@android:drawable/ic_input_add"
         android:title="@string/action_new_card"
         app:showAsAction="always"/>
 

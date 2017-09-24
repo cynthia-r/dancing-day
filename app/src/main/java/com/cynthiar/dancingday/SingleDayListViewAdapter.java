@@ -2,23 +2,21 @@ package com.cynthiar.dancingday;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.LevelPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.SchoolPropertySelector;
-import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
+import com.cynthiar.dancingday.model.propertySelector.LevelPropertySelector;
+import com.cynthiar.dancingday.model.propertySelector.SchoolPropertySelector;
+import com.cynthiar.dancingday.model.time.DanceClassTime;
 
 import java.util.List;
 

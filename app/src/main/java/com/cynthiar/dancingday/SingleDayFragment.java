@@ -1,7 +1,5 @@
 package com.cynthiar.dancingday;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -11,15 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
 
 import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static android.view.View.GONE;
 

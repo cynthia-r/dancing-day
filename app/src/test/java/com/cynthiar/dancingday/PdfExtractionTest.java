@@ -6,10 +6,10 @@ import android.util.Pair;
 import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.dummy.extractor.KDCDanceClassExtractor;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.model.extractor.KDCDanceClassExtractor;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
 

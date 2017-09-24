@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.SpinnerAdapter;
-import com.cynthiar.dancingday.dummy.Schools;
-import com.cynthiar.dancingday.dummy.extractor.Extractors;
+import com.cynthiar.dancingday.model.Schools;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,15 +27,15 @@ import java.util.List;
  */
 
 public abstract class BaseCardFragment extends DialogFragment {
-    protected Schools.DanceSchool mSchool;
+    protected Schools.DanceCompany mCompany;
     protected int mNumberOfClasses;
     protected DateTime mExpirationDate;
-    protected NewCardDialogListener mListener;
+    protected CardDialogListener mListener;
 
     /*
         Listener interface for events coming from this dialog.
      */
-    public interface NewCardDialogListener {
+    public interface CardDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
     }
 
@@ -44,12 +44,12 @@ public abstract class BaseCardFragment extends DialogFragment {
         super.onAttach(activity);
         // Verify that the host activity implements the callback interface
         try {
-            // Instantiate the NewCardDialogListener so we can send events to the host
-            mListener = (BaseCardFragment.NewCardDialogListener) activity;
+            // Instantiate the CardDialogListener so we can send events to the host
+            mListener = (CardDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(activity.toString()
-                    + " must implement NewCardDialogListener");
+                    + " must implement CardDialogListener");
         }
     }
 
@@ -63,7 +63,7 @@ public abstract class BaseCardFragment extends DialogFragment {
 
         // Get the new card view
         LayoutInflater inflater = parentActivity.getLayoutInflater();
-        final View newCardView = inflater.inflate(this.getViewResourceId(), null);
+        final View newCardView = inflater.inflate(R.layout.card_dialog_fragment, null);
 
         // Setup the number of classes editor
         TextView numberOfClassesView = (TextView) newCardView.findViewById(R.id.count);
@@ -76,27 +76,28 @@ public abstract class BaseCardFragment extends DialogFragment {
         datePicker.init(mExpirationDate.getYear(), mExpirationDate.getMonthOfYear() - 1, mExpirationDate.getDayOfMonth(), new CardDatePickerListener());
         // The date picker's day of month is zero-based
 
-        // Setup the school spinner
+        // Setup the school company spinner
         final Spinner schoolSpinner = (Spinner) newCardView.findViewById(R.id.schoolSpinner);
-        final List<String> schoolSpinnerItemList = Extractors.getInstance(parentActivity).getSchoolList(false);
+        final List<String> schoolSpinnerItemList = new ArrayList<>();
+        for (Schools.DanceCompany company:Schools.COMPANIES) {
+            schoolSpinnerItemList.add(company.toString());
+        }
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
                 parentActivity, R.layout.school_spinner_item, R.layout.spinner_dropdown_item, schoolSpinnerItemList);
         schoolSpinner.setAdapter(spinnerAdapter);
         schoolSpinner.setOnItemSelectedListener(new CardSchoolSpinnerListener(schoolSpinnerItemList));
-        schoolSpinner.setSelection(schoolSpinnerItemList.indexOf(mSchool.Key));
+        schoolSpinner.setSelection(schoolSpinnerItemList.indexOf(mCompany.Key));
 
         // Build and return the dialog
         return this.buildDialog(newCardView, parentActivity);
     }
-
-    protected abstract int getViewResourceId();
 
     protected abstract void initializeData();
 
     protected abstract Dialog buildDialog(View view, final Activity parentActivity);
 
     /*
-        Listener for the card's school spinner.
+        Listener for the card's company spinner.
      */
     private class CardSchoolSpinnerListener implements AdapterView.OnItemSelectedListener {
         private List<String> mSchoolList;
@@ -106,7 +107,7 @@ public abstract class BaseCardFragment extends DialogFragment {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            mSchool = Schools.DanceSchool.fromString(mSchoolList.get(position));
+            mCompany = Schools.DanceCompany.fromString(mSchoolList.get(position));
         }
 
         @Override

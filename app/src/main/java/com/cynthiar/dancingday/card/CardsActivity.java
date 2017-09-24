@@ -12,8 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
-import com.cynthiar.dancingday.dummy.DanceClassCard;
-import com.cynthiar.dancingday.dummy.Preferences;
+import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.Preferences;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import static android.view.View.GONE;
 /*
     Activity showing the list of class cards.
  */
-public class CardsActivity extends AppCompatActivity implements NewCardFragment.NewCardDialogListener{
+public class CardsActivity extends AppCompatActivity implements BaseCardFragment.CardDialogListener {
     private Toolbar myToolbar;
     private CardListViewAdapter mCardListViewAdapter;
 

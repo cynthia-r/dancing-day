@@ -1,28 +1,14 @@
 package com.cynthiar.dancingday.card;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
-import com.cynthiar.dancingday.dummy.DanceClassCard;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.LevelPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.SchoolPropertySelector;
-import com.cynthiar.dancingday.dummy.time.DanceClassTime;
+import com.cynthiar.dancingday.model.DanceClassCard;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -74,8 +60,8 @@ public class CardListViewAdapter extends BaseAdapter{
 
         final DanceClassCard danceClassCard = mValues.get(position);
 
-        // Set school, count and expiration date view texts
-        mSchoolView.setText(danceClassCard.school.toString());
+        // Set company, count and expiration date view texts
+        mSchoolView.setText(danceClassCard.company.toString());
         StringBuilder sb = new StringBuilder();
         sb.append(danceClassCard.count);
         sb.append(" classes");

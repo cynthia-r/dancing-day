@@ -7,11 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.cynthiar.dancingday.data.IConsumerCallback;
-import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
-import com.cynthiar.dancingday.distance.matrix.DistanceTask;
 import com.cynthiar.dancingday.download.DownloadTask;
 import com.cynthiar.dancingday.download.IDownloadCallback;
-import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 
 /**
  * Created by Robert on 08/02/2017.

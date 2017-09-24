@@ -3,7 +3,7 @@ package com.cynthiar.dancingday.data;
 import android.support.v4.util.Pair;
 
 import com.cynthiar.dancingday.TodayActivity;
-import com.cynthiar.dancingday.dummy.DummyItem;
+import com.cynthiar.dancingday.model.DummyItem;
 
 import java.util.List;
 

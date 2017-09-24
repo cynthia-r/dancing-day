@@ -5,7 +5,7 @@ import android.net.Uri;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.HttpClient;
 import com.cynthiar.dancingday.download.IHttpConsumer;
-import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.model.DummyUtils;
 
 import org.apache.commons.lang3.StringUtils;
 

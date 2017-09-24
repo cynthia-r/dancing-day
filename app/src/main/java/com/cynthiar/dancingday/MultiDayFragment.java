@@ -1,23 +1,21 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.cynthiar.dancingday.dummy.extractor.Extractors;
-import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
-import com.cynthiar.dancingday.dummy.propertySelector.DayPropertySelector;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
+import com.cynthiar.dancingday.model.extractor.Extractors;
+import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.filter.MultiDayFilterState;
 import com.cynthiar.dancingday.filter.MultiDaySpinner;
 import com.cynthiar.dancingday.filter.SpinnerItemsSelectedListener;

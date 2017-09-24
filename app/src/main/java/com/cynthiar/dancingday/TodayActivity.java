@@ -26,12 +26,12 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
-import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.dummy.extractor.Extractors;
-import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.model.extractor.Extractors;
+import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -221,7 +221,7 @@ public class TodayActivity extends AppCompatActivity
     }
 
     /**
-    * Swaps fragments in the main school view.
+    * Swaps fragments in the main company view.
     */
     private void selectItem(int position) {
         // Primary menu
@@ -305,7 +305,7 @@ public class TodayActivity extends AppCompatActivity
             schoolLists.add(schoolList);
         }
 
-        // Merge the school lists
+        // Merge the company lists
         List<DummyItem> dummyItemList = new ArrayList<>();
         for (List<DummyItem> schoolList:schoolLists
              ) {
