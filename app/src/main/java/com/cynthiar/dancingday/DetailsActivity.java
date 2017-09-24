@@ -102,9 +102,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         mIsFavorite = Preferences.getInstance(this).isFavorite(danceClassKey);
 
         // Set star button accordingly
-        //ImageButton imageButton = (ImageButton) this.findViewById(R.id.favorite);
-        //imageButton.setPressed(mIsFavorite);
-        //imageButton.setOnTouchListener(new StarTouchListener(this));
         ToggleButton imageButton = (ToggleButton) this.findViewById(R.id.favorite);
         imageButton.setChecked(mIsFavorite);
         imageButton.setOnClickListener(new StarClickListener(this));

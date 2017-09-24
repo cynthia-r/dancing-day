@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -164,6 +165,9 @@ public class TodayActivity extends AppCompatActivity
         if (mReloadFragmentOnResume) {
             this.reloadCurrentFragment();
         }
+
+        int currentPosition = this.getCurrentPosition(this.getCurrentFragment());
+        mDrawerList.setItemChecked(currentPosition, true);
     }
 
     @Override
@@ -172,6 +176,18 @@ public class TodayActivity extends AppCompatActivity
 
         mIsInForeground = false;
         Preferences.getInstance(this).save(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+
+            Fragment currentFragment = this.getCurrentFragment();
+            int currentPosition = this.getCurrentPosition(currentFragment);
+            mDrawerList.setItemChecked(currentPosition, true);
+        }
     }
 
     @Override
@@ -240,7 +256,6 @@ public class TodayActivity extends AppCompatActivity
 
             // Switch fragment
             this.switchToFragment(fragment, fragmentTag);
-
         }
         // Secondary menu
         else {
@@ -253,6 +268,17 @@ public class TodayActivity extends AppCompatActivity
         // Highlight the selected item, and close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mLeftDrawerLayout);
+    }
+
+    private int getCurrentPosition(Fragment currentFragment) {
+        if (currentFragment instanceof SingleDayFragment){
+            SingleDayFragment singleDayFragment = (SingleDayFragment)currentFragment;
+            return singleDayFragment.getArguments().getInt(SingleDayFragment.ARG_POSITION);
+        }
+        else if (currentFragment instanceof MultiDayFragment){
+            return 2;
+        }
+        return 0;
     }
 
     private void switchToFragment(Fragment fragment, String fragmentTag) {
@@ -395,8 +421,9 @@ public class TodayActivity extends AppCompatActivity
     private void reloadCurrentFragment() {
         // Reload current fragment
         Fragment currentFragment = this.getCurrentFragment();
-        if (null != currentFragment)
+        if (null != currentFragment) {
             this.reloadFragment(currentFragment);
+        }
 
         // Mark the reload as done
         mReloadFragmentOnResume = false;
