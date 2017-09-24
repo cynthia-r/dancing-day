@@ -2,7 +2,6 @@ package com.cynthiar.dancingday;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.cynthiar.dancingday.card.CardsActivity;
 import com.cynthiar.dancingday.data.DanceClassDataProvider;
 import com.cynthiar.dancingday.data.DataCache;
 import com.cynthiar.dancingday.data.IConsumerCallback;
@@ -36,9 +36,7 @@ import com.cynthiar.dancingday.dummy.propertySelector.DanceClassPropertySelector
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Main activity.

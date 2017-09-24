@@ -87,6 +87,22 @@ public class Preferences {
         cardSet.add(cardKey);
     }
 
+    public void updateCard(String oldCardKey, DanceClassCard danceClassCard) {
+        if ((null == oldCardKey) || (null == danceClassCard))
+            return;
+
+        cardSet.remove(oldCardKey);
+        String newCardKey = danceClassCard.toKey();
+        cardSet.add(newCardKey);
+    }
+
+    public void deleteCard(String cardKey) {
+        if (null == cardKey)
+            return;
+
+        cardSet.remove(cardKey);
+    }
+
     public void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);

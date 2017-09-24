@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity" />
-        <activity android:name=".CardsActivity" />
+        <activity android:name=".card.CardsActivity" />
     </application>
 
 </manifest>

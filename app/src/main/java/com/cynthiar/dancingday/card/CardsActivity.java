@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,15 +11,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.dummy.DanceClassCard;
-import com.cynthiar.dancingday.dummy.DummyItem;
-import com.cynthiar.dancingday.dummy.DummyUtils;
 import com.cynthiar.dancingday.dummy.Preferences;
-import com.cynthiar.dancingday.dummy.Schools;
 
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;

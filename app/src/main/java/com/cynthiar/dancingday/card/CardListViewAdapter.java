@@ -1,5 +1,6 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.card;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.dummy.DanceClassCard;
 import com.cynthiar.dancingday.dummy.DummyItem;
 import com.cynthiar.dancingday.dummy.DummyUtils;
@@ -87,7 +89,9 @@ public class CardListViewAdapter extends BaseAdapter{
 
             @Override
             public void onClick(View v) {
-                DummyUtils.toast(mContext, "Coming soon...");
+                //DummyUtils.toast(mContext, "Coming soon...");
+                EditDeleteCardFragment.newInstance(danceClassCard.toKey())
+                        .show(((CardsActivity)mContext).getSupportFragmentManager(), EditDeleteCardFragment.TAG);
             }
 
         });
