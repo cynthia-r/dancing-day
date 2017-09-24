@@ -1,5 +1,6 @@
 package com.cynthiar.dancingday;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -34,6 +35,28 @@ public class NewCardFragment extends DialogFragment {
     private Schools.DanceSchool mSchool;
     private int mNumberOfClasses;
     private DateTime mExpirationDate;
+    private NewCardDialogListener mListener;
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public NewCardFragment() {
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NewCardDialogListener so we can send events to the host
+            mListener = (NewCardDialogListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement NewCardDialogListener");
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -73,6 +96,7 @@ public class NewCardFragment extends DialogFragment {
                         // Save the new card
                         DanceClassCard danceClassCard = new DanceClassCard(mSchool, mNumberOfClasses, currentDate, mExpirationDate);
                         Preferences.getInstance(parentActivity).saveCard(danceClassCard);
+                        mListener.onDialogPositiveClick(NewCardFragment.this);
                         DummyUtils.toast(getActivity(), "New card created");
                     }
                 })
@@ -106,6 +130,13 @@ public class NewCardFragment extends DialogFragment {
     }
 
     /*
+        Listener interface for events coming from this dialog.
+     */
+    public interface NewCardDialogListener {
+        void onDialogPositiveClick(DialogFragment dialog);
+    }
+
+    /*
         Text watcher for the "New card" number of classes editor.
      */
     private class NewCardTextWatcher implements TextWatcher {
@@ -131,7 +162,8 @@ public class NewCardFragment extends DialogFragment {
     private class NewCardDatePickerListener implements DatePicker.OnDateChangedListener {
         @Override
         public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            mExpirationDate = new DateTime(year, monthOfYear, dayOfMonth, 00, 00);
+            mExpirationDate = new DateTime(year, monthOfYear + 1, dayOfMonth, 00, 00);
+            // The date picker's day of month is zero-based
         }
     }
 }

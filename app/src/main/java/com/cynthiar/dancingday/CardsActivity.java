@@ -31,8 +31,9 @@ import static android.view.View.GONE;
 /*
     Activity showing the list of class cards.
  */
-public class CardsActivity extends AppCompatActivity {
+public class CardsActivity extends AppCompatActivity implements NewCardFragment.NewCardDialogListener{
     private Toolbar myToolbar;
+    private CardListViewAdapter mCardListViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,9 +51,17 @@ public class CardsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
+        // Refresh the list
+        this.refreshList();
+    }
+
+    /*
+        Refreshes the list of cards
+     */
+    private void refreshList() {
         // Retrieve list of items
         List<DanceClassCard> danceClassCardList = Preferences.getInstance(this).getClassCardList();
 
@@ -73,8 +82,8 @@ public class CardsActivity extends AppCompatActivity {
         emptyStateTextView.setVisibility(View.GONE);
 
         // Setup list adapter
-        CardListViewAdapter adapter = new CardListViewAdapter(danceClassCardList, this);
-        listView.setAdapter(adapter);
+        mCardListViewAdapter = new CardListViewAdapter(danceClassCardList, this);
+        listView.setAdapter(mCardListViewAdapter);
     }
 
     @Override
@@ -103,5 +112,10 @@ public class CardsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        this.refreshList();
     }
 }
