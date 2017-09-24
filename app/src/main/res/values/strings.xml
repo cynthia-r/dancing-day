@@ -45,8 +45,9 @@
     <string name="cards_empty_state">No class cards</string>
     <string name="action_new_card">New card</string>
     <string name="confirm_new_card">Ok</string>
-    <string name="cancel_new_card">Cancel</string>
+    <string name="edit_card">Edit</string>
     <string name="delete_card">Delete</string>
+    <string name="cancel_card_action">Cancel</string>
     <string name="number_of_classes">Number of classes</string>
 
 </resources>

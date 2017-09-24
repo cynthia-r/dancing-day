@@ -17,8 +17,6 @@ import com.cynthiar.dancingday.dummy.extractor.Extractors;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
 /**
  * Created by CynthiaR on 9/23/2017.
  */
@@ -26,6 +24,7 @@ import java.util.List;
 public class EditDeleteCardFragment extends BaseCardFragment {
     public static final String TAG = "EditDeleteCardFragment";
     private String mCardKey;
+    private DanceClassCard mDanceClassCard;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -36,12 +35,13 @@ public class EditDeleteCardFragment extends BaseCardFragment {
 
     public static EditDeleteCardFragment newInstance(String cardKey) {
         EditDeleteCardFragment editDeleteCardFragment = new EditDeleteCardFragment();
-        editDeleteCardFragment.setCardKey(cardKey);
+        editDeleteCardFragment.setCard(cardKey);
         return editDeleteCardFragment;
     }
 
-    private void setCardKey(String cardKey) {
+    private void setCard(String cardKey) {
         mCardKey = cardKey;
+        mDanceClassCard = DanceClassCard.fromKey(cardKey);
     }
 
     @Override
@@ -50,21 +50,10 @@ public class EditDeleteCardFragment extends BaseCardFragment {
     }
 
     @Override
-    protected void initializeData(Activity parentActivity, Spinner schoolSpinner, TextView textView, DatePicker datePicker) {
-        DanceClassCard danceClassCard = DanceClassCard.fromKey(mCardKey);
-
-        Object[] schoolSpinnerItemList = Extractors.getInstance(parentActivity).getSchoolList(false).toArray();
-        int i=0;
-        while (i < schoolSpinnerItemList.length && (String)(schoolSpinnerItemList[i]) != danceClassCard.school.Key) {
-            i++;
-        }
-        if (i < schoolSpinnerItemList.length)
-            schoolSpinner.setSelection(i);
-
-        textView.setText(Integer.toString(danceClassCard.count));
-        DateTime expirationDate = danceClassCard.expirationDate;
-        datePicker.init(expirationDate.getYear(), expirationDate.getMonthOfYear() - 1, expirationDate.getDayOfMonth(), new CardDatePickerListener());
-        // The date picker's day of month is zero-based
+    protected void initializeData() {
+        mSchool = mDanceClassCard.school;
+        mNumberOfClasses = mDanceClassCard.count;
+        mExpirationDate = mDanceClassCard.expirationDate;
     }
 
     @Override
@@ -75,7 +64,7 @@ public class EditDeleteCardFragment extends BaseCardFragment {
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
                 .setView(view)
-                .setNeutralButton(R.string.confirm_new_card, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.edit_card, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Update the card
                         DanceClassCard danceClassCard = new DanceClassCard(mSchool, mNumberOfClasses, DateTime.now(), mExpirationDate);
@@ -92,7 +81,7 @@ public class EditDeleteCardFragment extends BaseCardFragment {
                         DummyUtils.toast(getActivity(), "Card deleted");
                     }
                 })
-                .setNegativeButton(R.string.cancel_new_card, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel_card_action, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }

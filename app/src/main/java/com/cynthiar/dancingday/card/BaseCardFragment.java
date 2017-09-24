@@ -58,6 +58,9 @@ public abstract class BaseCardFragment extends DialogFragment {
         // Get the parent activity
         final CardsActivity parentActivity = (CardsActivity)getActivity();
 
+        // Initialize the data
+        this.initializeData();
+
         // Get the new card view
         LayoutInflater inflater = parentActivity.getLayoutInflater();
         final View newCardView = inflater.inflate(this.getViewResourceId(), null);
@@ -65,9 +68,13 @@ public abstract class BaseCardFragment extends DialogFragment {
         // Setup the number of classes editor
         TextView numberOfClassesView = (TextView) newCardView.findViewById(R.id.count);
         numberOfClassesView.addTextChangedListener(new CardTextWatcher());
+        if (mNumberOfClasses > 0)
+            numberOfClassesView.setText(Integer.toString(mNumberOfClasses));
 
         // Setup the expiration date picker
         DatePicker datePicker = (DatePicker) newCardView.findViewById(R.id.expiration_date_picker);
+        datePicker.init(mExpirationDate.getYear(), mExpirationDate.getMonthOfYear() - 1, mExpirationDate.getDayOfMonth(), new CardDatePickerListener());
+        // The date picker's day of month is zero-based
 
         // Setup the school spinner
         final Spinner schoolSpinner = (Spinner) newCardView.findViewById(R.id.schoolSpinner);
@@ -76,9 +83,7 @@ public abstract class BaseCardFragment extends DialogFragment {
                 parentActivity, R.layout.school_spinner_item, R.layout.spinner_dropdown_item, schoolSpinnerItemList);
         schoolSpinner.setAdapter(spinnerAdapter);
         schoolSpinner.setOnItemSelectedListener(new CardSchoolSpinnerListener(schoolSpinnerItemList));
-
-        // Initialize the data
-        this.initializeData(parentActivity, schoolSpinner, numberOfClassesView, datePicker);
+        schoolSpinner.setSelection(schoolSpinnerItemList.indexOf(mSchool.Key));
 
         // Build and return the dialog
         return this.buildDialog(newCardView, parentActivity);
@@ -86,7 +91,7 @@ public abstract class BaseCardFragment extends DialogFragment {
 
     protected abstract int getViewResourceId();
 
-    protected abstract void initializeData(Activity parentActivity, Spinner schoolSpinner, TextView textView, DatePicker datePicker);
+    protected abstract void initializeData();
 
     protected abstract Dialog buildDialog(View view, final Activity parentActivity);
 
@@ -127,7 +132,7 @@ public abstract class BaseCardFragment extends DialogFragment {
         @Override
         public void afterTextChanged(Editable s) {
             try {
-                mNumberOfClasses =Integer.parseInt(s.toString());
+                mNumberOfClasses = Integer.parseInt(s.toString());
             }
             catch (Exception e){
                 mNumberOfClasses = 0;
