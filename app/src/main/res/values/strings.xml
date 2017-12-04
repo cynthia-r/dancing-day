@@ -3,6 +3,7 @@
     <string name="preferences_file_key">"com.cynthiar.dancingday.preferences"</string>
     <string name="favorites_key">"favorites"</string>
     <string name="cards_key">"cards"</string>
+    <string name="activities_key">"activities"</string>
 
     <!-- Titles -->
     <string name="title_activity_details">Class</string>

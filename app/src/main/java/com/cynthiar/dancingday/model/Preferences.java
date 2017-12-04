@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.cynthiar.dancingday.R;
+import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,14 +21,13 @@ public class Preferences {
 
     private static volatile Object syncObject = new Object();
 
-    private Preferences(PreferencesModel preferencesModel) {
-        this.favoriteSet = preferencesModel.FavoriteSet;
-        this.cardSet = preferencesModel.CardSet;
+    private Preferences(Context context, PreferencesModel preferencesModel) {
+        this.preferencesModel = preferencesModel;
+        mContext = context;
     }
 
-    private Set<String> favoriteSet;
-
-    private Set<String> cardSet;
+    private PreferencesModel preferencesModel;
+    private Context mContext;
 
     public static Preferences getInstance(Context context) {
         if (null != mPreferencesInstance)
@@ -36,7 +36,7 @@ public class Preferences {
         synchronized (syncObject) {
             if (null == mPreferencesInstance) {
                 PreferencesModel preferencesModel = load(context);
-                mPreferencesInstance = new Preferences(preferencesModel);
+                mPreferencesInstance = new Preferences(context, preferencesModel);
             }
         }
         return mPreferencesInstance;
@@ -47,60 +47,10 @@ public class Preferences {
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
         Set<String> favoriteSet = sharedPreferences.getStringSet(context.getString(R.string.favorites_key), new HashSet<String>());
         Set<String> cardSet = sharedPreferences.getStringSet(context.getString(R.string.cards_key), new HashSet<String>());
+        Set<String> activitySet = sharedPreferences.getStringSet(context.getString(R.string.activities_key), new HashSet<String>());
 
-        PreferencesModel preferencesModel = PreferencesModel.instantiate(favoriteSet, cardSet);
+        PreferencesModel preferencesModel = PreferencesModel.instantiate(favoriteSet, cardSet, activitySet);
         return preferencesModel;
-    }
-
-    public boolean isFavorite(String key) {
-        return favoriteSet.contains(key);
-    }
-
-    public void changeFavoriteStatus(String key, boolean previousStatus) {
-        // Un-mark as favorite
-        if (previousStatus)
-            favoriteSet.remove(key);
-            // Mark as favorite
-        else
-            favoriteSet.add(key);
-    }
-
-    public List<DanceClassCard> getClassCardList() {
-        if (cardSet.isEmpty())
-            return new ArrayList<>();
-        List<DanceClassCard> danceClassCardList = new ArrayList<>();
-        for (String cardKey:cardSet
-             ) {
-            DanceClassCard danceClassCard = DanceClassCard.fromKey(cardKey);
-            if (null != danceClassCard)
-                danceClassCardList.add(danceClassCard);
-            else this.cardSet.remove(cardKey);
-        }
-        return danceClassCardList;
-    }
-
-    public void saveCard(DanceClassCard danceClassCard) {
-        if (null == danceClassCard)
-            return;
-
-        String cardKey = danceClassCard.toKey();
-        cardSet.add(cardKey);
-    }
-
-    public void updateCard(String oldCardKey, DanceClassCard danceClassCard) {
-        if ((null == oldCardKey) || (null == danceClassCard))
-            return;
-
-        cardSet.remove(oldCardKey);
-        String newCardKey = danceClassCard.toKey();
-        cardSet.add(newCardKey);
-    }
-
-    public void deleteCard(String cardKey) {
-        if (null == cardKey)
-            return;
-
-        cardSet.remove(cardKey);
     }
 
     public void save(Context context) {
@@ -111,9 +61,51 @@ public class Preferences {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         String favoritesPreferencesKey = context.getString(R.string.favorites_key);
-        editor.putStringSet(favoritesPreferencesKey, favoriteSet);
+        editor.putStringSet(favoritesPreferencesKey, this.preferencesModel.getFavoriteSet());
         String cardsPreferencesKey = context.getString(R.string.cards_key);
-        editor.putStringSet(cardsPreferencesKey, cardSet);
+        editor.putStringSet(cardsPreferencesKey, this.preferencesModel.getCardSet());
+        String activitiesPreferencesKey = context.getString(R.string.activities_key);
+        editor.putStringSet(activitiesPreferencesKey, this.preferencesModel.getActivitySet());
         editor.apply();
+    }
+
+    public boolean isFavorite(String key) {
+        return this.preferencesModel.isFavorite(key);
+    }
+
+    public void changeFavoriteStatus(String key, boolean previousStatus) {
+        this.preferencesModel.changeFavoriteStatus(key, previousStatus);
+    }
+
+    public List<DanceClassCard> getClassCardList() {
+        return this.preferencesModel.getClassCardList();
+    }
+
+    public void saveCard(DanceClassCard danceClassCard) {
+        this.preferencesModel.saveCard(danceClassCard);
+    }
+
+    public void updateCard(String oldCardKey, DanceClassCard danceClassCard) {
+        this.preferencesModel.updateCard(oldCardKey, danceClassCard);
+    }
+
+    public void deleteCard(String cardKey) {
+        this.preferencesModel.deleteCard(cardKey);
+    }
+    
+    public void registerActivity(ClassActivity classActivity) {
+        try {
+            this.preferencesModel.registerActivity(classActivity);
+        } catch (Exception e) {
+            DummyUtils.toast(mContext, "Failed to register activity.");
+        }
+    }
+
+    public void cancelActivity(ClassActivity classActivity) {
+        this.preferencesModel.cancelActivity(classActivity);
+    }
+
+    public List<ClassActivity> getActivityList() {
+        return this.preferencesModel.getActivityList();
     }
 }

@@ -1,5 +1,7 @@
 package com.cynthiar.dancingday.model;
 
+import com.cynthiar.dancingday.card.CardListViewAdapter;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -10,10 +12,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DanceClassCard {
 
-    public Schools.DanceCompany company;
-    public final int count;
-    public final DateTime expirationDate;
-    public final DateTime purchaseDate;
+    private Schools.DanceCompany company;
+    private int count;
+    private final DateTime expirationDate;
+    private final DateTime purchaseDate;
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
     private static final String KEY_SEPARATOR = "-";
 
@@ -22,6 +24,32 @@ public class DanceClassCard {
         this.count = count;
         this.purchaseDate = purchaseDate;
         this.expirationDate = expirationDate;
+    }
+
+    public Schools.DanceCompany getCompany() {
+        return this.company;
+    }
+
+    public int getCount() {
+        return this.count;
+    }
+
+    public DateTime getExpirationDate() {
+        return this.expirationDate;
+    }
+
+    public boolean isValid() {
+        return this.count > 0 && this.expirationDate.isAfterNow();
+    }
+
+    public void debit() throws Exception {
+        if (!this.isValid())
+            throw new Exception("Cannot debit expired card for: " + this.company.Key + ". Card expired on: " + this.expirationDate.toString(CardListViewAdapter.ExpirationDateFormatter));
+        this.count--;
+    }
+
+    public void credit() {
+        this.count++;
     }
 
     /*

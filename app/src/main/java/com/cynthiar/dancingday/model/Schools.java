@@ -20,6 +20,16 @@ public class Schools {
 
         public static DanceSchool Unknown = new DanceSchool("Unknown", "", "", "");
 
+        public boolean isInCompany(DanceCompany danceCompany) {
+            int i=0;
+            while (i < danceCompany.DanceSchools.length) {
+                if (danceCompany.DanceSchools[i].Key == this.Key)
+                    return true;
+                i++;
+            }
+            return false;
+        }
+
         @Override
         public String toString() {
             return this.Key;

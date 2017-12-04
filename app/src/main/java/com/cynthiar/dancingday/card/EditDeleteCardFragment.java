@@ -42,9 +42,9 @@ public class EditDeleteCardFragment extends BaseCardFragment {
 
     @Override
     protected void initializeData() {
-        mCompany = mDanceClassCard.company;
-        mNumberOfClasses = mDanceClassCard.count;
-        mExpirationDate = mDanceClassCard.expirationDate;
+        mCompany = mDanceClassCard.getCompany();
+        mNumberOfClasses = mDanceClassCard.getCount();
+        mExpirationDate = mDanceClassCard.getExpirationDate();
     }
 
     @Override

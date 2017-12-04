@@ -18,6 +18,7 @@ import com.cynthiar.dancingday.distance.matrix.DistanceTask;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -32,6 +33,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TIME_KEY = "Time";
     public static final String DAY_KEY = "Day";
 
+    private static final String ORIGIN_ADDRESS = "1120 112th Ave NE Bellevue WA 98004";
     private static final String WAZE_SCHEME = "waze";
 
     private Toolbar myToolbar;
@@ -43,7 +45,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     // estimations with consecutive button clicks.
     private boolean mEstimating = false;
 
-    // The dance class this activity is foo
+    // The dance class this activity is for
     private DummyItem mDanceClass;
 
     // Save the company coordinates
@@ -125,8 +127,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     private void startEstimate(String destinationAddress) {
         if (!mEstimating && mDistanceTask != null) {
             // Execute the async estimate
-            String originAddress = "3933 Lake Washington Blvd NE #200, Kirkland, WA 98033";
-            DistanceQuery distanceQuery = new DistanceQuery(originAddress, destinationAddress);
+            DistanceQuery distanceQuery = new DistanceQuery(ORIGIN_ADDRESS, destinationAddress);
             mDistanceTask.execute(distanceQuery);
             mEstimating = true;
         }
@@ -168,6 +169,13 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             // Start the Waze navigation
             Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
             startActivity( intent );
+
+            // Register a new activity if the class is about to start
+            // and there is no current activity for this class
+            if (mDanceClass.isNow() && !mDanceClass.activityExists(this)) {
+                ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
+                Preferences.getInstance(this).registerActivity(classActivity);
+            }
         }
         catch ( ActivityNotFoundException ex ) {
             DummyUtils.toast(this, "Failed to start navigation");

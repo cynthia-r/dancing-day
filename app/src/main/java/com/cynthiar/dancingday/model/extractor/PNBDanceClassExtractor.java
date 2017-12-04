@@ -33,7 +33,7 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
 
     @Override
     public String getUrl() {
-        return "https://www.pnb.org/pnb-company/classes/open-program/#fusion-tab-classschedule";
+        return "https://www.pnb.org/pnb-school/classes/open-program/#fusion-tab-classschedule";
     }
 
     @Override

@@ -24,7 +24,7 @@ public class CardListViewAdapter extends BaseAdapter{
     private Context mContext;
     private LayoutInflater mInflater;
 
-    private DateTimeFormatter mExpirationDateFormatter = DateTimeFormat.forPattern("MMM d, YYYY");
+    public static DateTimeFormatter ExpirationDateFormatter = DateTimeFormat.forPattern("MMM d, YYYY");
 
     public CardListViewAdapter(List<DanceClassCard> items, Context context) {
         mValues = items;
@@ -61,12 +61,12 @@ public class CardListViewAdapter extends BaseAdapter{
         final DanceClassCard danceClassCard = mValues.get(position);
 
         // Set company, count and expiration date view texts
-        mSchoolView.setText(danceClassCard.company.toString());
+        mSchoolView.setText(danceClassCard.getCompany().toString());
         StringBuilder sb = new StringBuilder();
-        sb.append(danceClassCard.count);
+        sb.append(danceClassCard.getCount());
         sb.append(" classes");
         mCountView.setText(sb.toString());
-        mExpirationDateView.setText(danceClassCard.expirationDate.toString(mExpirationDateFormatter));
+        mExpirationDateView.setText(danceClassCard.getExpirationDate().toString(CardListViewAdapter.ExpirationDateFormatter));
 
         convertView.setClickable(true);
         convertView.setFocusable(true);

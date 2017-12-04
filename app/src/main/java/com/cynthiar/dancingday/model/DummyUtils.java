@@ -448,12 +448,4 @@ public class DummyUtils<T> {
 
         return stringBuilder.toString();
     }
-
-    public static DanceClassLevel tryParseLevel(String levelString) {
-        for (DanceClassLevel danceClassLevel : DanceClassLevel.values()) {
-            if (levelString.equals(danceClassLevel.toString()))
-                return danceClassLevel;
-        }
-        return DanceClassLevel.Unknown;
-    }
 }

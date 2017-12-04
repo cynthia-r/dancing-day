@@ -1,12 +1,22 @@
 package com.cynthiar.dancingday.model;
 
+import android.content.Context;
+
+import com.cynthiar.dancingday.model.classActivity.ClassActivity;
+import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A dummy item representing a piece of content.
  */
 public class DummyItem {
-    private static final String KEY_SEPARATOR = "-";
+    private static final String KEY_SEPARATOR = "_";
 
     public final String day;
     public final String teacher;
@@ -22,6 +32,39 @@ public class DummyItem {
         this.teacher = teacher;
         this.level = level;
         this.mIsMarkedAsFavorite = false;
+    }
+
+    /*
+        Checks whether the class is about to start.
+        The time range is 1h30 before to 10 minutes after.
+     */
+    public boolean isNow() {
+        // Check the day and time
+        LocalTime currentTime = LocalTime.now();
+        return (this.day == DummyUtils.getCurrentDay()
+            && this.danceClassTime.startTime.minusMinutes(90).isBefore(currentTime)
+            && this.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime));
+    }
+
+    public boolean activityExists(Context context) {
+        if (null == context)
+            return false;
+
+        // Retrieve the list of past activities
+        List<ClassActivity> activityList = Preferences.getInstance(context).getActivityList();
+        if (null == activityList || activityList.isEmpty())
+            return false;
+
+        // Check if there is an existing activity for this class
+        Iterator<ClassActivity> activityIterator = activityList.iterator();
+        boolean activityExists = false;
+        while (activityIterator.hasNext() && !activityExists) {
+            ClassActivity activity = activityIterator.next();
+            SingleDayDummyItemComparer classComparer = new SingleDayDummyItemComparer();
+            activityExists = activity.isCurrent() && (0 == classComparer.compare(activity.dummyItem, this));
+        }
+
+        return activityExists;
     }
 
     @Override
@@ -48,6 +91,6 @@ public class DummyItem {
     }
 
     public static DummyItem fromStrings(String day, String time, String school, String teacher, String level) {
-        return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DummyUtils.tryParseLevel(level));
+        return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DanceClassLevel.valueOf(level));
     }
 }
