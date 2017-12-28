@@ -140,6 +140,8 @@ public class TodayActivity extends AppCompatActivity
         DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
         mDanceClassCache = new DataCache<>(danceClassDataProvider, this);
 
+
+
         // Add the fragment to the 'fragment_container' FrameLayout
         // Default fragment is for "Today"
         SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);

@@ -90,6 +90,7 @@ public class DummyItem {
         return DummyItem.fromStrings(keyElements[0], keyElements[1], keyElements[2], keyElements[3], keyElements[4]);
     }
 
+    /* TODO: put tryParseLevel back since some incoming string values don't correspond to the enum */
     public static DummyItem fromStrings(String day, String time, String school, String teacher, String level) {
         return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DanceClassLevel.valueOf(level));
     }
