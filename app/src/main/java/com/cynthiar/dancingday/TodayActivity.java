@@ -27,6 +27,7 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
+import com.cynthiar.dancingday.model.AppDatabase;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
@@ -140,7 +141,8 @@ public class TodayActivity extends AppCompatActivity
         DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
         mDanceClassCache = new DataCache<>(danceClassDataProvider, this);
 
-
+        // Initialize database
+        AppDatabase.initializeDb(this);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         // Default fragment is for "Today"
@@ -178,6 +180,12 @@ public class TodayActivity extends AppCompatActivity
 
         mIsInForeground = false;
         Preferences.getInstance(this).save(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        AppDatabase.finalizeDb();
+        super.onDestroy();
     }
 
     @Override

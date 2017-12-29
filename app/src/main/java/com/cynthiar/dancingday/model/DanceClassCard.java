@@ -1,8 +1,6 @@
 package com.cynthiar.dancingday.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
+import android.provider.BaseColumns;
 
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 
@@ -13,23 +11,21 @@ import org.joda.time.format.DateTimeFormatter;
 /**
  * Created by cynthiar on 8/13/2017.
  */
-//@Entity
-public class DanceClassCard {
-    @PrimaryKey
+
+public class DanceClassCard implements BaseColumns {
     public int id;
 
     private String companyKey;
-    @Ignore
     private Schools.DanceCompany company;
-
     private int count;
-    @Ignore
     private DateTime expirationDate;
-    @Ignore
     private DateTime purchaseDate;
-    @Ignore
+
+    public static final String TABLE = "DanceClassCard";
+    public static final String COLUMN_COUNT = "count";
+    public static final String COLUMN_COMPANY = "company";
+
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
-    @Ignore
     private static final String KEY_SEPARATOR = "-";
 
     public DanceClassCard() {}
