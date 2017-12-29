@@ -25,7 +25,6 @@ import com.cynthiar.dancingday.model.DanceClassCard;
 
 public class AppDatabase extends SQLiteOpenHelper {
     private static AppDatabase mDatabaseInstance;
-    //private static volatile Object syncObject = new Object();
 
     public static final String DATABASE_NAME = "DancingDay.db";
     private static final String SQL_CREATE_ENTRIES =
@@ -44,11 +43,6 @@ public class AppDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
     }
 
-    /*private AppDatabase(Context context) {
-        mContext = context;
-        mSqLiteDatabase = openOrCreateDatabase("your database name",MODE_PRIVATE,null);
-    }*/
-
     public static void initializeDb(Context context) {
         mDatabaseInstance = new AppDatabase(context);
     }
@@ -61,18 +55,6 @@ public class AppDatabase extends SQLiteOpenHelper {
         return mDatabaseInstance;
     }
 
-    /*public static AppDatabase getInstance(Context context) {
-        if (null != mDatabaseInstance)
-            return mDatabaseInstance;
-
-        synchronized (syncObject) {
-            if (null == mDatabaseInstance) {
-                mDatabaseInstance = new AppDatabase(context);
-            }
-        }
-        return mDatabaseInstance;
-    }*/
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the tables
@@ -81,7 +63,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Recreate the whole database
+        // Recreate the whole database // TODO check if should do anything
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
