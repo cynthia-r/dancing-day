@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model;
+package com.cynthiar.dancingday.model.database;
 
 /*
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
@@ -21,7 +21,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static android.content.Context.MODE_PRIVATE;
+import com.cynthiar.dancingday.model.DanceClassCard;
 
 public class AppDatabase extends SQLiteOpenHelper {
     private static AppDatabase mDatabaseInstance;
@@ -32,7 +32,9 @@ public class AppDatabase extends SQLiteOpenHelper {
             "CREATE TABLE " + DanceClassCard.TABLE + " (" +
                     DanceClassCard._ID + " INTEGER PRIMARY KEY," +
                     DanceClassCard.COLUMN_COMPANY + " TEXT," +
-                    DanceClassCard.COLUMN_COUNT + " INTEGER)";
+                    DanceClassCard.COLUMN_COUNT + " INTEGER," +
+                    DanceClassCard.COLUMN_EXPIRATION_DATE + " TEXT," +
+                    DanceClassCard.COLUMN_PURCHASE_DATE + " TEXT)";
     // TODO implement schema
 
     private static final String SQL_DELETE_ENTRIES =

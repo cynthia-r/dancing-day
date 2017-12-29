@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.SpinnerAdapter;
 import com.cynthiar.dancingday.model.Schools;
+import com.cynthiar.dancingday.model.database.DanceClassCardDao;
 
 import org.joda.time.DateTime;
 
@@ -30,7 +31,9 @@ public abstract class BaseCardFragment extends DialogFragment {
     protected Schools.DanceCompany mCompany;
     protected int mNumberOfClasses;
     protected DateTime mExpirationDate;
+    protected DateTime mPurchaseDate;
     protected CardDialogListener mListener;
+    protected DanceClassCardDao mDanceClassCardDao;
 
     /*
         Listener interface for events coming from this dialog.
@@ -59,6 +62,7 @@ public abstract class BaseCardFragment extends DialogFragment {
         final CardsActivity parentActivity = (CardsActivity)getActivity();
 
         // Initialize the data
+        mDanceClassCardDao = new DanceClassCardDao();
         this.initializeData();
 
         // Get the new card view

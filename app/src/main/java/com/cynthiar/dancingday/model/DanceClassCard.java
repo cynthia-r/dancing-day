@@ -13,8 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
  */
 
 public class DanceClassCard implements BaseColumns {
-    public int id;
-
+    private long id;
     private String companyKey;
     private Schools.DanceCompany company;
     private int count;
@@ -24,8 +23,10 @@ public class DanceClassCard implements BaseColumns {
     public static final String TABLE = "DanceClassCard";
     public static final String COLUMN_COUNT = "count";
     public static final String COLUMN_COMPANY = "company";
+    public static final String COLUMN_EXPIRATION_DATE = "expirationDate";
+    public static final String COLUMN_PURCHASE_DATE = "purchaseDate";
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
     private static final String KEY_SEPARATOR = "-";
 
     public DanceClassCard() {}
@@ -35,6 +36,15 @@ public class DanceClassCard implements BaseColumns {
         this.count = count;
         this.purchaseDate = purchaseDate;
         this.expirationDate = expirationDate;
+    }
+
+    public DanceClassCard(long id, Schools.DanceCompany company, int count, DateTime purchaseDate, DateTime expirationDate) {
+        this(company, count, purchaseDate, expirationDate);
+        this.id = id;
+    }
+
+    public long getId() {
+        return this.id;
     }
 
     public String getCompanyKey() {

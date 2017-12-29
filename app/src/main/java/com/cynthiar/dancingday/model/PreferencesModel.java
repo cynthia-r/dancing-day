@@ -51,32 +51,6 @@ public class PreferencesModel {
             favoriteSet.add(key);
     }
 
-    public List<DanceClassCard> getClassCardList() {
-        if (cardSet.isEmpty())
-            return new ArrayList<>();
-        List<DanceClassCard> danceClassCardList = new ArrayList<>();
-        List<String> invalidCardKeyList = new ArrayList<>();
-        for (String cardKey:cardSet
-                ) {
-            DanceClassCard danceClassCard = DanceClassCard.fromKey(cardKey);
-            if (null != danceClassCard)
-                danceClassCardList.add(danceClassCard);
-            else invalidCardKeyList.add(cardKey);
-        }
-        for (String invalidCardKey:invalidCardKeyList) {
-            this.cardSet.remove(invalidCardKey);
-        }
-        return danceClassCardList;
-    }
-
-    public void saveCard(DanceClassCard danceClassCard) {
-        if (null == danceClassCard)
-            return;
-
-        String cardKey = danceClassCard.toKey();
-        cardSet.add(cardKey);
-    }
-
     public void updateCard(String oldCardKey, DanceClassCard danceClassCard) {
         if ((null == oldCardKey) || (null == danceClassCard))
             return;
@@ -84,13 +58,6 @@ public class PreferencesModel {
         cardSet.remove(oldCardKey);
         String newCardKey = danceClassCard.toKey();
         cardSet.add(newCardKey);
-    }
-
-    public void deleteCard(String cardKey) {
-        if (null == cardKey)
-            return;
-
-        cardSet.remove(cardKey);
     }
 
     public void registerActivity(ClassActivity classActivity) throws Exception {
@@ -105,7 +72,7 @@ public class PreferencesModel {
             cardToUse.debit();
 
             // Update the card
-            this.updateCard(currentCardKey, cardToUse);
+            this.updateCard(currentCardKey, cardToUse); // TODO replace by DB
         }
 
         // Register the activity

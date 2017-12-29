@@ -75,8 +75,7 @@ public class CardListViewAdapter extends BaseAdapter{
 
             @Override
             public void onClick(View v) {
-                //DummyUtils.toast(mContext, "Coming soon...");
-                EditDeleteCardFragment.newInstance(danceClassCard.toKey())
+                EditDeleteCardFragment.newInstance(danceClassCard)
                         .show(((CardsActivity)mContext).getSupportFragmentManager(), EditDeleteCardFragment.TAG);
             }
 

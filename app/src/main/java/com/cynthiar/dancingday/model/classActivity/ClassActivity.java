@@ -6,6 +6,7 @@ import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.database.DanceClassCardDao;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -60,7 +61,7 @@ public class ClassActivity {
         DanceClassCard cardToUse = null;
 
         // Retrieve the list of current class cards
-        List<DanceClassCard> classCardList = Preferences.getInstance(context).getClassCardList();
+        List<DanceClassCard> classCardList = new DanceClassCardDao().getClassCardList();
 
         // If there are no cards available, a single ticket is used
         if (null == classCardList || classCardList.isEmpty())

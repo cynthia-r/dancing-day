@@ -77,22 +77,6 @@ public class Preferences {
         this.preferencesModel.changeFavoriteStatus(key, previousStatus);
     }
 
-    public List<DanceClassCard> getClassCardList() {
-        return this.preferencesModel.getClassCardList();
-    }
-
-    public void saveCard(DanceClassCard danceClassCard) {
-        this.preferencesModel.saveCard(danceClassCard);
-    }
-
-    public void updateCard(String oldCardKey, DanceClassCard danceClassCard) {
-        this.preferencesModel.updateCard(oldCardKey, danceClassCard);
-    }
-
-    public void deleteCard(String cardKey) {
-        this.preferencesModel.deleteCard(cardKey);
-    }
-    
     public void registerActivity(ClassActivity classActivity) {
         try {
             this.preferencesModel.registerActivity(classActivity);

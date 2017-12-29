@@ -46,7 +46,7 @@ public class NewCardFragment extends BaseCardFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         // Save the new card
                         DanceClassCard danceClassCard = new DanceClassCard(mCompany, mNumberOfClasses, DateTime.now(), mExpirationDate);
-                        Preferences.getInstance(parentActivity).saveCard(danceClassCard);
+                        mDanceClassCardDao.saveCard(danceClassCard);
                         mListener.onDialogPositiveClick(NewCardFragment.this);
                         DummyUtils.toast(getActivity(), "New card created");
                     }

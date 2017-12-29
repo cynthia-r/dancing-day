@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.database.DanceClassCardDao;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import static android.view.View.GONE;
 public class CardsActivity extends AppCompatActivity implements BaseCardFragment.CardDialogListener {
     private Toolbar myToolbar;
     private CardListViewAdapter mCardListViewAdapter;
+    private DanceClassCardDao danceClassCardDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class CardsActivity extends AppCompatActivity implements BaseCardFragment
         // Setup action bar buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        // Setup dao
+        danceClassCardDao = new DanceClassCardDao();
     }
 
     @Override
@@ -58,7 +63,7 @@ public class CardsActivity extends AppCompatActivity implements BaseCardFragment
      */
     private void refreshList() {
         // Retrieve list of items
-        List<DanceClassCard> danceClassCardList = Preferences.getInstance(this).getClassCardList();
+        List<DanceClassCard> danceClassCardList = danceClassCardDao.getClassCardList();
 
         // Get the list view and the empty state view
         ListView listView = (ListView) this.findViewById(R.id.card_list_view);

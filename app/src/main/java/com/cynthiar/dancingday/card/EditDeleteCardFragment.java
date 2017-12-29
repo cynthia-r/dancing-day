@@ -19,7 +19,6 @@ import org.joda.time.DateTime;
 
 public class EditDeleteCardFragment extends BaseCardFragment {
     public static final String TAG = "EditDeleteCardFragment";
-    private String mCardKey;
     private DanceClassCard mDanceClassCard;
 
     /**
@@ -29,15 +28,14 @@ public class EditDeleteCardFragment extends BaseCardFragment {
     public EditDeleteCardFragment() {
     }
 
-    public static EditDeleteCardFragment newInstance(String cardKey) {
+    public static EditDeleteCardFragment newInstance(DanceClassCard danceClassCard) {
         EditDeleteCardFragment editDeleteCardFragment = new EditDeleteCardFragment();
-        editDeleteCardFragment.setCard(cardKey);
+        editDeleteCardFragment.setCard(danceClassCard);
         return editDeleteCardFragment;
     }
 
-    private void setCard(String cardKey) {
-        mCardKey = cardKey;
-        mDanceClassCard = DanceClassCard.fromKey(cardKey);
+    private void setCard(DanceClassCard danceClassCard) {
+        mDanceClassCard = danceClassCard;
     }
 
     @Override
@@ -45,6 +43,7 @@ public class EditDeleteCardFragment extends BaseCardFragment {
         mCompany = mDanceClassCard.getCompany();
         mNumberOfClasses = mDanceClassCard.getCount();
         mExpirationDate = mDanceClassCard.getExpirationDate();
+        mPurchaseDate = mDanceClassCard.getPurchaseDate();
     }
 
     @Override
@@ -58,8 +57,8 @@ public class EditDeleteCardFragment extends BaseCardFragment {
                 .setNeutralButton(R.string.edit_card, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Update the card
-                        DanceClassCard danceClassCard = new DanceClassCard(mCompany, mNumberOfClasses, DateTime.now(), mExpirationDate);
-                        Preferences.getInstance(parentActivity).updateCard(mCardKey, danceClassCard);
+                        DanceClassCard updatedDanceClassCard = new DanceClassCard(mDanceClassCard.getId(), mCompany, mNumberOfClasses, mPurchaseDate, mExpirationDate);
+                        mDanceClassCardDao.updateCard(updatedDanceClassCard);
                         mListener.onDialogPositiveClick(EditDeleteCardFragment.this);
                         DummyUtils.toast(getActivity(), "Card updated");
                     }
@@ -67,7 +66,7 @@ public class EditDeleteCardFragment extends BaseCardFragment {
                 .setPositiveButton(R.string.delete_card, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Delete the card
-                        Preferences.getInstance(parentActivity).deleteCard(mCardKey);
+                        mDanceClassCardDao.deleteCard(mDanceClassCard);
                         mListener.onDialogPositiveClick(EditDeleteCardFragment.this);
                         DummyUtils.toast(getActivity(), "Card deleted");
                     }
