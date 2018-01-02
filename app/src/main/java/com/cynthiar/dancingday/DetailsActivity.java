@@ -19,6 +19,7 @@ import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
+import com.cynthiar.dancingday.model.database.ClassActivityDao;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -50,6 +51,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
     // Save the company coordinates
     private String mSchoolCoordinates;
+
+    private ClassActivityDao mClassActivityDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,9 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         ToggleButton imageButton = (ToggleButton) this.findViewById(R.id.favorite);
         imageButton.setChecked(mIsFavorite);
         imageButton.setOnClickListener(new StarClickListener(this));
+
+        // Initialize DAO
+        mClassActivityDao = new ClassActivityDao();
     }
 
     @Override
@@ -174,7 +180,12 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             // and there is no current activity for this class
             if (mDanceClass.isNow() && !mDanceClass.activityExists(this)) {
                 ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
-                Preferences.getInstance(this).registerActivity(classActivity);
+                try {
+                    mClassActivityDao.registerActivity(classActivity);
+                }
+                catch (Exception e) {
+                    DummyUtils.toast(this, "Failed to register activity:" + e.getLocalizedMessage());
+                }
             }
         }
         catch ( ActivityNotFoundException ex ) {

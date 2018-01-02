@@ -448,4 +448,16 @@ public class DummyUtils<T> {
 
         return stringBuilder.toString();
     }
+
+    /*
+        Tries to parse the dance class level.
+        We can't use valueOf since some incoming string values don't correspond to the enum.
+     */
+    public static DanceClassLevel tryParseLevel(String levelString) {
+        for (DanceClassLevel danceClassLevel : DanceClassLevel.values()) {
+                if (levelString.equals(danceClassLevel.toString()))
+                        return danceClassLevel;
+            }
+        return DanceClassLevel.Unknown;
+    }
 }

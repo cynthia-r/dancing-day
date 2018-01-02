@@ -65,9 +65,9 @@ public class PreferencesModel {
             return;
 
         // Debit the corresponding card if needed
-        if (PaymentType.PunchCard == classActivity.paymentType) {
+        if (PaymentType.PunchCard == classActivity.getPaymentType()) {
             // Debit
-            DanceClassCard cardToUse = classActivity.danceClassCard;
+            DanceClassCard cardToUse = classActivity.getDanceClassCard();
             String currentCardKey = cardToUse.toKey();
             cardToUse.debit();
 
@@ -84,9 +84,9 @@ public class PreferencesModel {
             return;
 
         // Credit the corresponding card if needed
-        if (PaymentType.PunchCard == classActivity.paymentType) {
+        if (PaymentType.PunchCard == classActivity.getPaymentType()) {
             // Credit
-            DanceClassCard cardToUse = classActivity.danceClassCard;
+            DanceClassCard cardToUse = classActivity.getDanceClassCard();
             String currentCardKey = cardToUse.toKey();
             cardToUse.credit();
 

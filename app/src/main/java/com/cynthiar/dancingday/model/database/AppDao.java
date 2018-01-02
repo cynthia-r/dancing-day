@@ -16,6 +16,7 @@ public abstract class AppDao<T> {
 
     protected abstract String getTableName();
     protected abstract String[] getTableColumns();
+    protected abstract String[] getTableColumnTypes();
     protected abstract ContentValues createRow(T entity);
     protected abstract T readRow(Cursor cursor);
     protected abstract long getRowId(T entity);

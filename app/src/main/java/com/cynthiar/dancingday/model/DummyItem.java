@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
+import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
 import org.joda.time.DateTime;
@@ -24,6 +25,7 @@ public class DummyItem {
     public final DanceClassTime danceClassTime;
     public Schools.DanceSchool school;
     private boolean mIsMarkedAsFavorite;
+    private ClassActivityDao classActivityDao;
 
     public DummyItem(String day, DanceClassTime time, Schools.DanceSchool school, String teacher, DanceClassLevel level) {
         this.day = day;
@@ -32,6 +34,7 @@ public class DummyItem {
         this.teacher = teacher;
         this.level = level;
         this.mIsMarkedAsFavorite = false;
+        this.classActivityDao = new ClassActivityDao();
     }
 
     /*
@@ -51,17 +54,17 @@ public class DummyItem {
             return false;
 
         // Retrieve the list of past activities
-        List<ClassActivity> activityList = Preferences.getInstance(context).getActivityList();
+        List<ClassActivity> activityList = this.classActivityDao.getActivityList();
         if (null == activityList || activityList.isEmpty())
             return false;
-
+        // TODO filter by date directly
         // Check if there is an existing activity for this class
         Iterator<ClassActivity> activityIterator = activityList.iterator();
         boolean activityExists = false;
         while (activityIterator.hasNext() && !activityExists) {
             ClassActivity activity = activityIterator.next();
             SingleDayDummyItemComparer classComparer = new SingleDayDummyItemComparer();
-            activityExists = activity.isCurrent() && (0 == classComparer.compare(activity.dummyItem, this));
+            activityExists = activity.isCurrent() && (0 == classComparer.compare(activity.getDanceClass(), this));
         }
 
         return activityExists;
@@ -90,8 +93,7 @@ public class DummyItem {
         return DummyItem.fromStrings(keyElements[0], keyElements[1], keyElements[2], keyElements[3], keyElements[4]);
     }
 
-    /* TODO: put tryParseLevel back since some incoming string values don't correspond to the enum */
     public static DummyItem fromStrings(String day, String time, String school, String teacher, String level) {
-        return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DanceClassLevel.valueOf(level));
+        return new DummyItem(day, DanceClassTime.create(time), Schools.DanceSchool.fromString(school), teacher, DummyUtils.tryParseLevel(level));
     }
 }

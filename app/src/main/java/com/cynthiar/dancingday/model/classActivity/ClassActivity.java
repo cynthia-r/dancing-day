@@ -1,6 +1,7 @@
 package com.cynthiar.dancingday.model.classActivity;
 
 import android.content.Context;
+import android.provider.BaseColumns;
 
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.DummyItem;
@@ -19,15 +20,26 @@ import java.util.List;
  * Created by CynthiaR on 9/24/2017.
  */
 
-public class ClassActivity {
-    public final DummyItem dummyItem;
-    public final DateTime date;
-    public final PaymentType paymentType;
-    public final DanceClassCard danceClassCard;
-    public boolean isConfirmed;
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmm");
+public class ClassActivity implements BaseColumns {
+    private long id;
+    private DummyItem dummyItem;
+    private DateTime date;
+    private PaymentType paymentType;
+    private DanceClassCard danceClassCard;
+    private long danceClassCardId;
+    private boolean isConfirmed;
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmm");
     private static final String KEY_SEPARATOR = "_";
     private static final String CLASS_SEPARATOR = "#";
+
+    public static final String TABLE = "ClassActivity";
+    public static final String COLUMN_CLASS = "class";
+    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_PAYMENT_TYPE = "paymentType";
+    public static final String COLUMN_CARD_ID = "cardId";
+    public static final String COLUMN_IS_CONFIRMED = "isConfirmed";
+
+    private DanceClassCardDao danceClassCardDao;
 
     public ClassActivity(DummyItem dummyItem, DateTime activityDate, PaymentType paymentType, DanceClassCard danceClassCard){
         this.dummyItem = dummyItem;
@@ -35,6 +47,69 @@ public class ClassActivity {
         this.paymentType = paymentType;
         this.danceClassCard = danceClassCard;
         this.isConfirmed = false;
+        this.danceClassCardDao = new DanceClassCardDao();
+    }
+
+    public ClassActivity(long id, DummyItem dummyItem, DateTime activityDate, PaymentType paymentType, long danceClassCardId, boolean isConfirmed){
+        this(dummyItem, activityDate, paymentType, null);
+        this.id = id;
+        this.danceClassCardId = danceClassCardId;
+        this.isConfirmed = isConfirmed;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public DummyItem getDanceClass() {
+        return dummyItem;
+    }
+
+    public void setDanceClass(DummyItem dummyItem) {
+        this.dummyItem = dummyItem;
+    }
+
+    public DateTime getDate() {
+        return date;
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
+    }
+
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public DanceClassCard getDanceClassCard() {
+        if (null != this.danceClassCard)
+            return danceClassCard;
+        else if (0 != this.danceClassCardId)
+            return this.danceClassCardDao.getClassCardById(this.danceClassCardId);
+        else
+            return null;
+    }
+
+    public void setDanceClassCard(DanceClassCard danceClassCard) {
+        this.danceClassCard = danceClassCard;
+        this.danceClassCardId = danceClassCard.getId();
+    }
+
+    public long getDanceClassCardId() {
+        if (0 != this.danceClassCardId)
+            return this.danceClassCardId;
+        else if (null != this.danceClassCard)
+            return this.danceClassCard.getId();
+        else
+            return 0;
+    }
+
+    public boolean isConfirmed() {
+        return isConfirmed;
     }
 
     public void confirm() {
@@ -62,6 +137,7 @@ public class ClassActivity {
 
         // Retrieve the list of current class cards
         List<DanceClassCard> classCardList = new DanceClassCardDao().getClassCardList();
+        // TODO filter by company directly
 
         // If there are no cards available, a single ticket is used
         if (null == classCardList || classCardList.isEmpty())

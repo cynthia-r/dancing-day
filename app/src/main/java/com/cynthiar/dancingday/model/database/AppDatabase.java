@@ -1,43 +1,22 @@
 package com.cynthiar.dancingday.model.database;
 
-/*
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.DatabaseConfiguration;
-import android.arch.persistence.room.InvalidationTracker;
-import android.arch.persistence.room.RoomDatabase;
-
 /**
  * Created by CynthiaR on 12/27/2017.
  */
-/*
-@Database(entities=DanceClassCard.class, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
-    public abstract DanceClassCardDao getClassCardDao();
-}
-*/
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.cynthiar.dancingday.model.DanceClassCard;
+import android.provider.BaseColumns;
 
 public class AppDatabase extends SQLiteOpenHelper {
     private static AppDatabase mDatabaseInstance;
 
     public static final String DATABASE_NAME = "DancingDay.db";
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + DanceClassCard.TABLE + " (" +
-                    DanceClassCard._ID + " INTEGER PRIMARY KEY," +
-                    DanceClassCard.COLUMN_COMPANY + " TEXT," +
-                    DanceClassCard.COLUMN_COUNT + " INTEGER," +
-                    DanceClassCard.COLUMN_EXPIRATION_DATE + " TEXT," +
-                    DanceClassCard.COLUMN_PURCHASE_DATE + " TEXT)";
-    // TODO implement schema
-
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + DanceClassCard.TABLE;
+    private static final AppDao[] appDaos = new AppDao[] {
+        new DanceClassCardDao(),
+        new ClassActivityDao()
+    };
 
     private AppDatabase(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -58,13 +37,13 @@ public class AppDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the tables
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(AppDatabase.getSqlCreateEntries());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Recreate the whole database // TODO check if should do anything
-        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(AppDatabase.getSqlDeleteEntries());
         onCreate(db);
     }
 
@@ -72,5 +51,30 @@ public class AppDatabase extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Call upgrade with the versions swapped
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    private static String getSqlCreateEntries() {
+        StringBuilder sqlCreateDatabaseScript = new StringBuilder();
+        for (AppDao appDao:appDaos
+                ) {
+            sqlCreateDatabaseScript.append("CREATE TABLE " + appDao.getTableName() + " (");
+            String[] tableColumns = appDao.getTableColumns();
+            String[] tableColumnTypes = appDao.getTableColumnTypes();
+            for (int i=0; i < tableColumns.length - 1; i++) {
+                sqlCreateDatabaseScript.append(tableColumns[i] + " " + tableColumnTypes[i] + ",");
+            }
+            sqlCreateDatabaseScript.append(
+                    tableColumns[tableColumns.length - 1] + " " + tableColumnTypes[tableColumns.length - 1] + ");");
+        }
+        return  sqlCreateDatabaseScript.toString();
+    }
+
+    private static String getSqlDeleteEntries() {
+        StringBuilder sqlDeleteDatabaseScript = new StringBuilder();
+        for (AppDao appDao:appDaos
+                ) {
+            sqlDeleteDatabaseScript.append("DROP TABLE IF EXISTS " + appDao.getTableName() + ";");
+        }
+        return sqlDeleteDatabaseScript.toString();
     }
 }

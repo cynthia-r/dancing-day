@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.model.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.Schools;
@@ -22,6 +23,18 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
 
         // Retrieve the cards
         return this.retrieveEntities(null, null, null, null, sortOrder);
+    }
+
+    public DanceClassCard getClassCardById(long cardId){
+        // Filter by ID
+        String selection = DanceClassCard._ID + " = ?";
+        String[] selectionArgs = { Long.toString(cardId) };
+
+        // Retrieve the card
+        List<DanceClassCard> danceClassCardList = this.retrieveEntities(selection, selectionArgs, null, null, null);
+        if (!danceClassCardList.isEmpty())
+            return danceClassCardList.get(0);
+        return null;
     }
 
     public long saveCard(DanceClassCard danceClassCard){
@@ -49,6 +62,17 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
                 DanceClassCard.COLUMN_COUNT,
                 DanceClassCard.COLUMN_EXPIRATION_DATE,
                 DanceClassCard.COLUMN_PURCHASE_DATE
+        };
+    }
+
+    @Override
+    protected String[] getTableColumnTypes() {
+        return new String[] {
+                "INTEGER PRIMARY KEY",
+                "TEXT",
+                "INTEGER",
+                "TEXT",
+                "TEXT"
         };
     }
 

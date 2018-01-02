@@ -5,10 +5,18 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.cynthiar.dancingday.model.DanceClassLevel;
+import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
+import com.cynthiar.dancingday.model.classActivity.ClassActivity;
+import com.cynthiar.dancingday.model.classActivity.PaymentType;
+import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.model.database.AppDatabase;
 import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.database.DanceClassCardDao;
 import com.cynthiar.dancingday.model.Schools;
+import com.cynthiar.dancingday.model.time.DanceClassTime;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -88,5 +96,37 @@ public class DatabaseTests {
         assertEquals(1, deletedCount);
         allCards = danceClassCardDao.getClassCardList();
         assertEquals(0, allCards.size());
+    }
+
+    @Test
+    public void registerAndCheckActivity() throws Exception {
+        // Initialize test data
+        DateTime activityDate = new DateTime(2018, 1, 1, 0, 0);
+        PaymentType paymentType = PaymentType.PunchCard;
+        DanceClassCard danceClassCard = new DanceClassCard(Schools.KDC_COMPANY, 3, new DateTime(2017, 12, 29, 00, 00), new DateTime(2018, 2, 12, 00, 00));
+        DummyItem danceClass = new DummyItem("Monday", new DanceClassTime(7, 0, 8, 30), Schools.KDC_SCHOOL, "Jerry", DanceClassLevel.Advanced);
+        ClassActivity classActivity = new ClassActivity(danceClass, activityDate, paymentType, danceClassCard);
+
+        // Save card
+        DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
+        long cardId = danceClassCardDao.saveCard(danceClassCard);
+
+        // Register the activity
+        ClassActivityDao classActivityDao = new ClassActivityDao();
+        classActivityDao.registerActivity(classActivity);
+
+        // Check that the activity is registered
+        List<ClassActivity> classActivityList = classActivityDao.getActivityList();
+        assertEquals(1, classActivityList.size());
+        ClassActivity registeredActivity = classActivityList.get(0);
+        assertEquals(activityDate, registeredActivity.getDate());
+        assertEquals(paymentType, registeredActivity.getPaymentType());
+        assertEquals(0, new SingleDayDummyItemComparer().compare(danceClass, registeredActivity.getDanceClass()));
+        assertEquals(cardId, registeredActivity.getDanceClassCardId());
+
+        // Check that the corresponding card has been debited
+        DanceClassCard updatedCard = danceClassCardDao.getClassCardById(cardId);
+        assertNotNull(updatedCard);
+        assertEquals(2, updatedCard.getCount());
     }
 }

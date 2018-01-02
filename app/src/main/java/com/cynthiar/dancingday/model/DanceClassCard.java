@@ -29,8 +29,6 @@ public class DanceClassCard implements BaseColumns {
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
     private static final String KEY_SEPARATOR = "-";
 
-    public DanceClassCard() {}
-
     public DanceClassCard(Schools.DanceCompany company, int count, DateTime purchaseDate, DateTime expirationDate) {
         this.setCompanyKey(company.Key);
         this.count = count;
