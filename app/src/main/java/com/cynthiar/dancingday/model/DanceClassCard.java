@@ -45,6 +45,10 @@ public class DanceClassCard implements BaseColumns {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getCompanyKey() {
         return this.companyKey;
     }

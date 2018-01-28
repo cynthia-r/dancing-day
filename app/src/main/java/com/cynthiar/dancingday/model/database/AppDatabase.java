@@ -10,16 +10,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class AppDatabase extends SQLiteOpenHelper {
+    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "DancingDay.db";
+
     private static AppDatabase mDatabaseInstance;
 
-    public static final String DATABASE_NAME = "DancingDay.db";
     private static final AppDao[] appDaos = new AppDao[] {
         new DanceClassCardDao(),
         new ClassActivityDao()
     };
 
     private AppDatabase(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, AppDatabase.DATABASE_VERSION);
     }
 
     public static void initializeDb(Context context) {
@@ -37,13 +39,21 @@ public class AppDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the tables
-        db.execSQL(AppDatabase.getSqlCreateEntries());
+        for (AppDao appDao:appDaos
+                ) {
+            String sqlCreateEntries = AppDatabase.getSqlCreateEntries(appDao);
+            db.execSQL(sqlCreateEntries);
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Recreate the whole database // TODO check if should do anything
-        db.execSQL(AppDatabase.getSqlDeleteEntries());
+        for (AppDao appDao:appDaos
+                ) {
+            String sqlDeleteEntries = AppDatabase.getSqlDeleteEntries(appDao);
+            db.execSQL(sqlDeleteEntries);
+        }
         onCreate(db);
     }
 
@@ -53,28 +63,34 @@ public class AppDatabase extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    private static String getSqlCreateEntries() {
-        StringBuilder sqlCreateDatabaseScript = new StringBuilder();
+    public static void clearDb() {
+        SQLiteDatabase db = mDatabaseInstance.getWritableDatabase();
         for (AppDao appDao:appDaos
                 ) {
-            sqlCreateDatabaseScript.append("CREATE TABLE " + appDao.getTableName() + " (");
-            String[] tableColumns = appDao.getTableColumns();
-            String[] tableColumnTypes = appDao.getTableColumnTypes();
-            for (int i=0; i < tableColumns.length - 1; i++) {
-                sqlCreateDatabaseScript.append(tableColumns[i] + " " + tableColumnTypes[i] + ",");
-            }
-            sqlCreateDatabaseScript.append(
-                    tableColumns[tableColumns.length - 1] + " " + tableColumnTypes[tableColumns.length - 1] + ");");
+            db.execSQL(AppDatabase.getSqlClearEntries(appDao));
         }
-        return  sqlCreateDatabaseScript.toString();
+        db.execSQL("VACUUM;");
     }
 
-    private static String getSqlDeleteEntries() {
-        StringBuilder sqlDeleteDatabaseScript = new StringBuilder();
-        for (AppDao appDao:appDaos
-                ) {
-            sqlDeleteDatabaseScript.append("DROP TABLE IF EXISTS " + appDao.getTableName() + ";");
+    private static String getSqlCreateEntries(AppDao appDao) {
+        StringBuilder sqlCreateDatabaseScript = new StringBuilder();
+        sqlCreateDatabaseScript.append("CREATE TABLE " + appDao.getTableName() + " (");
+        String[] tableColumns = appDao.getTableColumns();
+        String[] tableColumnTypes = appDao.getTableColumnTypes();
+        for (int i=0; i < tableColumns.length - 1; i++) {
+            sqlCreateDatabaseScript.append(tableColumns[i] + " " + tableColumnTypes[i] + ",");
         }
-        return sqlDeleteDatabaseScript.toString();
+        sqlCreateDatabaseScript.append(
+                tableColumns[tableColumns.length - 1] + " " + tableColumnTypes[tableColumns.length - 1] + ");");
+
+        return sqlCreateDatabaseScript.toString();
+    }
+
+    private static String getSqlDeleteEntries(AppDao appDao) {
+        return "DROP TABLE IF EXISTS " + appDao.getTableName() + ";";
+    }
+
+    private static String getSqlClearEntries(AppDao appDao) {
+        return "DELETE FROM " + appDao.getTableName() + ";";
     }
 }

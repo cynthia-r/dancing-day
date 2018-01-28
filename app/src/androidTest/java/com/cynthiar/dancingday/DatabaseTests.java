@@ -40,12 +40,13 @@ public class DatabaseTests {
     @Before
     public void createDb() {
         Context context = InstrumentationRegistry.getTargetContext();
-        context.deleteDatabase(AppDatabase.DATABASE_NAME);
         AppDatabase.initializeDb(context);
+        AppDatabase.clearDb();
     }
 
     @After
     public void closeDb() throws IOException {
+        AppDatabase.clearDb();
         AppDatabase.finalizeDb();
     }
 

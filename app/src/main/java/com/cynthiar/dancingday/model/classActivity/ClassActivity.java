@@ -61,6 +61,10 @@ public class ClassActivity implements BaseColumns {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public DummyItem getDanceClass() {
         return dummyItem;
     }

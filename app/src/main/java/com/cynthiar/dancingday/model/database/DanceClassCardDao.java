@@ -38,7 +38,9 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
     }
 
     public long saveCard(DanceClassCard danceClassCard){
-        return this.insertEntity(danceClassCard);
+        long id = this.insertEntity(danceClassCard);
+        danceClassCard.setId(id);
+        return id;
     }
 
     public int updateCard(DanceClassCard danceClassCard) {

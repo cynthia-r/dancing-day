@@ -19,9 +19,9 @@ import java.util.List;
 public class ClassActivityDao extends AppDao<ClassActivity> {
     private DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
 
-    public void registerActivity(ClassActivity classActivity) throws Exception {
+    public long registerActivity(ClassActivity classActivity) throws Exception {
         if (null == classActivity)
-            return;
+            return -1;
 
         // Debit the corresponding card if needed
         if (PaymentType.PunchCard == classActivity.getPaymentType()) {
@@ -34,7 +34,9 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         }
 
         // Register the activity
-        long a = this.insertEntity(classActivity);
+        long id = this.insertEntity(classActivity);
+        classActivity.setId(id);
+        return id;
     }
 
     public void cancelActivity(ClassActivity classActivity) {
