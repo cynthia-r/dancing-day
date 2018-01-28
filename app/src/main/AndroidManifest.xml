@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".DetailsActivity" />
         <activity android:name=".card.CardsActivity" />
+        <activity android:name=".recentactivity.RecentActivityActivity" />
     </application>
 
 </manifest>

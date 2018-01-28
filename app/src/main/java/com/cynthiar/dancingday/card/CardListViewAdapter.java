@@ -54,19 +54,19 @@ public class CardListViewAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.card_item, parent, false);
         }
 
-        TextView mSchoolView = (TextView) convertView.findViewById(R.id.school);
-        TextView mCountView = (TextView) convertView.findViewById(R.id.count);
-        TextView mExpirationDateView = (TextView) convertView.findViewById(R.id.expiration_date);
+        TextView schoolView = (TextView) convertView.findViewById(R.id.school);
+        TextView countView = (TextView) convertView.findViewById(R.id.count);
+        TextView expirationDateView = (TextView) convertView.findViewById(R.id.expiration_date);
 
         final DanceClassCard danceClassCard = mValues.get(position);
 
         // Set company, count and expiration date view texts
-        mSchoolView.setText(danceClassCard.getCompany().toString());
+        schoolView.setText(danceClassCard.getCompany().toString());
         StringBuilder sb = new StringBuilder();
         sb.append(danceClassCard.getCount());
         sb.append(" classes");
-        mCountView.setText(sb.toString());
-        mExpirationDateView.setText(danceClassCard.getExpirationDate().toString(CardListViewAdapter.ExpirationDateFormatter));
+        countView.setText(sb.toString());
+        expirationDateView.setText(danceClassCard.getExpirationDate().toString(CardListViewAdapter.ExpirationDateFormatter));
 
         convertView.setClickable(true);
         convertView.setFocusable(true);

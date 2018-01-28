@@ -68,6 +68,8 @@ public class DrawerListViewAdapter extends BaseAdapter {
         if (menuItemValue.equals(resources.getString(R.string.nav_next7days)))
             return R.mipmap.ic_calendar;
         if (menuItemValue.equals(resources.getString(R.string.nav_my_cards)))
+            return R.mipmap.ic_alarm_clock; // TODO
+        if (menuItemValue.equals(resources.getString(R.string.nav_my_activity)))
             return R.mipmap.ic_alarm_clock;
         return -1;
     }

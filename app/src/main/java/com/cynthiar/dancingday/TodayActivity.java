@@ -27,6 +27,7 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
+import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.AppDatabase;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
@@ -34,6 +35,7 @@ import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.model.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.recentactivity.RecentActivityActivity;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -271,6 +273,10 @@ public class TodayActivity extends AppCompatActivity
         else {
             if (3 == position) {
                 Intent intent = new Intent(this, CardsActivity.class);
+                this.startActivity(intent);
+            }
+            else if (4 == position) {
+                Intent intent = new Intent(this, RecentActivityActivity.class);
                 this.startActivity(intent);
             }
         }

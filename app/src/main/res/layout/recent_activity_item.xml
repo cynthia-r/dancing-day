@@ -6,50 +6,60 @@
     android:foreground="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/school"
+        android:id="@+id/activity_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
         android:layout_marginTop="@dimen/text_margin"
-        android:text="KDC"
+        android:text="Tue, Jun 27"
         android:textStyle="bold"
         android:layout_alignParentLeft="true"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/count"
+        android:id="@+id/activity_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
         android:layout_marginTop="3dp"
-        android:text="5 classes"
-        android:layout_below="@id/school"
+        android:text="6PM-7PM"
+        android:layout_below="@id/activity_date"
         android:layout_alignParentLeft="true"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/expiration_text"
+        android:id="@+id/school"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/text_margin"
         android:layout_marginTop="@dimen/text_margin"
-        android:text="Expires"
+        android:text="KDC"
+        android:textColor="@color/colorAccent"
         android:textStyle="italic"
         android:layout_alignParentRight="true"
         android:textAppearance="?attr/textAppearanceListItem" />
 
-    <TextView
-        android:id="@+id/expiration_date"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/payment_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/text_margin"
         android:layout_marginTop="3dp"
-        android:text="May 5, 2017"
-        android:textColor="@color/colorAccent"
-        android:textStyle="italic"
-        android:layout_below="@id/expiration_text"
-        android:layout_alignParentRight="true"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_below="@id/school"
+        android:layout_alignParentRight="true" >
+        <ImageView
+            android:id="@+id/payment_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_dialog_map"
+            android:textAppearance="?attr/textAppearanceListItem" />
+        <ImageView
+            android:id="@+id/payment_ticket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_media_ff" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
 
