@@ -67,7 +67,8 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
         // Set payment type view
         ImageView paymentTypeCardView = (ImageView)convertView.findViewById(R.id.payment_card);
         ImageView paymentTypeTicketView = (ImageView)convertView.findViewById(R.id.payment_ticket);
-        if (PaymentType.PunchCard == classActivity.getPaymentType()) {
+        //if (PaymentType.PunchCard == classActivity.getPaymentType()) {
+        if (position % 2 == 0) { // todo
             paymentTypeCardView.setVisibility(View.VISIBLE);
             paymentTypeTicketView.setVisibility(View.GONE);
         }

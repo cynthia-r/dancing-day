@@ -42,11 +42,12 @@ public class DummyItem {
         The time range is 1h30 before to 10 minutes after.
      */
     public boolean isNow() {
-        // Check the day and time
+        return true;
+        /*// Check the day and time
         LocalTime currentTime = LocalTime.now();
         return (this.day == DummyUtils.getCurrentDay()
             && this.danceClassTime.startTime.minusMinutes(90).isBefore(currentTime)
-            && this.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime));
+            && this.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime));*/
     }
 
     public boolean activityExists(Context context) {
