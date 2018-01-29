@@ -1,6 +1,8 @@
 package com.cynthiar.dancingday.recentactivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
+import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
@@ -76,7 +79,25 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
             paymentTypeCardView.setVisibility(View.GONE);
         }
 
-        // TODO make clickable, on-click open recent activity details view
+        // Setup on-click event
+        convertView.setClickable(true);
+        convertView.setFocusable(true);
+
+        // Start the recent activity details activity
+        convertView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                TodayActivity parentActivity = (TodayActivity)mContext;
+                Intent intent = new Intent(parentActivity, RecentActivityDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivity.getId());
+                intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, bundle);
+
+                parentActivity.startActivity(intent);
+            }
+
+        });
         return convertView;
     }
 }

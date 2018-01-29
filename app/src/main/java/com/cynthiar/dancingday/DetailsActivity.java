@@ -78,6 +78,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         startEstimate(destinationAddress);
 
         // Save the dance class information
+        // TODO replace by a database call
         String day = bundle.getString(DetailsActivity.DAY_KEY);
         String time = bundle.getString(DetailsActivity.TIME_KEY);
         String school = bundle.getString(DetailsActivity.SCHOOL_KEY);

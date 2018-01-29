@@ -63,6 +63,18 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         return this.retrieveEntities(null, null, null, null, sortOrder);
     }
 
+    public ClassActivity getActivityById(long classActivityId) {
+        // Filter by ID
+        String selection = ClassActivity._ID + " = ?";
+        String[] selectionArgs = { Long.toString(classActivityId) };
+
+        // Retrieve the card
+        List<ClassActivity> classActivityList = this.retrieveEntities(selection, selectionArgs, null, null, null);
+        if (!classActivityList.isEmpty())
+            return classActivityList.get(0);
+        return null;
+    }
+
     @Override
     protected String getTableName() {
         return ClassActivity.TABLE;

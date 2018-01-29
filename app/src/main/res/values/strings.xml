@@ -57,4 +57,7 @@
     <!-- Activity view -->
     <string name="activities_empty_state">No recent activity</string>
 
+    <!-- Activity details view -->
+    <string name="cancel_debit">Cancel debit</string>
+
 </resources>

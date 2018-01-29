@@ -19,8 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity" />
-        <activity android:name=".card.CardsMainFragment" />
-        <activity android:name=".recentactivity.RecentActivityFragment" />
+        <activity android:name=".recentactivity.RecentActivityDetailsActivity" />
     </application>
 
 </manifest>
