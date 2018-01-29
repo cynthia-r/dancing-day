@@ -2,13 +2,15 @@ package com.cynthiar.dancingday.recentactivity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
+import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
 
@@ -22,31 +24,45 @@ import static android.view.View.GONE;
 /*
     Activity showing the past activity.
  */
-public class RecentActivityActivity extends AppCompatActivity {
-    private Toolbar myToolbar;
+public class RecentActivityFragment extends Fragment {
+    public static final String TAG = "RecentActivityFragment";
+    public static final int POSITION = 4;
+
     private ClassActivityDao classActivityDao = new ClassActivityDao();
     private RecentActivityListViewAdapter recentActivityListViewAdapter;
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public RecentActivityFragment() {
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.recent_activity_fragment, container, false);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recent_activity);
+    }
 
-        // Setup toolbar
-        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.title_recent_activity);
-        setSupportActionBar(myToolbar);
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        // Setup action bar buttons
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        // Get the parent activity
+        TodayActivity parentActivity = (TodayActivity)getActivity();
 
         // Retrieve list of items
         List<ClassActivity> classActivityList = classActivityDao.getActivityList();
 
         // Get the list view and the empty state view
-        ListView listView = (ListView) this.findViewById(R.id.recent_activity_list_view);
-        TextView emptyStateTextView = (TextView) this.findViewById(R.id.emptyList);
+        ListView listView = (ListView) parentActivity.findViewById(R.id.recent_activity_list_view);
+        TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
 
         // Display empty state if no results
         if (0 == classActivityList.size()) {
@@ -61,13 +77,10 @@ public class RecentActivityActivity extends AppCompatActivity {
         emptyStateTextView.setVisibility(View.GONE);
 
         // Setup list adapter
-        recentActivityListViewAdapter = new RecentActivityListViewAdapter(classActivityList, this);
+        recentActivityListViewAdapter = new RecentActivityListViewAdapter(classActivityList, parentActivity);
         listView.setAdapter(recentActivityListViewAdapter);
-    }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+        // Set title
+        parentActivity.setTitle(RecentActivityFragment.POSITION);
     }
 }

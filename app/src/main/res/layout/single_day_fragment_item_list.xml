@@ -6,6 +6,9 @@
     android:orientation="vertical"
     tools:context="com.cynthiar.dancingday.SingleDayFragment">
 
+    <!-- Show schedule bar -->
+    <include layout="@layout/schedule_bar"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

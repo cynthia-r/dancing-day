@@ -27,7 +27,6 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
-import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.AppDatabase;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
@@ -35,7 +34,7 @@ import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.model.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
-import com.cynthiar.dancingday.recentactivity.RecentActivityActivity;
+import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -249,11 +248,11 @@ public class TodayActivity extends AppCompatActivity
     }
 
     /**
-    * Swaps fragments in the main company view.
+    * Swaps fragments in the main activity view.
     */
     private void selectItem(int position) {
         // Primary menu
-        if (position < 3) {
+        if (position != 3) {
             // Create a new fragment and specify the title to show based on position
             Fragment fragment;
             String fragmentTag;
@@ -261,9 +260,13 @@ public class TodayActivity extends AppCompatActivity
                 fragment = SingleDayFragment.newInstance(position);
                 fragmentTag = SingleDayFragment.TAG;
             }
-            else { // 2: Next 7 days
+            else if (2 == position) { // 2: Next 7 days
                 fragment = new MultiDayFragment();
                 fragmentTag = MultiDayFragment.TAG;
+            }
+            else { // 4: Recent activity
+                fragment = new RecentActivityFragment();
+                fragmentTag = RecentActivityFragment.TAG;
             }
 
             // Switch fragment
@@ -273,10 +276,6 @@ public class TodayActivity extends AppCompatActivity
         else {
             if (3 == position) {
                 Intent intent = new Intent(this, CardsActivity.class);
-                this.startActivity(intent);
-            }
-            else if (4 == position) {
-                Intent intent = new Intent(this, RecentActivityActivity.class);
                 this.startActivity(intent);
             }
         }
@@ -293,6 +292,9 @@ public class TodayActivity extends AppCompatActivity
         }
         else if (currentFragment instanceof MultiDayFragment){
             return 2;
+        }
+        else if (currentFragment instanceof RecentActivityFragment) {
+            return 4;
         }
         return 0;
     }
@@ -317,7 +319,7 @@ public class TodayActivity extends AppCompatActivity
     }
 
     public void setTitle(int position) {
-        setTitle(mTimeFrames[position]);
+        setTitle(mDrawerItems[position]);
     }
 
     /**
@@ -421,6 +423,12 @@ public class TodayActivity extends AppCompatActivity
             myFragment = getSupportFragmentManager().findFragmentByTag(MultiDayFragment.TAG);
             if (myFragment != null && myFragment.isVisible()) {
                 return myFragment;
+            }
+            else {
+                myFragment = getSupportFragmentManager().findFragmentByTag(RecentActivityFragment.TAG);
+                if (myFragment != null && myFragment.isVisible()) {
+                    return myFragment;
+                }
             }
         }
         return null;
