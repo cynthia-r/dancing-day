@@ -9,9 +9,6 @@ import android.view.View;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.DummyUtils;
-import com.cynthiar.dancingday.model.Preferences;
-
-import org.joda.time.DateTime;
 
 /**
  * Created by CynthiaR on 9/23/2017.
@@ -19,6 +16,7 @@ import org.joda.time.DateTime;
 
 public class EditDeleteCardFragment extends BaseCardFragment {
     public static final String TAG = "EditDeleteCardFragment";
+    public static final int REQUEST_CODE = 2;
     private DanceClassCard mDanceClassCard;
 
     /**

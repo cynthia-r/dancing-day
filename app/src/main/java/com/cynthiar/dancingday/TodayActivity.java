@@ -1,7 +1,6 @@
 package com.cynthiar.dancingday;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.cynthiar.dancingday.card.CardsActivity;
+import com.cynthiar.dancingday.card.CardsMainFragment;
 import com.cynthiar.dancingday.data.DanceClassDataProvider;
 import com.cynthiar.dancingday.data.DataCache;
 import com.cynthiar.dancingday.data.IConsumerCallback;
@@ -233,6 +232,11 @@ public class TodayActivity extends AppCompatActivity
             return true;
         }
 
+        Fragment currentFragment = this.getCurrentFragment();
+        if (currentFragment.hasOptionsMenu() && currentFragment.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         // Call base
         return super.onOptionsItemSelected(item);
     }
@@ -251,34 +255,30 @@ public class TodayActivity extends AppCompatActivity
     * Swaps fragments in the main activity view.
     */
     private void selectItem(int position) {
+        // Create a new fragment and specify the title to show based on position
         // Primary menu
-        if (position != 3) {
-            // Create a new fragment and specify the title to show based on position
-            Fragment fragment;
-            String fragmentTag;
-            if (position < 2) { // 0: Today, 1: Tomorrow
-                fragment = SingleDayFragment.newInstance(position);
-                fragmentTag = SingleDayFragment.TAG;
-            }
-            else if (2 == position) { // 2: Next 7 days
-                fragment = new MultiDayFragment();
-                fragmentTag = MultiDayFragment.TAG;
-            }
-            else { // 4: Recent activity
-                fragment = new RecentActivityFragment();
-                fragmentTag = RecentActivityFragment.TAG;
-            }
-
-            // Switch fragment
-            this.switchToFragment(fragment, fragmentTag);
+        Fragment fragment;
+        String fragmentTag;
+        if (position < 2) { // 0: Today, 1: Tomorrow
+            fragment = SingleDayFragment.newInstance(position);
+            fragmentTag = SingleDayFragment.TAG;
+        }
+        else if (2 == position) { // 2: Next 7 days
+            fragment = new MultiDayFragment();
+            fragmentTag = MultiDayFragment.TAG;
         }
         // Secondary menu
-        else {
-            if (3 == position) {
-                Intent intent = new Intent(this, CardsActivity.class);
-                this.startActivity(intent);
-            }
+        else if (3 == position) { // 3: Class cards
+            fragment = new CardsMainFragment();
+            fragmentTag = CardsMainFragment.TAG;
         }
+        else { // 4: Recent activity
+            fragment = new RecentActivityFragment();
+            fragmentTag = RecentActivityFragment.TAG;
+        }
+
+        // Switch fragment
+        this.switchToFragment(fragment, fragmentTag);
 
         // Highlight the selected item, and close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -293,8 +293,11 @@ public class TodayActivity extends AppCompatActivity
         else if (currentFragment instanceof MultiDayFragment){
             return 2;
         }
+        else if (currentFragment instanceof CardsMainFragment) {
+            return CardsMainFragment.POSITION;
+        }
         else if (currentFragment instanceof RecentActivityFragment) {
-            return 4;
+            return RecentActivityFragment.POSITION;
         }
         return 0;
     }
@@ -425,9 +428,15 @@ public class TodayActivity extends AppCompatActivity
                 return myFragment;
             }
             else {
-                myFragment = getSupportFragmentManager().findFragmentByTag(RecentActivityFragment.TAG);
+                myFragment = getSupportFragmentManager().findFragmentByTag(CardsMainFragment.TAG);
                 if (myFragment != null && myFragment.isVisible()) {
                     return myFragment;
+                }
+                else {
+                    myFragment = getSupportFragmentManager().findFragmentByTag(RecentActivityFragment.TAG);
+                    if (myFragment != null && myFragment.isVisible()) {
+                        return myFragment;
+                    }
                 }
             }
         }

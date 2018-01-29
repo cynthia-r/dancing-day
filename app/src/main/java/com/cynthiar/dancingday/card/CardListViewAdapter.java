@@ -1,6 +1,7 @@
 package com.cynthiar.dancingday.card;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,15 @@ import java.util.List;
 public class CardListViewAdapter extends BaseAdapter{
     private List<DanceClassCard> mValues;
     private Context mContext;
+    private Fragment mTargetFragment;
     private LayoutInflater mInflater;
 
     public static DateTimeFormatter ExpirationDateFormatter = DateTimeFormat.forPattern("MMM d, YYYY");
 
-    public CardListViewAdapter(List<DanceClassCard> items, Context context) {
+    public CardListViewAdapter(List<DanceClassCard> items, Context context, Fragment targetFragment) {
         mValues = items;
         mContext = context;
+        mTargetFragment = targetFragment;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -75,8 +78,9 @@ public class CardListViewAdapter extends BaseAdapter{
 
             @Override
             public void onClick(View v) {
-                EditDeleteCardFragment.newInstance(danceClassCard)
-                        .show(((CardsActivity)mContext).getSupportFragmentManager(), EditDeleteCardFragment.TAG);
+                EditDeleteCardFragment editDeleteCardFragment = EditDeleteCardFragment.newInstance(danceClassCard);
+                editDeleteCardFragment.setTargetFragment(mTargetFragment, EditDeleteCardFragment.REQUEST_CODE);
+                editDeleteCardFragment.show(mTargetFragment.getFragmentManager(), EditDeleteCardFragment.TAG);
             }
 
         });

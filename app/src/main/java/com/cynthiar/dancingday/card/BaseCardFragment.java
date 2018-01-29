@@ -2,8 +2,10 @@ package com.cynthiar.dancingday.card;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.SpinnerAdapter;
+import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.Schools;
 import com.cynthiar.dancingday.model.database.DanceClassCardDao;
 
@@ -43,15 +46,16 @@ public abstract class BaseCardFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the target fragment implements the callback interface
+        Fragment targetFragment = getTargetFragment();
         try {
             // Instantiate the CardDialogListener so we can send events to the host
-            mListener = (CardDialogListener) activity;
+            mListener = (CardDialogListener) targetFragment;
         } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
+            // The target fragment doesn't implement the interface, throw exception
+            throw new ClassCastException(targetFragment.getTag()
                     + " must implement CardDialogListener");
         }
     }
@@ -59,7 +63,7 @@ public abstract class BaseCardFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Get the parent activity
-        final CardsActivity parentActivity = (CardsActivity)getActivity();
+        final TodayActivity parentActivity = (TodayActivity) getActivity();
 
         // Initialize the data
         mDanceClassCardDao = new DanceClassCardDao();

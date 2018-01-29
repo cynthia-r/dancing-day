@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
  */
 public class NewCardFragment extends BaseCardFragment {
     public static final String TAG = "NewCardFragment";
+    public static final int REQUEST_CODE = 1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
