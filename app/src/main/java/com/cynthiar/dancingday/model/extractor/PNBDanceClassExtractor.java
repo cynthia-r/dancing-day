@@ -2,15 +2,21 @@ package com.cynthiar.dancingday.model.extractor;
 
 import android.content.Context;
 
+import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.model.DanceClassLevel;
 import com.cynthiar.dancingday.model.DummyContent;
 import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Schools;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +40,23 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     @Override
     public String getUrl() {
         return "https://www.pnb.org/pnb-school/classes/open-program/#fusion-tab-classschedule";
+    }
+
+    @Override
+    public Certificate getCertificate() throws IOException {
+        InputStream certificateInput = mContext.getResources().openRawResource(R.raw.wwwpnborg);
+        Certificate certificate = null;
+        try {
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            certificate = cf.generateCertificate(certificateInput);
+        }
+        catch (Exception e) {
+            DummyUtils.toast(mContext, e.getMessage());
+        }
+        finally {
+            certificateInput.close();
+        }
+        return certificate;
     }
 
     @Override

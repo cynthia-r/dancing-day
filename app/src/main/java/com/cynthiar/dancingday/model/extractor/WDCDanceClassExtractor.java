@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.model.extractor;
 
 import android.content.Context;
 
+import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.model.DanceClassLevel;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
@@ -15,6 +16,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +26,7 @@ import java.util.List;
  */
 
 public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
-    private static final String mainSelector = ".aQJ , #WRchTxt3-gua span, #WRchTxt2-nsv span";
+    private static final String mainSelector = ".wcs-class--visible";
 
     public WDCDanceClassExtractor(Context context) { super(context); }
 
@@ -34,7 +37,7 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
 
     @Override
     public String getUrl() {
-        return "https://www.westlakedance.com/schedule-";
+        return "http://westlakedancecenter.com/class-schedule/";
     }
 
     @Override

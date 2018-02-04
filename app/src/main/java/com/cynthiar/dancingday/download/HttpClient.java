@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Created by CynthiaR on 3/4/2017.
@@ -18,9 +22,15 @@ public class HttpClient {
     private static final int CONNECT_TIMEOUT = 3000;
 
     private IHttpConsumer mHttpConsumer;
+    private Certificate mCertificate;
 
     public HttpClient(IHttpConsumer httpUser){
         mHttpConsumer = httpUser;
+    }
+
+    public HttpClient(IHttpConsumer httpUser, Certificate certificate) {
+        this(httpUser);
+        mCertificate = certificate;
     }
 
     /**
@@ -33,10 +43,19 @@ public class HttpClient {
         HttpURLConnection connection = null;
         Object processedInput = null;
         try {
-            if (url.getProtocol().equals("https"))
+
+            if (url.getProtocol().equals("https")) {
                 connection = (HttpsURLConnection) url.openConnection();
+
+                // Build SSL context if the extractor specified a certificate to use
+                if (null != mCertificate) {
+                    SSLContext sslContext = this.buildSSLContext(mCertificate);
+                    ((HttpsURLConnection)connection).setSSLSocketFactory(sslContext.getSocketFactory());
+                }
+            }
             else
                 connection = (HttpURLConnection) url.openConnection();
+
             // Timeout for reading InputStream arbitrarily set to 3000ms.
             connection.setReadTimeout(HttpClient.READ_TIMEOUT);
             // Timeout for connection.connect() arbitrarily set to 3000ms.
@@ -71,5 +90,33 @@ public class HttpClient {
             }
         }
         return processedInput;
+    }
+
+    /**
+     * Builds an SSL context from the specified certificate.
+     * @param certificate
+     * @return The SSL context to use in the HTTPS connection.
+     */
+    private SSLContext buildSSLContext(Certificate certificate){
+        SSLContext sslContext = null;
+        try {
+            // Create a KeyStore containing our trusted CAs
+            String keyStoreType = KeyStore.getDefaultType();
+            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("ca", certificate);
+
+            // Create a TrustManager that trusts the CAs in our KeyStore
+            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+            tmf.init(keyStore);
+
+            // Create an SSLContext that uses our TrustManager
+            sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sslContext;
     }
 }

@@ -108,7 +108,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             try {
                 // Use the HTTP client to perform the request
                 URL url = new URL(urlString);
-                HttpClient httpClient = new HttpClient(this);
+                HttpClient httpClient = new HttpClient(this, mExtractor.getCertificate());
                 Object processedResult = httpClient.getResponse(url);
 
                 // Extract the items from the response
