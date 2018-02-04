@@ -25,6 +25,7 @@ import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.recentactivity.RecentActivityDetailsActivity;
+import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -38,6 +39,11 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TEACHER_KEY = "Teacher";
     public static final String TIME_KEY = "Time";
     public static final String DAY_KEY = "Day";
+    public static final int NOTIFICATION_ID = 1;
+
+    public static final String CLASS_ACTIVITY_ID_KEY = "Class_Activity_Id";
+    public static final String CLASS_ACTIVITY_CONFIRMED_KEY = "Class_Activity_Confirmed";
+    public static final String NOTIFICATION_ACTION_KEY = "Notification";
 
     private static final String ORIGIN_ADDRESS = "1120 112th Ave NE Bellevue WA 98004";
     private static final String WAZE_SCHEME = "waze";
@@ -208,28 +214,20 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
         PendingIntent detailsActivityPendingIntent = this.buildPendingIntent(0, DetailsActivity.class, detailsActivityIntent);
 
-        // Setup the recent activity to open on action click
+        // Setup the activities to open on action click
         Intent recentActivityConfirmedIntent = new Intent(this, RecentActivityDetailsActivity.class);
-        /*Bundle recentActivityConfirmedBundle = new Bundle();
-        recentActivityConfirmedBundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        recentActivityConfirmedBundle.putBoolean(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
-        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, recentActivityConfirmedBundle);*/
-        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, true);
-        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
+        recentActivityConfirmedIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        recentActivityConfirmedIntent.putExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, true);
+        recentActivityConfirmedIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
 
-        Intent recentActivityCancelledIntent = new Intent(this, RecentActivityDetailsActivity.class);
-        /*Bundle recentActivityCancelledBundle = new Bundle();
-        recentActivityCancelledBundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        recentActivityCancelledBundle.putBoolean(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
-        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, recentActivityCancelledBundle);*/
-        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, true);
-        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+        Intent todayActivityCancelledIntent = new Intent(this, TodayActivity.class);
+        todayActivityCancelledIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        todayActivityCancelledIntent.putExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, true);
+        todayActivityCancelledIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
 
-        // Get a PendingIntent containing the entire back stack
+        // Setup the pending intents
         PendingIntent recentActivityConfirmedPendingIntent = this.buildPendingIntent(1, RecentActivityDetailsActivity.class, recentActivityConfirmedIntent);
-        PendingIntent recentActivityCancelledPendingIntent = this.buildPendingIntent(2, RecentActivityDetailsActivity.class, recentActivityCancelledIntent);
+        PendingIntent recentActivityCancelledPendingIntent = this.buildPendingIntent(2, TodayActivity.class, todayActivityCancelledIntent);
 
         // Create a notification
         NotificationCompat.Builder mBuilder =
@@ -239,16 +237,14 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
                         .setContentText("Time for class")
                         .setContentIntent(detailsActivityPendingIntent)
                         .addAction(android.R.drawable.ic_menu_save, "Confirm", recentActivityConfirmedPendingIntent)
-                        /*.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Cancel", recentActivityCancelledPendingIntent)*/;
+                        .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Cancel", recentActivityCancelledPendingIntent);
 
-        // Set an ID for the notification
-        int mNotificationId = 001;
         // Get an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Build the notification and issue it
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotifyMgr.notify(Long.toString(classActivityId), DetailsActivity.NOTIFICATION_ID, mBuilder.build());
     }
 
     public static Bundle toBundle(DummyItem dummyItem) {

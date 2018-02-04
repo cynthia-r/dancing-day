@@ -47,6 +47,26 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         this.deleteEntity(classActivity);
     }
 
+    public void confirmActivity(ClassActivity classActivity) {
+        if (null == classActivity)
+            return;
+
+        // Update the activity to be confirmed
+        classActivity.confirm();
+        this.updateEntity(classActivity);
+    }
+
+    public void cancelActivity(long classActivityId) {
+        if (classActivityId <= 0)
+            return;
+
+        ClassActivity classActivity = this.getActivityById(classActivityId);
+        if (null == classActivity)
+            return;
+
+        this.cancelActivity(classActivity);
+    }
+
     public void cancelActivity(ClassActivity classActivity) {
         if (null == classActivity)
             return;

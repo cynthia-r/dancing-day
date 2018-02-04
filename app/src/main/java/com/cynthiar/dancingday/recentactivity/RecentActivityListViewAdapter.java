@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.DetailsActivity;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
@@ -90,9 +91,7 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 TodayActivity parentActivity = (TodayActivity)mContext;
                 Intent intent = new Intent(parentActivity, RecentActivityDetailsActivity.class);
-                //Bundle bundle = new Bundle();
-                intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivity.getId());
-                //intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, bundle);
+                intent.putExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivity.getId());
 
                 parentActivity.startActivity(intent);
             }

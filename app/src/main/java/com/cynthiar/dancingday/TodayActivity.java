@@ -1,6 +1,8 @@
 package com.cynthiar.dancingday;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -30,6 +32,7 @@ import com.cynthiar.dancingday.model.database.AppDatabase;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
+import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.model.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
@@ -73,8 +76,12 @@ public class TodayActivity extends AppCompatActivity
     private DataCache<List<DummyItem>> mDanceClassCache;
     private boolean mAllListsLoaded;
 
+    // Properties for loading fragments
     private boolean mIsInForeground = false;
     private boolean mReloadFragmentOnResume = false;
+
+    // DAOs
+    private ClassActivityDao mClassActivityDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,14 +151,25 @@ public class TodayActivity extends AppCompatActivity
         // Initialize database
         AppDatabase.initializeDb(this);
 
-        // Add the fragment to the 'fragment_container' FrameLayout
-        // Default fragment is for "Today"
-        SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
-        mReloadFragmentOnResume = false;
-
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassDataProvider);
+
+        // Add the fragment to the 'fragment_container' FrameLayout
+        // Check if the activity was started from a notification
+        Intent intent = getIntent();
+        if (null != intent
+                && intent.getBooleanExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, false)
+                && !intent.getBooleanExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false)) {
+            this.handleNotificationCancelAction(intent);
+            RecentActivityFragment firstFragment = new RecentActivityFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, RecentActivityFragment.TAG).commit();
+        }
+        else {
+            // Default fragment is for "Today"
+            SingleDayFragment firstFragment = SingleDayFragment.newInstance(0);
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
+        }
+        mReloadFragmentOnResume = false;
     }
 
     @Override
@@ -512,5 +530,19 @@ public class TodayActivity extends AppCompatActivity
         // Clear the cache and get the list again
         mDanceClassCache.clear();
         this.getCurrentList();
+    }
+
+    private void handleNotificationCancelAction(Intent notificationIntent) {
+        // Retrieve the class activity id
+        long classActivityId = notificationIntent.getLongExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
+
+        // Cancel the class activity
+        mClassActivityDao = new ClassActivityDao();
+        mClassActivityDao.cancelActivity(classActivityId);
+        DummyUtils.toast(this, "Cancelled");
+
+        // Dismiss the notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(Long.toString(classActivityId), DetailsActivity.NOTIFICATION_ID);
     }
 }

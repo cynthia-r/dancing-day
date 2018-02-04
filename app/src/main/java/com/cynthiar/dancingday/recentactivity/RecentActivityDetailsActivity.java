@@ -1,14 +1,14 @@
 package com.cynthiar.dancingday.recentactivity;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.DetailsActivity;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 import com.cynthiar.dancingday.model.DummyItem;
@@ -18,11 +18,6 @@ import com.cynthiar.dancingday.model.classActivity.PaymentType;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
 
 public class RecentActivityDetailsActivity extends AppCompatActivity {
-    public static final String CLASS_ACTIVITY_KEY = "Class_Activity";
-    public static final String CLASS_ACTIVITY_ID_KEY = "Class_Activity_Id";
-    public static final String CLASS_ACTIVITY_CONFIRMED_KEY = "Class_Activity_Confirmed";
-    public static final String NOTIFICATION_KEY = "Notification";
-
     private Toolbar myToolbar;
     private ClassActivity mClassActivity;
     private ClassActivityDao mClassActivityDao;
@@ -34,13 +29,12 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the bundle
         Intent intent = getIntent();
-        //Bundle bundle = intent.getBundleExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY);
 
         // Set the DAO
         mClassActivityDao = new ClassActivityDao();
 
         // Retrieve the class activity information
-        long classActivityId = intent.getLongExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
+        long classActivityId = intent.getLongExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
         mClassActivity = mClassActivityDao.getActivityById(classActivityId);
         DummyItem danceClass = mClassActivity.getDanceClass();
 
@@ -73,15 +67,10 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        // Check if the activity was opened from a notification
-        boolean notification = intent.getBooleanExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, false);
+        // Check if the activity was opened from a notification action
+        boolean notification = intent.getBooleanExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, false);
         if (notification) {
-            boolean confirmed = intent.getBooleanExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
-            // todo
-            if (confirmed)
-                DummyUtils.toast(this, "Confirmed");
-            else
-                DummyUtils.toast(this, "Cancelled");
+            this.handleNotificationConfirmAction(intent);
         }
     }
 
@@ -96,9 +85,10 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
      * @param view: The "Delete activity" button.
      */
     public void deleteActivity(View view) {
-        // TODO - show dialog confirm + dismiss activity if cancelled
+        // TODO - show dialog confirm
         mClassActivityDao.deleteActivity(mClassActivity);
         DummyUtils.toast(this, "Activity deleted");
+        finish();
     }
 
     /**
@@ -106,7 +96,28 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
      * @param view: The "cancel debit" button
      */
     public void cancelDebit(View view) {
-        // TODO - show dialog confirm + dismiss activity if cancelled
-        // mClassActivityDao.cancelActivity(mClassActivity);
+        // TODO - show dialog confirm
+        mClassActivityDao.cancelActivity(mClassActivity);
+        DummyUtils.toast(this, "Activity cancelled");
+
+
+        // Dismiss the notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(Long.toString(mClassActivity.getId()), DetailsActivity.NOTIFICATION_ID);
+
+        finish();
+    }
+
+    private void handleNotificationConfirmAction(Intent notificationIntent) {
+        // Check if the activity is confirmed
+        boolean confirmed = notificationIntent.getBooleanExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+        if (confirmed) {
+            DummyUtils.toast(this, "Confirmed");
+            mClassActivityDao.confirmActivity(mClassActivity);
+        }
+
+        // Dismiss the notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(Long.toString(mClassActivity.getId()), DetailsActivity.NOTIFICATION_ID);
     }
 }
