@@ -1,11 +1,15 @@
 package com.cynthiar.dancingday;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.recentactivity.RecentActivityDetailsActivity;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -182,7 +187,8 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             if (mDanceClass.isNow() && !mDanceClass.activityExists(this)) {
                 ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
                 try {
-                    mClassActivityDao.registerActivity(classActivity);
+                    long classActivityId = mClassActivityDao.registerActivity(classActivity);
+                    this.buildNotification(classActivityId);
                 }
                 catch (Exception e) {
                     DummyUtils.toast(this, "Failed to register activity:" + e.getLocalizedMessage());
@@ -192,6 +198,82 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         catch ( ActivityNotFoundException ex ) {
             DummyUtils.toast(this, "Failed to start navigation");
         }
+    }
+
+    private void buildNotification(long classActivityId) {
+        // Setup the details activity to open on notification click
+        Intent detailsActivityIntent = new Intent(this, DetailsActivity.class);
+        Bundle detailsActivityBundle = DetailsActivity.toBundle(mDanceClass);
+        detailsActivityIntent.putExtra(DetailsActivity.DANCE_CLASS_KEY, detailsActivityBundle);
+
+        PendingIntent detailsActivityPendingIntent = this.buildPendingIntent(0, DetailsActivity.class, detailsActivityIntent);
+
+        // Setup the recent activity to open on action click
+        Intent recentActivityConfirmedIntent = new Intent(this, RecentActivityDetailsActivity.class);
+        /*Bundle recentActivityConfirmedBundle = new Bundle();
+        recentActivityConfirmedBundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        recentActivityConfirmedBundle.putBoolean(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
+        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, recentActivityConfirmedBundle);*/
+        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, true);
+        recentActivityConfirmedIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
+
+        Intent recentActivityCancelledIntent = new Intent(this, RecentActivityDetailsActivity.class);
+        /*Bundle recentActivityCancelledBundle = new Bundle();
+        recentActivityCancelledBundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        recentActivityCancelledBundle.putBoolean(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, recentActivityCancelledBundle);*/
+        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
+        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, true);
+        recentActivityCancelledIntent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+
+        // Get a PendingIntent containing the entire back stack
+        PendingIntent recentActivityConfirmedPendingIntent = this.buildPendingIntent(1, RecentActivityDetailsActivity.class, recentActivityConfirmedIntent);
+        PendingIntent recentActivityCancelledPendingIntent = this.buildPendingIntent(2, RecentActivityDetailsActivity.class, recentActivityCancelledIntent);
+
+        // Create a notification
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.star)
+                        .setContentTitle("Dancing day")
+                        .setContentText("Time for class")
+                        .setContentIntent(detailsActivityPendingIntent)
+                        .addAction(android.R.drawable.ic_menu_save, "Confirm", recentActivityConfirmedPendingIntent)
+                        /*.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Cancel", recentActivityCancelledPendingIntent)*/;
+
+        // Set an ID for the notification
+        int mNotificationId = 001;
+        // Get an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // Build the notification and issue it
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    public static Bundle toBundle(DummyItem dummyItem) {
+        Bundle bundle = new Bundle();
+        bundle.putString(DetailsActivity.DAY_KEY, dummyItem.day);
+        bundle.putString(DetailsActivity.LEVEL_KEY, dummyItem.level.toString());
+        bundle.putString(DetailsActivity.SCHOOL_KEY, dummyItem.school.Key);
+        bundle.putString(DetailsActivity.SCHOOL_ADDRESS_KEY, dummyItem.school.Address);
+        bundle.putString(DetailsActivity.SCHOOL_COORDINATES_KEY, dummyItem.school.Coordinates);
+        bundle.putString(DetailsActivity.TEACHER_KEY, dummyItem.teacher.toString());
+        bundle.putString(DetailsActivity.TIME_KEY, dummyItem.danceClassTime.toString());
+        return bundle;
+    }
+
+    private PendingIntent buildPendingIntent(int requestCode, Class activityClass, Intent intent) {
+        // Create a stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Add the back stack
+        stackBuilder.addParentStack(activityClass);
+        // Add the Intent to the top of the stack
+        stackBuilder.addNextIntent(intent);
+        // Get a PendingIntent containing the entire back stack
+        PendingIntent pendingIntent =
+                stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
+        return pendingIntent;
     }
 
     /**

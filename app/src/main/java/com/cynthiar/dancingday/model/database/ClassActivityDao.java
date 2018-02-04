@@ -39,6 +39,14 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         return id;
     }
 
+    public void deleteActivity(ClassActivity classActivity) {
+        if (null == classActivity)
+            return;
+
+        // Cancel the activity
+        this.deleteEntity(classActivity);
+    }
+
     public void cancelActivity(ClassActivity classActivity) {
         if (null == classActivity)
             return;

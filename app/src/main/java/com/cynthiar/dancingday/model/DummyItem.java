@@ -7,9 +7,6 @@ import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-
 import java.util.Iterator;
 import java.util.List;
 

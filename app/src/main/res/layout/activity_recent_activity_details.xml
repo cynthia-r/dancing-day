@@ -18,6 +18,17 @@
         android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
+            android:id="@+id/school"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/text_margin"
+            android:text="KDC"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
             android:id="@+id/activity_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,6 +37,7 @@
             android:text="6:30PM-8PM"
             android:textStyle="bold"
             android:layout_alignParentLeft="true"
+            android:layout_below="@id/school"
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
@@ -52,17 +64,6 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
-            android:id="@+id/school"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/text_margin"
-            android:layout_marginTop="@dimen/text_margin"
-            android:text="KDC"
-            android:textColor="@color/colorAccent"
-            android:layout_alignParentRight="true"
-            android:textAppearance="?attr/textAppearanceListItem" />
-
-        <TextView
             android:id="@+id/teacher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +74,15 @@
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/level"
             android:textAppearance="?attr/textAppearanceListItem" />
+
+        <ImageButton android:id="@+id/deleteActivity"
+            android:layout_width="@dimen/big_star"
+            android:layout_height="@dimen/big_star"
+            android:background="@android:drawable/ic_menu_delete"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:onClick="deleteActivity"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical" android:layout_width="match_parent"

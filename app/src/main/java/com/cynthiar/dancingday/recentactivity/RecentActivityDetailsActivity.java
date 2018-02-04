@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 import com.cynthiar.dancingday.model.DummyItem;
+import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.classActivity.PaymentType;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
@@ -19,6 +20,8 @@ import com.cynthiar.dancingday.model.database.ClassActivityDao;
 public class RecentActivityDetailsActivity extends AppCompatActivity {
     public static final String CLASS_ACTIVITY_KEY = "Class_Activity";
     public static final String CLASS_ACTIVITY_ID_KEY = "Class_Activity_Id";
+    public static final String CLASS_ACTIVITY_CONFIRMED_KEY = "Class_Activity_Confirmed";
+    public static final String NOTIFICATION_KEY = "Notification";
 
     private Toolbar myToolbar;
     private ClassActivity mClassActivity;
@@ -31,13 +34,13 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the bundle
         Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY);
+        //Bundle bundle = intent.getBundleExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY);
 
         // Set the DAO
         mClassActivityDao = new ClassActivityDao();
 
         // Retrieve the class activity information
-        long classActivityId = bundle.getLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY);
+        long classActivityId = intent.getLongExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
         mClassActivity = mClassActivityDao.getActivityById(classActivityId);
         DummyItem danceClass = mClassActivity.getDanceClass();
 
@@ -69,12 +72,33 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Setup action bar buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        // Check if the activity was opened from a notification
+        boolean notification = intent.getBooleanExtra(RecentActivityDetailsActivity.NOTIFICATION_KEY, false);
+        if (notification) {
+            boolean confirmed = intent.getBooleanExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+            // todo
+            if (confirmed)
+                DummyUtils.toast(this, "Confirmed");
+            else
+                DummyUtils.toast(this, "Cancelled");
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    /**
+     * Deletes the activity from the history
+     * @param view: The "Delete activity" button.
+     */
+    public void deleteActivity(View view) {
+        // TODO - show dialog confirm + dismiss activity if cancelled
+        mClassActivityDao.deleteActivity(mClassActivity);
+        DummyUtils.toast(this, "Activity deleted");
     }
 
     /**

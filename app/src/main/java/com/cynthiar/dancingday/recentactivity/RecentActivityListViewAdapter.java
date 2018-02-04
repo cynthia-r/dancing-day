@@ -90,9 +90,9 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 TodayActivity parentActivity = (TodayActivity)mContext;
                 Intent intent = new Intent(parentActivity, RecentActivityDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putLong(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivity.getId());
-                intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, bundle);
+                //Bundle bundle = new Bundle();
+                intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivity.getId());
+                //intent.putExtra(RecentActivityDetailsActivity.CLASS_ACTIVITY_KEY, bundle);
 
                 parentActivity.startActivity(intent);
             }
