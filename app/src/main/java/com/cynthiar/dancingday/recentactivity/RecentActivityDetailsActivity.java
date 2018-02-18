@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.DetailsActivity;
+import com.cynthiar.dancingday.ClassActivityNotification;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 import com.cynthiar.dancingday.model.DummyItem;
@@ -34,7 +34,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         mClassActivityDao = new ClassActivityDao();
 
         // Retrieve the class activity information
-        long classActivityId = intent.getLongExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
+        long classActivityId = intent.getLongExtra(ClassActivityNotification.CLASS_ACTIVITY_ID_KEY, -1);
         mClassActivity = mClassActivityDao.getActivityById(classActivityId);
         DummyItem danceClass = mClassActivity.getDanceClass();
 
@@ -68,7 +68,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // Check if the activity was opened from a notification action
-        boolean notification = intent.getBooleanExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, false);
+        boolean notification = intent.getBooleanExtra(ClassActivityNotification.NOTIFICATION_ACTION_KEY, false);
         if (notification) {
             this.handleNotificationConfirmAction(intent);
         }
@@ -103,14 +103,14 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
 
         // Dismiss the notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.toString(mClassActivity.getId()), DetailsActivity.NOTIFICATION_ID);
+        notificationManager.cancel(Long.toString(mClassActivity.getId()), ClassActivityNotification.NOTIFICATION_ID);
 
         finish();
     }
 
     private void handleNotificationConfirmAction(Intent notificationIntent) {
         // Check if the activity is confirmed
-        boolean confirmed = notificationIntent.getBooleanExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+        boolean confirmed = notificationIntent.getBooleanExtra(ClassActivityNotification.CLASS_ACTIVITY_CONFIRMED_KEY, false);
         if (confirmed) {
             DummyUtils.toast(this, "Confirmed");
             mClassActivityDao.confirmActivity(mClassActivity);
@@ -118,6 +118,6 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
 
         // Dismiss the notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.toString(mClassActivity.getId()), DetailsActivity.NOTIFICATION_ID);
+        notificationManager.cancel(Long.toString(mClassActivity.getId()), ClassActivityNotification.NOTIFICATION_ID);
     }
 }

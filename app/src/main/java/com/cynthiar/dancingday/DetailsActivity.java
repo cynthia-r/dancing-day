@@ -1,15 +1,13 @@
 package com.cynthiar.dancingday;
 
+import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -24,8 +22,6 @@ import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
-import com.cynthiar.dancingday.recentactivity.RecentActivityDetailsActivity;
-import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
 
 /**
  * Activity for the detailed view of a given dance class.
@@ -39,11 +35,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TEACHER_KEY = "Teacher";
     public static final String TIME_KEY = "Time";
     public static final String DAY_KEY = "Day";
-    public static final int NOTIFICATION_ID = 1;
-
-    public static final String CLASS_ACTIVITY_ID_KEY = "Class_Activity_Id";
-    public static final String CLASS_ACTIVITY_CONFIRMED_KEY = "Class_Activity_Confirmed";
-    public static final String NOTIFICATION_ACTION_KEY = "Notification";
 
     private static final String ORIGIN_ADDRESS = "1120 112th Ave NE Bellevue WA 98004";
     private static final String WAZE_SCHEME = "waze";
@@ -89,7 +80,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         startEstimate(destinationAddress);
 
         // Save the dance class information
-        // TODO replace by a database call
         String day = bundle.getString(DetailsActivity.DAY_KEY);
         String time = bundle.getString(DetailsActivity.TIME_KEY);
         String school = bundle.getString(DetailsActivity.SCHOOL_KEY);
@@ -193,8 +183,13 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
             if (mDanceClass.isNow() && !mDanceClass.activityExists(this)) {
                 ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
                 try {
+                    // Build a notification
                     long classActivityId = mClassActivityDao.registerActivity(classActivity);
-                    this.buildNotification(classActivityId);
+                    Notification notification = new ClassActivityNotification(this).buildNotification(classActivityId, mDanceClass);
+
+                    // Issue the notification
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.notify(Long.toString(classActivityId), ClassActivityNotification.NOTIFICATION_ID, notification);
                 }
                 catch (Exception e) {
                     DummyUtils.toast(this, "Failed to register activity:" + e.getLocalizedMessage());
@@ -206,47 +201,11 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         }
     }
 
-    private void buildNotification(long classActivityId) {
-        // Setup the details activity to open on notification click
-        Intent detailsActivityIntent = new Intent(this, DetailsActivity.class);
-        Bundle detailsActivityBundle = DetailsActivity.toBundle(mDanceClass);
-        detailsActivityIntent.putExtra(DetailsActivity.DANCE_CLASS_KEY, detailsActivityBundle);
-
-        PendingIntent detailsActivityPendingIntent = this.buildPendingIntent(0, DetailsActivity.class, detailsActivityIntent);
-
-        // Setup the activities to open on action click
-        Intent recentActivityConfirmedIntent = new Intent(this, RecentActivityDetailsActivity.class);
-        recentActivityConfirmedIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        recentActivityConfirmedIntent.putExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, true);
-        recentActivityConfirmedIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, true);
-
-        Intent todayActivityCancelledIntent = new Intent(this, TodayActivity.class);
-        todayActivityCancelledIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, classActivityId);
-        todayActivityCancelledIntent.putExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, true);
-        todayActivityCancelledIntent.putExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false);
-
-        // Setup the pending intents
-        PendingIntent recentActivityConfirmedPendingIntent = this.buildPendingIntent(1, RecentActivityDetailsActivity.class, recentActivityConfirmedIntent);
-        PendingIntent recentActivityCancelledPendingIntent = this.buildPendingIntent(2, TodayActivity.class, todayActivityCancelledIntent);
-
-        // Create a notification
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.star)
-                        .setContentTitle("Dancing day")
-                        .setContentText("Time for class")
-                        .setContentIntent(detailsActivityPendingIntent)
-                        .addAction(android.R.drawable.ic_menu_save, "Confirm", recentActivityConfirmedPendingIntent)
-                        .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Cancel", recentActivityCancelledPendingIntent);
-
-        // Get an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        // Build the notification and issue it
-        mNotifyMgr.notify(Long.toString(classActivityId), DetailsActivity.NOTIFICATION_ID, mBuilder.build());
-    }
-
+    /**
+     * Converts a dance class to a bundle.
+     * @param dummyItem: The dance class information.
+     * @return: The bundle that can be used between activities.
+     */
     public static Bundle toBundle(DummyItem dummyItem) {
         Bundle bundle = new Bundle();
         bundle.putString(DetailsActivity.DAY_KEY, dummyItem.day);
@@ -257,19 +216,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         bundle.putString(DetailsActivity.TEACHER_KEY, dummyItem.teacher.toString());
         bundle.putString(DetailsActivity.TIME_KEY, dummyItem.danceClassTime.toString());
         return bundle;
-    }
-
-    private PendingIntent buildPendingIntent(int requestCode, Class activityClass, Intent intent) {
-        // Create a stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Add the back stack
-        stackBuilder.addParentStack(activityClass);
-        // Add the Intent to the top of the stack
-        stackBuilder.addNextIntent(intent);
-        // Get a PendingIntent containing the entire back stack
-        PendingIntent pendingIntent =
-                stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pendingIntent;
     }
 
     /**

@@ -158,8 +158,8 @@ public class TodayActivity extends AppCompatActivity
         // Check if the activity was started from a notification
         Intent intent = getIntent();
         if (null != intent
-                && intent.getBooleanExtra(DetailsActivity.NOTIFICATION_ACTION_KEY, false)
-                && !intent.getBooleanExtra(DetailsActivity.CLASS_ACTIVITY_CONFIRMED_KEY, false)) {
+                && intent.getBooleanExtra(ClassActivityNotification.NOTIFICATION_ACTION_KEY, false)
+                && !intent.getBooleanExtra(ClassActivityNotification.CLASS_ACTIVITY_CONFIRMED_KEY, false)) {
             this.handleNotificationCancelAction(intent);
             RecentActivityFragment firstFragment = new RecentActivityFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, RecentActivityFragment.TAG).commit();
@@ -534,7 +534,7 @@ public class TodayActivity extends AppCompatActivity
 
     private void handleNotificationCancelAction(Intent notificationIntent) {
         // Retrieve the class activity id
-        long classActivityId = notificationIntent.getLongExtra(DetailsActivity.CLASS_ACTIVITY_ID_KEY, -1);
+        long classActivityId = notificationIntent.getLongExtra(ClassActivityNotification.CLASS_ACTIVITY_ID_KEY, -1);
 
         // Cancel the class activity
         mClassActivityDao = new ClassActivityDao();
@@ -543,6 +543,6 @@ public class TodayActivity extends AppCompatActivity
 
         // Dismiss the notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.toString(classActivityId), DetailsActivity.NOTIFICATION_ID);
+        notificationManager.cancel(Long.toString(classActivityId), ClassActivityNotification.NOTIFICATION_ID);
     }
 }
