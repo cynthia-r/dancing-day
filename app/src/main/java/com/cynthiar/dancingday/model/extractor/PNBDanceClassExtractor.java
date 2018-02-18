@@ -79,12 +79,13 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     }
 
     @Override
-    protected List<DummyItem> parseBaseElement(int elementIndex, Element classElement) {
+    protected ExtractorResults parseBaseElement(int elementIndex, Element classElement) {
+        List<DummyItem> classItemList = new ArrayList<>();
         try {
             NextElement nextElement = findNextChildElement(classElement, 0);
             Element firstChild = nextElement.getElement();
             if (null == firstChild)
-                return null;
+                return new ExtractorResults();
 
             String firstChildText = firstChild.text();
             if (firstChildText.equals("Class"))
@@ -92,9 +93,8 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
 
             DanceClassLevel level = this.parseLevel(firstChildText);
             if (DanceClassLevel.Unknown == level)
-                return null;
+                return new ExtractorResults();
 
-            List<DummyItem> classItemList = new ArrayList<>();
             int i=1;   // 6 days (no classes on Sunday)
             while (i <= 6) {
                 nextElement = findNextChildElement(classElement, nextElement.getNextN());
@@ -123,10 +123,10 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
                 }
                 i++;
             }
-            return classItemList;
+            return new ExtractorResults(classItemList);
         }
         catch (Exception e) {
-            return null;
+            return new ExtractorResults(classItemList, "Could not parse class element: " + e.getMessage());
         }
     }
 

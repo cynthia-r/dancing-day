@@ -20,7 +20,7 @@ import java.util.List;
 
 public abstract class HtmlDanceClassExtractor extends DanceClassExtractor<Document>{
     protected abstract String getSelector();
-    protected abstract List<DummyItem> parseBaseElement(int elementIndex, Element classElement);
+    protected abstract ExtractorResults parseBaseElement(int elementIndex, Element classElement);
 
     protected boolean validateElements(Elements elements) {
         return true;
@@ -35,29 +35,27 @@ public abstract class HtmlDanceClassExtractor extends DanceClassExtractor<Docume
     }
 
     @Override
-    public List<DummyItem> extract(Document doc) throws IOException {
+    public ExtractorResults extract(Document doc) throws IOException {
         String mainSelector = this.getSelector();
         Elements baseElements = doc.select(mainSelector);
 
         // Return empty list if nothing extracted
         if (null == baseElements || baseElements.size() == 0)
-            return new ArrayList<>();
+            return new ExtractorResults(new ArrayList<DummyItem>(), new ArrayList<String>());
 
         // Validate the elements found
         if (!this.validateElements(baseElements)) {
-            //DummyUtils.toast(mContext, "Invalid elements"); // Runtime exception
-            return new ArrayList<>();
+            return new ExtractorResults(new ArrayList<DummyItem>(), "Invalid elements");
         }
 
         // Keep the ballet classes only
-        List<DummyItem> dummyItemList = new ArrayList<>();
+        ExtractorResults extractorResults = new ExtractorResults();
         for (int i=0; i < baseElements.size(); i++
                 ) {
             Element classElement = baseElements.get(i);
-            List<DummyItem> classItemList = this.parseBaseElement(i, classElement);
-            if (null != classItemList && !classItemList.isEmpty())
-                dummyItemList.addAll(classItemList);
+            ExtractorResults currentExtractorResults = this.parseBaseElement(i, classElement);
+            extractorResults.addExtractorResults(currentExtractorResults);
         }
-        return dummyItemList;
+        return extractorResults;
     }
 }

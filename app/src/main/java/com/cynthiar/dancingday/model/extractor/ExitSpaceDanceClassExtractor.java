@@ -54,7 +54,7 @@ public class ExitSpaceDanceClassExtractor extends HtmlDanceClassExtractor {
     }*/ // TODO we are getting 9 of them
 
     @Override
-    protected List<DummyItem> parseBaseElement(int elementIndex, Element studioElement) {
+    protected ExtractorResults parseBaseElement(int elementIndex, Element studioElement) {
         // Base element is a studio
         List<DummyItem> dummyItemList = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class ExitSpaceDanceClassExtractor extends HtmlDanceClassExtractor {
         // Get the days
         Elements dayElements = studioElement.getElementsByClass("day");
         if (null == dayElements || 0 == dayElements.size())
-            return new ArrayList<>();
+            return new ExtractorResults();
 
         // Loop through each day
         for (int i=0; i < dayElements.size(); i++) {
@@ -114,7 +114,7 @@ public class ExitSpaceDanceClassExtractor extends HtmlDanceClassExtractor {
                 dummyItemList.add(classItem);
             }
         }
-        return dummyItemList;
+        return new ExtractorResults(dummyItemList);
     }
 
     private DanceClassLevel parseLevel(String levelText) {

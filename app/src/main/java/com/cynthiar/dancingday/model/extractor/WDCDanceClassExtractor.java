@@ -54,8 +54,9 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
     }
 
     @Override
-    public List<DummyItem> extract(Document doc) throws IOException {
+    public ExtractorResults extract(Document doc) throws IOException {
         Elements classes = doc.select(mainSelector);
+        String unexpectedMessage;
 
         // Return empty list if nothing extracted
         if (null == classes || classes.size() == 0) {
@@ -70,10 +71,10 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
             dummyItemList.add(new DummyItem("Friday", DanceClassTime.create("6:30-8:00pm"), Schools.WDC_SCHOOL, "Kim Gockel", DanceClassLevel.Intermediate));
             dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("10:00-11:30am"), Schools.WDC_SCHOOL, "Kim Gockel", DanceClassLevel.Intermediate));
             dummyItemList.add(new DummyItem("Sunday", DanceClassTime.create("1:00-2:00 pm"), Schools.WDC_SCHOOL, "Melissa Brown", DanceClassLevel.Beginner));
-            return dummyItemList;
+            return new ExtractorResults(dummyItemList);
         }
         else {
-            DummyUtils.toast(mContext, "WDC found something!");
+            unexpectedMessage = "WDC found something!";
         }
 
         List<DummyItem> dummyItemList = new ArrayList<>();
@@ -82,6 +83,6 @@ public class WDCDanceClassExtractor extends DanceClassExtractor<Document> {
 
         }
 
-        return dummyItemList;
+        return new ExtractorResults(dummyItemList, unexpectedMessage);
     }
 }

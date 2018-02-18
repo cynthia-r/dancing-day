@@ -9,6 +9,7 @@ import com.cynthiar.dancingday.data.IConsumerCallback;
 import com.cynthiar.dancingday.data.IProgress;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.model.extractor.ExtractorResults;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,8 +114,17 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
 
                 // Extract the items from the response
                 if (processedResult != null) {
-                    List<DummyItem> dummyItemList = mExtractor.extractItems(processedResult);
-                    result = new Result(new Pair<>(mKey, dummyItemList));
+                    ExtractorResults extractorResults = mExtractor.extractItems(processedResult);
+                    if (extractorResults.isSuccess())
+                        result = new Result(new Pair<>(mKey, extractorResults.getClassList()));
+                    else {
+                        StringBuilder exceptionMessageBuilder = new StringBuilder();
+                        for (String errorMessage:extractorResults.getErrorMessageList()
+                             ) {
+                            exceptionMessageBuilder.append(errorMessage);
+                        }
+                        result = new Result(new Exception(exceptionMessageBuilder.toString()));
+                    }
                 } else {
                     throw new IOException("No response received.");
                 }

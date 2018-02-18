@@ -47,7 +47,7 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
     }
 
     @Override
-    protected List<DummyItem> parseBaseElement(int elementIndex, Element classElement) {
+    protected ExtractorResults parseBaseElement(int elementIndex, Element classElement) {
         String classType = "";
         String classText = "";
         String levelText = "";
@@ -114,17 +114,16 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
             // Build and return the class object
             List<DummyItem> dummyItemList = new ArrayList<>();
             dummyItemList.add(new DummyItem(day, DanceClassTime.create(time), Schools.ADI_SCHOOL, teacher, level));
-            return dummyItemList;
+            return new ExtractorResults(dummyItemList);
         }
         catch (Exception e) {
-            String a = classElement.text();
-            System.out.print("Excluded: elementText:"+ classElement.text()
+            String errorMessage = "Excluded: elementText:"+ classElement.text()
                     + " classType: " + classType
                     + " classText: " + classText
                     + " levelText: " + levelText
                     + " classDescription: " + classDescription
-                    + "because of an exception: " + e.getMessage());
-            return null;
+                    + "because of an exception: " + e.getMessage();
+            return new ExtractorResults(errorMessage);
         }
 
     }

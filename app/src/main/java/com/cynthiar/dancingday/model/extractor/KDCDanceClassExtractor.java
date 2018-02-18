@@ -70,7 +70,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
     }
 
     @Override
-    public List<DummyItem> extract(String okay) {
+    public ExtractorResults extract(String okay) {
         List<DummyItem> dummyItemList = new ArrayList<>();
         dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), Schools.KDC_SCHOOL, "Jerri", DanceClassLevel.BeginnerIntermediate));
         dummyItemList.add(new DummyItem("Monday", DanceClassTime.create("6-7 pm"), Schools.KDC_SCHOOL, "Beinna", DanceClassLevel.BeginnerIntermediate));
@@ -81,7 +81,7 @@ public class KDCDanceClassExtractor extends DanceClassExtractor<String> {
         dummyItemList.add(new DummyItem("Thursday", DanceClassTime.create("6-7 pm"), Schools.KDC_SCHOOL, "Jerri", DanceClassLevel.Beginner));
         dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("10-11:30 am"), Schools.KDC_SCHOOL, "Jerri", DanceClassLevel.BeginnerIntermediate));
         dummyItemList.add(new DummyItem("Saturday", DanceClassTime.create("11:30 am-12:30 pm"), Schools.KDC_SCHOOL, "Jerri", DanceClassLevel.Pointe));
-        return dummyItemList;
+        return new ExtractorResults(dummyItemList);
     }
 
     public List<DummyItem> Extract(File pdfFile) throws IOException {
