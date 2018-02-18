@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cynthiar on 2/18/2018.
+ * Represents results from extracting dance class items from the web.
  */
 
 public class ExtractorResults {
@@ -42,16 +42,6 @@ public class ExtractorResults {
 
     public List<String> getErrorMessageList() {
         return this.errorMessageList;
-    }
-
-    public void addClasses(List<DummyItem> classList) {
-        if (null != classList && !classList.isEmpty())
-            this.classList.addAll(classList);
-    }
-
-    public void addErrorMessages(List<String> errorMessageList) {
-        if (null != errorMessageList && !errorMessageList.isEmpty())
-            this.errorMessageList.addAll(errorMessageList);
     }
 
     public void addExtractorResults(ExtractorResults extractorResults) {

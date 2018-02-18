@@ -11,11 +11,13 @@ import com.cynthiar.dancingday.model.Schools;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +45,12 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
     }
 
     @Override
-    public Certificate getCertificate() throws IOException {
+    public Certificate getCertificate() throws IOException, CertificateException {
         InputStream certificateInput = mContext.getResources().openRawResource(R.raw.wwwpnborg);
         Certificate certificate = null;
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             certificate = cf.generateCertificate(certificateInput);
-        }
-        catch (Exception e) {
-            DummyUtils.toast(mContext, e.getMessage());
         }
         finally {
             certificateInput.close();
@@ -110,16 +109,40 @@ public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
                     continue; // no class on that day
                 }
 
+                // Process each child node
+                // There might be multiple classes on a given day
                 int j=0;
-                while (j < dayClassElement.childNodes().size()) { // multiple classes on that day
-                    TextNode classInLevelElement = (TextNode)dayClassElement.childNode(j);
-                    String classInLevelText = classInLevelElement.text();
-                    if (null != classInLevelText && !classInLevelText.equals("")) {
-                        DummyItem classInLevel = parseClassText(classInLevelText, i, level);
-                        if (null != classInLevel)
-                            classItemList.add(classInLevel);
+                int childNodeSize = dayClassElement.childNodes().size();
+                while (j < childNodeSize) {
+                    // Retrieve the child node
+                    Node childNode = dayClassElement.childNode(j);
+
+                    // Check if the child node is a <strong> element
+                    if (childNode instanceof Element) {
+                        Element elementNode = (Element)childNode;
+
+                        // The <strong> element contains the time information
+                        if (elementNode.tagName().equals("strong")) {
+                            Node nextChildNode = childNode.nextSibling();
+
+                            // The next node contains the teacher information
+                            if (nextChildNode instanceof TextNode) {
+                                String classInLevelText = elementNode.text() + ((TextNode)nextChildNode).text();
+
+                                // Parse the class text
+                                if (null != classInLevelText && !classInLevelText.equals("")) {
+                                    DummyItem classInLevel = parseClassText(classInLevelText, i, level);
+                                    if (null != classInLevel) {
+                                        classItemList.add(classInLevel);
+                                    }
+                                }
+                                // Skip the next node, as it was processed with the current one
+                                j+=2;
+                            }
+                        }
                     }
-                    j+=2;
+                    // Continue looking for class nodes
+                    j++;
                 }
                 i++;
             }

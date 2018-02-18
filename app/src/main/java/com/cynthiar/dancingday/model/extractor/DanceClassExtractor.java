@@ -7,6 +7,7 @@ import com.cynthiar.dancingday.model.DummyItem;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public abstract class DanceClassExtractor<T> {
         return extract(htmlContent);
     }
 
-    public Certificate getCertificate() throws IOException {
+    public Certificate getCertificate() throws IOException, CertificateException {
         return null;
     }
 }
