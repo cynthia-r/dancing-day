@@ -38,25 +38,18 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
     }
 
     public DanceClassCard getCompatibleCard(Schools.DanceSchool school) {
-        // Retrieve the list of current class cards
-        List<DanceClassCard> classCardList = new DanceClassCardDao().getClassCardList();
-        // TODO filter by company directly
+        // Filter by school company
+        String selection = DanceClassCard.COLUMN_COMPANY + " = ?";
+        String[] selectionArgs = { school.getDanceCompany().Key };
 
-        // Return if no cards are available
-        if (null == classCardList ||classCardList.isEmpty())
-            return null;
+        // Sort by purchase date
+        String sortOrder = DanceClassCard.COLUMN_PURCHASE_DATE + " ASC";
 
-        // Try to find a compatible card for this class
-        DanceClassCard cardToUse = null;
-        Iterator<DanceClassCard> danceClassCardIterator = classCardList.iterator();
-        do {
-            DanceClassCard danceClassCard = danceClassCardIterator.next();
-            if (school.isInCompany(danceClassCard.getCompany())
-                    && danceClassCard.isValid())
-                cardToUse = danceClassCard;
-        }
-        while (null == cardToUse && danceClassCardIterator.hasNext());
-        return cardToUse;
+        // Retrieve the first available class card in this company
+        DanceClassCard classCard = this.retrieveEntity(selection, selectionArgs, null, null, sortOrder);
+
+        // Return the card found (null if no card was found)
+        return classCard;
     }
 
     public long saveCard(DanceClassCard danceClassCard){

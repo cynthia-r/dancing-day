@@ -53,26 +53,37 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
-            android:id="@+id/payment_type"
+            android:id="@+id/payment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/text_margin"
             android:layout_marginTop="@dimen/small_text_margin"
-            android:text="Payment: Ticket"
             android:layout_below="@id/level"
-            android:layout_alignParentLeft="true"
+            android:text="Payment:"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-        <Button
-            android:id="@+id/editPaymentType"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@android:drawable/ic_menu_edit"
+        <FrameLayout
+            android:id="@+id/payment_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_text_margin"
-            android:layout_marginTop="@dimen/small_text_margin"
-            android:layout_toRightOf="@id/payment_type"
-            android:layout_alignBottom="@id/payment_type"
-            android:onClick="editPaymentType"/>
+            android:layout_alignBottom="@id/payment_text"
+            android:layout_toRightOf="@id/payment_text">
+
+            <ImageButton
+                android:id="@+id/payment_ticket"
+                android:layout_width="35dp"
+                android:layout_height="25dp"
+                android:background="@mipmap/ic_ticket"
+                android:onClick="editPaymentType"/>
+
+            <ImageButton
+                android:id="@+id/payment_card"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:background="@mipmap/ic_cards"
+                android:onClick="editPaymentType" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/teacher"

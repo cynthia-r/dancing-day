@@ -8,6 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.ClassActivityNotification;
@@ -51,7 +54,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         levelView.setText(danceClass.level.toString());
 
         // Set payment type view
-        this.setPaymentTypeView(mClassActivity.getPaymentType());
+        this.setPaymentTypeViews(mClassActivity.getPaymentType());
 
         // Setup toolbar
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -142,7 +145,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
                     }
 
                     // Set the payment type view
-                    setPaymentTypeView(paymentTypeToSet);
+                    setPaymentTypeViews(paymentTypeToSet);
                 }
             })
             .setNegativeButton(android.R.string.no, null) // No action
@@ -177,21 +180,24 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
             .show();
     }
 
-    private void setPaymentTypeView(PaymentType paymentTypeToSet) {
-        // Retrieve the payment type view
-        TextView paymentView = (TextView) findViewById(R.id.payment_type);
+    private void setPaymentTypeViews(PaymentType paymentTypeToSet) {
+        // Retrieve the payment type views
+        ImageButton cardView = (ImageButton) findViewById(R.id.payment_card);
+        ImageButton ticketView = (ImageButton) findViewById(R.id.payment_ticket);
+        Button cancelDebitButton = (Button) findViewById(R.id.cancelDebit);
 
-        // Set payment text and display the "Cancel Debit" button for card payments
+        // Set payment view and display the "Cancel Debit" button for card payments
         String paymentText;
         if (PaymentType.PunchCard == paymentTypeToSet) {
-            paymentText = "Card";
-            findViewById(R.id.cancelDebit).setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.VISIBLE);
+            ticketView.setVisibility(View.GONE);
+            cancelDebitButton.setVisibility(View.VISIBLE);
         }
         else {
-            paymentText = "Ticket";
-            findViewById(R.id.cancelDebit).setVisibility(View.GONE);
+            ticketView.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.GONE);
+            cancelDebitButton.setVisibility(View.GONE);
         }
-        paymentView.setText("Payment: " + paymentText);
     }
 
     private void handleNotificationConfirmAction(Intent notificationIntent) {

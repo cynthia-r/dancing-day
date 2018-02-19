@@ -20,14 +20,21 @@ public class Schools {
 
         public static DanceSchool Unknown = new DanceSchool("Unknown", "", "", "");
 
-        public boolean isInCompany(DanceCompany danceCompany) {
-            int i=0;
-            while (i < danceCompany.DanceSchools.length) {
-                if (danceCompany.DanceSchools[i].Key == this.Key)
-                    return true;
-                i++;
+        public DanceCompany getDanceCompany() {
+            // Loop through the dance companies until we find a match
+            int j=0;
+            while ( j < Schools.COMPANIES.length) {
+                DanceCompany danceCompany = Schools.COMPANIES[j];
+                int i=0;
+                while (i < danceCompany.DanceSchools.length) {
+                    if (danceCompany.DanceSchools[i].Key == this.Key)
+                        return danceCompany;
+                    i++;
+                }
             }
-            return false;
+
+            // No company found
+            return null;
         }
 
         @Override

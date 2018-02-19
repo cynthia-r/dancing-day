@@ -22,7 +22,8 @@ public abstract class AppDao<T> {
     protected abstract long getRowId(T entity);
 
     protected List<T> retrieveEntities(String selection, String[] selectionArgs,
-                                       String groupBy, String having, String orderBy) {
+                                       String groupBy, String having, String orderBy,
+                                       int count) {
         // Get a readable instance of the database
         SQLiteDatabase db = AppDatabase.getInstance().getReadableDatabase();
 
@@ -33,10 +34,26 @@ public abstract class AppDao<T> {
         Cursor cursor = db.query(this.getTableName(), projection, selection,
                 selectionArgs, groupBy, having, orderBy);
         List<T> entityList = new ArrayList<>();
-        while (cursor.moveToNext()) {
+        int currentCount = 0;
+        while (currentCount < count && cursor.moveToNext()) {
             entityList.add(this.readRow(cursor));
+            currentCount++;
         }
         return entityList;
+    }
+
+    protected List<T> retrieveEntities(String selection, String[] selectionArgs,
+                                       String groupBy, String having, String orderBy) {
+        return this.retrieveEntities(selection, selectionArgs, groupBy, having, orderBy, Integer.MAX_VALUE);
+    }
+
+    protected T retrieveEntity(String selection, String[] selectionArgs,
+                                       String groupBy, String having, String orderBy) {
+        List<T> entityList = this.retrieveEntities(selection, selectionArgs, groupBy, having, orderBy, 1);
+        if ((null != entityList) && !entityList.isEmpty())
+            return entityList.get(0);
+        else
+            return null;
     }
 
     protected long insertEntity(T entity){
