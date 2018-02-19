@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by CynthiaR on 9/24/2017.
+ * Represents a class activity: i.e. when the user attended a dance class.
  */
 
 public class ClassActivity implements BaseColumns {
@@ -69,16 +69,8 @@ public class ClassActivity implements BaseColumns {
         return dummyItem;
     }
 
-    public void setDanceClass(DummyItem dummyItem) {
-        this.dummyItem = dummyItem;
-    }
-
     public DateTime getDate() {
         return date;
-    }
-
-    public void setDate(DateTime date) {
-        this.date = date;
     }
 
     public PaymentType getPaymentType() {
@@ -98,11 +90,6 @@ public class ClassActivity implements BaseColumns {
             return null;
     }
 
-    public void setDanceClassCard(DanceClassCard danceClassCard) {
-        this.danceClassCard = danceClassCard;
-        this.danceClassCardId = danceClassCard.getId();
-    }
-
     public long getDanceClassCardId() {
         if (0 != this.danceClassCardId)
             return this.danceClassCardId;
@@ -110,6 +97,10 @@ public class ClassActivity implements BaseColumns {
             return this.danceClassCard.getId();
         else
             return 0;
+    }
+
+    public void setDanceClassCard(DanceClassCard danceClassCard) {
+        this.danceClassCard = danceClassCard;
     }
 
     public boolean isConfirmed() {
@@ -137,32 +128,13 @@ public class ClassActivity implements BaseColumns {
 
         // Determine the payment type and if to use a card
         PaymentType paymentType;
-        DanceClassCard cardToUse = null;
-
-        // Retrieve the list of current class cards
-        List<DanceClassCard> classCardList = new DanceClassCardDao().getClassCardList();
-        // TODO filter by company directly
+        DanceClassCard cardToUse = new DanceClassCardDao().getCompatibleCard(danceClass.school);
 
         // If there are no cards available, a single ticket is used
-        if (null == classCardList || classCardList.isEmpty())
+        if (null == cardToUse)
             paymentType = PaymentType.SingleTicket;
-        else {
-            // Try to find a compatible card for this class
-            Iterator<DanceClassCard> danceClassCardIterator = classCardList.iterator();
-            do {
-                DanceClassCard danceClassCard = danceClassCardIterator.next();
-                if (danceClass.school.isInCompany(danceClassCard.getCompany())
-                        && danceClassCard.isValid())
-                    cardToUse = danceClassCard;
-            }
-            while (null == cardToUse && danceClassCardIterator.hasNext());
-
-            // If a card was found use it
-            if (null == cardToUse)
-                paymentType = PaymentType.SingleTicket;
-            else
-                paymentType = PaymentType.PunchCard;
-        }
+        else
+            paymentType = PaymentType.PunchCard;
 
         // Build and return the new activity
         return new ClassActivity(danceClass, DateTime.now(), paymentType, cardToUse);

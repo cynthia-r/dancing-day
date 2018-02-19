@@ -1,8 +1,10 @@
 package com.cynthiar.dancingday.recentactivity;
 
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -43,17 +45,13 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         TextView schoolView = (TextView) findViewById(R.id.school);
         TextView teacherView = (TextView) findViewById(R.id.teacher);
         TextView levelView = (TextView) findViewById(R.id.level);
-        TextView paymentView = (TextView) findViewById(R.id.payment_type);
         timeView.setText(danceClass.danceClassTime.toString());
         schoolView.setText(danceClass.school.Key);
         teacherView.setText(danceClass.teacher);
         levelView.setText(danceClass.level.toString());
-        String paymentText;
-        if (PaymentType.PunchCard == mClassActivity.getPaymentType())
-            paymentText = "Card";
-        else
-            paymentText = "Ticket";
-        paymentView.setText("Payment: " + paymentText);
+
+        // Set payment type view
+        this.setPaymentTypeView(mClassActivity.getPaymentType());
 
         // Setup toolbar
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -85,10 +83,70 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
      * @param view: The "Delete activity" button.
      */
     public void deleteActivity(View view) {
-        // TODO - show dialog confirm
-        mClassActivityDao.deleteActivity(mClassActivity);
-        DummyUtils.toast(this, "Activity deleted");
-        finish();
+        // Show confirmation dialog
+        new AlertDialog.Builder(this)
+            .setTitle("Delete activity")
+            .setMessage("Are you sure you want to delete this activity ?")
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Delete the class activity
+                    mClassActivityDao.deleteActivity(mClassActivity);
+                    DummyUtils.toast(getApplicationContext(), "Activity deleted");
+
+                    // Close the activity
+                    finish();
+                }
+            })
+            .setNegativeButton(android.R.string.no, null) // No action
+            .show();
+    }
+
+    /**
+     * Edits the payment type.
+     * @param view: The "Edit payment type" button.
+     */
+    public void editPaymentType(View view) {
+        // Retrieve the current payment type
+        PaymentType currentPaymentType = mClassActivity.getPaymentType();
+
+        // Determine the change of payment type
+        boolean ticketToCard = PaymentType.SingleTicket == currentPaymentType;
+        PaymentType newPaymentType = PaymentType.PunchCard;
+        String currentPaymentTypeString = "ticket";
+        String newPaymentTypeString = "punch card";
+
+        // Check if we're changing from a card to a ticket
+        if (!ticketToCard) {
+            newPaymentType = PaymentType.SingleTicket;
+            currentPaymentTypeString = "punch card";
+            newPaymentTypeString = "ticket";
+        }
+        final PaymentType paymentTypeToSet = newPaymentType;
+
+        // Show confirmation dialog
+        new AlertDialog.Builder(this)
+            .setTitle("Edit payment type")
+            .setMessage("A " + currentPaymentTypeString + " was used for this class activity." +
+                    " Do you want to change it to a " + newPaymentTypeString + " ?")
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Edit payment type
+                    try {
+                        mClassActivityDao.editPaymentType(mClassActivity, paymentTypeToSet);
+                    }
+                    catch (Exception e) {
+                        DummyUtils.toast(getApplicationContext(), "Failed to edit payment type: " + e.getMessage());
+                        return;
+                    }
+
+                    // Set the payment type view
+                    setPaymentTypeView(paymentTypeToSet);
+                }
+            })
+            .setNegativeButton(android.R.string.no, null) // No action
+            .show();
     }
 
     /**
@@ -96,16 +154,44 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
      * @param view: The "cancel debit" button
      */
     public void cancelDebit(View view) {
-        // TODO - show dialog confirm
-        mClassActivityDao.cancelActivity(mClassActivity);
-        DummyUtils.toast(this, "Activity cancelled");
+        // Show confirmation dialog
+        new AlertDialog.Builder(this)
+            .setTitle("Cancel debit")
+            .setMessage("Are you sure you want to cancel this activity ?")
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Cancel the class activity
+                    mClassActivityDao.cancelActivity(mClassActivity);
+                    DummyUtils.toast(getApplicationContext(), "Activity cancelled");
 
+                    // Dismiss the notification
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.cancel(Long.toString(mClassActivity.getId()), ClassActivityNotification.NOTIFICATION_ID);
 
-        // Dismiss the notification
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.toString(mClassActivity.getId()), ClassActivityNotification.NOTIFICATION_ID);
+                    // Close the activity
+                    finish();
+                }
+            })
+            .setNegativeButton(android.R.string.no, null) // No action
+            .show();
+    }
 
-        finish();
+    private void setPaymentTypeView(PaymentType paymentTypeToSet) {
+        // Retrieve the payment type view
+        TextView paymentView = (TextView) findViewById(R.id.payment_type);
+
+        // Set payment text and display the "Cancel Debit" button for card payments
+        String paymentText;
+        if (PaymentType.PunchCard == paymentTypeToSet) {
+            paymentText = "Card";
+            findViewById(R.id.cancelDebit).setVisibility(View.VISIBLE);
+        }
+        else {
+            paymentText = "Ticket";
+            findViewById(R.id.cancelDebit).setVisibility(View.GONE);
+        }
+        paymentView.setText("Payment: " + paymentText);
     }
 
     private void handleNotificationConfirmAction(Intent notificationIntent) {

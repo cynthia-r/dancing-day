@@ -103,6 +103,44 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         return null;
     }
 
+    public boolean editPaymentType(ClassActivity classActivity, PaymentType newPaymentType) throws Exception {
+        // Check if there's a change needed
+        PaymentType currentPaymentType = classActivity.getPaymentType();
+        if ((null == classActivity) || (newPaymentType == currentPaymentType))
+            return false;
+
+        // If the current payment is a card, credit it
+        if (PaymentType.PunchCard == currentPaymentType) {
+            // Credit
+            DanceClassCard cardToUse = classActivity.getDanceClassCard();
+            cardToUse.credit();
+
+            // Update the card
+            danceClassCardDao.updateCard(cardToUse);
+
+            // Unlink the activity from the card
+            classActivity.setDanceClassCard(null);
+        }
+        // If the current payment is a ticket, find the new card and debit it
+        else {
+            // Debit and update the card
+            DanceClassCard cardToUse = danceClassCardDao.getCompatibleCard(classActivity.getDanceClass().school);
+            if (null != cardToUse) {
+                cardToUse.debit();
+                danceClassCardDao.updateCard(cardToUse);
+
+                // Link the activity to the card
+                classActivity.setDanceClassCard(cardToUse);
+            }
+            else
+                throw new Exception("Cannot change payment ticket to a card: there was no compatible card available.");
+        }
+
+        // Set the payment type and update the class activity
+        classActivity.setPaymentType(newPaymentType);
+        return this.updateEntity(classActivity) > 0;
+    }
+
     @Override
     protected String getTableName() {
         return ClassActivity.TABLE;
@@ -138,7 +176,7 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         values.put(ClassActivity.COLUMN_CLASS, classActivity.getDanceClass().toKey());
         values.put(ClassActivity.COLUMN_DATE, classActivity.getDate().toString(ClassActivity.dateTimeFormatter));
         values.put(ClassActivity.COLUMN_PAYMENT_TYPE, classActivity.getPaymentType().toString());
-        values.put(ClassActivity.COLUMN_CARD_ID, classActivity.getDanceClassCard().getId());
+        values.put(ClassActivity.COLUMN_CARD_ID, classActivity.getDanceClassCardId());
         values.put(ClassActivity.COLUMN_IS_CONFIRMED, classActivity.isConfirmed());
         return values;
     }

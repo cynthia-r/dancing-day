@@ -84,10 +84,6 @@ public class DanceClassCard implements BaseColumns {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(DateTime purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
     public boolean isValid() {
         return this.count > 0 && this.expirationDate.isAfterNow();
     }
