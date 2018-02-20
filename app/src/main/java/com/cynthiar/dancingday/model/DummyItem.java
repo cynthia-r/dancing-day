@@ -2,10 +2,13 @@ package com.cynthiar.dancingday.model;
 
 import android.content.Context;
 
+import com.cynthiar.dancingday.SettingsActivity;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
+
+import org.joda.time.LocalTime;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,32 +42,32 @@ public class DummyItem {
         The time range is 1h30 before to 10 minutes after.
      */
     public boolean isNow() {
-        return true;
-        /*// Check the day and time
+        // Always return true in test mode
+        if (SettingsActivity.testModeOn)
+            return true;
+
+        // Check the day and time
         LocalTime currentTime = LocalTime.now();
         return (this.day == DummyUtils.getCurrentDay()
             && this.danceClassTime.startTime.minusMinutes(90).isBefore(currentTime)
-            && this.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime));*/
+            && this.danceClassTime.startTime.plusMinutes(10).isAfter(currentTime));
     }
 
-    public boolean activityExists(Context context) {
-        if (null == context)
-            return false;
-
-        // Retrieve the list of past activities
-        List<ClassActivity> activityList = this.classActivityDao.getActivityList();
+    public boolean activityExists() {
+        // Retrieve the list of past activities matching this dance class
+        List<ClassActivity> activityList = this.classActivityDao.getActivityListByDanceClass(this.toKey());
         if (null == activityList || activityList.isEmpty())
             return false;
-        // TODO filter by date directly
+
         // Check if there is an existing activity for this class
         Iterator<ClassActivity> activityIterator = activityList.iterator();
         boolean activityExists = false;
         while (activityIterator.hasNext() && !activityExists) {
             ClassActivity activity = activityIterator.next();
-            SingleDayDummyItemComparer classComparer = new SingleDayDummyItemComparer();
-            activityExists = activity.isCurrent() && (0 == classComparer.compare(activity.getDanceClass(), this));
+            activityExists = activity.isCurrent();
         }
 
+        // Return whether the activity exists
         return activityExists;
     }
 

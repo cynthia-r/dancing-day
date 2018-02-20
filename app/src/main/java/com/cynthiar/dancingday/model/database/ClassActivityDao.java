@@ -19,6 +19,33 @@ import java.util.List;
 public class ClassActivityDao extends AppDao<ClassActivity> {
     private DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
 
+    public List<ClassActivity> getActivityList() {
+        // Sort by most recent activity
+        String sortOrder = ClassActivity.COLUMN_DATE + " DESC";
+        return this.retrieveEntities(null, null, null, null, sortOrder);
+    }
+
+    public ClassActivity getActivityById(long classActivityId) {
+        // Filter by ID
+        String selection = ClassActivity._ID + " = ?";
+        String[] selectionArgs = { Long.toString(classActivityId) };
+
+        // Retrieve the class activity
+        return this.retrieveEntity(selection, selectionArgs, null, null, null);
+    }
+
+    public List<ClassActivity> getActivityListByDanceClass(String danceClassKey) {
+        // Filter by ID
+        String selection = ClassActivity.COLUMN_CLASS + " = ?";
+        String[] selectionArgs = { danceClassKey };
+
+        // Sort by most recent activity
+        String sortOrder = ClassActivity.COLUMN_DATE + " DESC";
+
+        // Retrieve the class activities
+        return this.retrieveEntities(selection, selectionArgs, null, null, sortOrder);
+    }
+
     public long registerActivity(ClassActivity classActivity) throws Exception {
         if (null == classActivity)
             return -1;
@@ -83,24 +110,6 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
 
         // Cancel the activity
         this.deleteEntity(classActivity);
-    }
-
-    public List<ClassActivity> getActivityList() {
-        // Sort by most recent activity
-        String sortOrder = ClassActivity.COLUMN_DATE + " DESC";
-        return this.retrieveEntities(null, null, null, null, sortOrder);
-    }
-
-    public ClassActivity getActivityById(long classActivityId) {
-        // Filter by ID
-        String selection = ClassActivity._ID + " = ?";
-        String[] selectionArgs = { Long.toString(classActivityId) };
-
-        // Retrieve the card
-        List<ClassActivity> classActivityList = this.retrieveEntities(selection, selectionArgs, null, null, null);
-        if (!classActivityList.isEmpty())
-            return classActivityList.get(0);
-        return null;
     }
 
     public boolean editPaymentType(ClassActivity classActivity, PaymentType newPaymentType) throws Exception {

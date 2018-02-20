@@ -23,7 +23,7 @@ public class Schools {
         public DanceCompany getDanceCompany() {
             // Loop through the dance companies until we find a match
             int j=0;
-            while ( j < Schools.COMPANIES.length) {
+            while (j < Schools.COMPANIES.length) {
                 DanceCompany danceCompany = Schools.COMPANIES[j];
                 int i=0;
                 while (i < danceCompany.DanceSchools.length) {
@@ -31,6 +31,7 @@ public class Schools {
                         return danceCompany;
                     i++;
                 }
+                j++;
             }
 
             // No company found

@@ -3,6 +3,7 @@ package com.cynthiar.dancingday.model.classActivity;
 import android.content.Context;
 import android.provider.BaseColumns;
 
+import com.cynthiar.dancingday.SettingsActivity;
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
@@ -116,6 +117,10 @@ public class ClassActivity implements BaseColumns {
         The time range is 1h30 before the current time to 10 minutes after.
      */
     public boolean isCurrent() {
+        // Always return true in test mode
+        if (SettingsActivity.testModeOn)
+            return true;
+
         // Check the day and time
         DateTime currentTime = DateTime.now();
         return (currentTime.minusMinutes(90).isBefore(this.date)

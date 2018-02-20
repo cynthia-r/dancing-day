@@ -3,10 +3,12 @@ package com.cynthiar.dancingday;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -148,6 +150,9 @@ public class TodayActivity extends AppCompatActivity
         DanceClassDataProvider danceClassDataProvider = new DanceClassDataProvider(this);
         mDanceClassCache = new DataCache<>(danceClassDataProvider, this);
 
+        // Initialize settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         // Initialize database
         AppDatabase.initializeDb(this);
 
@@ -190,6 +195,10 @@ public class TodayActivity extends AppCompatActivity
 
         int currentPosition = this.getCurrentPosition(this.getCurrentFragment());
         mDrawerList.setItemChecked(currentPosition, true);
+
+        // Check settings changes
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SettingsActivity.testModeOn = sharedPreferences.getBoolean(SettingsActivity.TEST_MODE_SWITCH, false);
     }
 
     @Override
@@ -245,8 +254,9 @@ public class TodayActivity extends AppCompatActivity
         int id = item.getItemId();
 
         // Return true if the settings button was touched
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

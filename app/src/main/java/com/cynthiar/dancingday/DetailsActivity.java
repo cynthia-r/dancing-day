@@ -180,7 +180,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
             // Register a new activity if the class is about to start
             // and there is no current activity for this class
-            if (mDanceClass.isNow() && !mDanceClass.activityExists(this)) {
+            if (mDanceClass.isNow() && !mDanceClass.activityExists()) {
                 ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
                 try {
                     // Build a notification

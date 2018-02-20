@@ -89,7 +89,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Show confirmation dialog
         new AlertDialog.Builder(this)
             .setTitle("Delete activity")
-            .setMessage("Are you sure you want to delete this activity ?")
+            .setMessage("Are you sure you want to delete this activity?")
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -131,7 +131,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
             .setTitle("Edit payment type")
             .setMessage("A " + currentPaymentTypeString + " was used for this class activity." +
-                    " Do you want to change it to a " + newPaymentTypeString + " ?")
+                    " Do you want to change it to a " + newPaymentTypeString + "?")
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -160,7 +160,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Show confirmation dialog
         new AlertDialog.Builder(this)
             .setTitle("Cancel debit")
-            .setMessage("Are you sure you want to cancel this activity ?")
+            .setMessage("Are you sure you want to cancel this activity?")
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
