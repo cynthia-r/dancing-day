@@ -10,6 +10,8 @@ import com.cynthiar.dancingday.model.classActivity.PaymentType;
 
 import org.joda.time.DateTime;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -150,6 +152,27 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         return this.updateEntity(classActivity) > 0;
     }
 
+    public int confirmPendingActivities() {
+        DateTime thresholdDate = DateTime.now().minusDays(1);
+        String selection = ClassActivity.COLUMN_IS_CONFIRMED + " = ? AND " + ClassActivity.COLUMN_DATE + " < ?";
+        String[] selectionArgs = new String[] { Boolean.toString(false), thresholdDate.toString(ClassActivity.dateTimeFormatter) };
+
+        HashMap<String, String> columnValues = new HashMap<>();
+        columnValues.put(ClassActivity.COLUMN_IS_CONFIRMED, Boolean.toString(true));
+
+        return this.updateColumns(columnValues, selection, selectionArgs);
+    }
+
+    public int deleteOldActivities() {
+        // Filter based on the threshold date
+        DateTime oldActivityThresholdDate = DateTime.now().minusDays(15);
+        String selection = ClassActivity.COLUMN_DATE + " < ?";
+        String[] selectionArgs = { oldActivityThresholdDate.toString(ClassActivity.dateTimeFormatter) };
+
+        // Delete the old class activities
+        return this.deleteEntities(selection, selectionArgs);
+    }
+
     @Override
     protected String getTableName() {
         return ClassActivity.TABLE;
@@ -186,7 +209,7 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         values.put(ClassActivity.COLUMN_DATE, classActivity.getDate().toString(ClassActivity.dateTimeFormatter));
         values.put(ClassActivity.COLUMN_PAYMENT_TYPE, classActivity.getPaymentType().toString());
         values.put(ClassActivity.COLUMN_CARD_ID, classActivity.getDanceClassCardId());
-        values.put(ClassActivity.COLUMN_IS_CONFIRMED, classActivity.isConfirmed());
+        values.put(ClassActivity.COLUMN_IS_CONFIRMED, Boolean.toString(classActivity.isConfirmed()));
         return values;
     }
 

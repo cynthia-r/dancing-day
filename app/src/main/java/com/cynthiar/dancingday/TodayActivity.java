@@ -38,6 +38,7 @@ import com.cynthiar.dancingday.model.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.model.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
+import com.cynthiar.dancingday.recentactivity.ClassActivityBackgroundTask;
 import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -155,6 +156,7 @@ public class TodayActivity extends AppCompatActivity
 
         // Initialize database
         AppDatabase.initializeDb(this);
+        mClassActivityDao = new ClassActivityDao();
 
         // Setup the network fragment
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassDataProvider);
@@ -175,6 +177,21 @@ public class TodayActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, firstFragment, SingleDayFragment.TAG).commit();
         }
         mReloadFragmentOnResume = false;
+
+        // Run the background task for class activities
+        final Context currentContext = this;
+        new ClassActivityBackgroundTask(mClassActivityDao, new IConsumerCallback<ClassActivityBackgroundTask.ClassActivityBackgroundResult>() {
+
+            @Override
+            public void updateFromResult(ClassActivityBackgroundTask.ClassActivityBackgroundResult result) {
+                if (null == result)
+                    return;
+                if (0 < result.getConfirmedActivityCount())
+                    DummyUtils.toast(currentContext, result.getConfirmedActivityCount() + " class activities were automatically confirmed.");
+                if (0 < result.getDeletedOldActivityCount())
+                    DummyUtils.toast(currentContext, result.getDeletedOldActivityCount() + " old class activities were automatically deleted.");
+            }
+        }).execute();
     }
 
     @Override
@@ -547,7 +564,6 @@ public class TodayActivity extends AppCompatActivity
         long classActivityId = notificationIntent.getLongExtra(ClassActivityNotification.CLASS_ACTIVITY_ID_KEY, -1);
 
         // Cancel the class activity
-        mClassActivityDao = new ClassActivityDao();
         mClassActivityDao.cancelActivity(classActivityId);
         DummyUtils.toast(this, "Cancelled");
 
