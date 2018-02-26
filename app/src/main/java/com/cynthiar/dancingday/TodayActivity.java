@@ -39,6 +39,7 @@ import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
 import com.cynthiar.dancingday.model.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.recentactivity.ClassActivityBackgroundTask;
+import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -179,13 +180,13 @@ public class TodayActivity extends AppCompatActivity
         mReloadFragmentOnResume = false;
 
         // Run the background task for class activities
-        final Context currentContext = this;
         new ClassActivityBackgroundTask(mClassActivityDao, new IConsumerCallback<ClassActivityBackgroundTask.ClassActivityBackgroundResult>() {
 
             @Override
             public void updateFromResult(ClassActivityBackgroundTask.ClassActivityBackgroundResult result) {
                 if (null == result)
                     return;
+                Context currentContext = getApplicationContext();
                 if (0 < result.getConfirmedActivityCount())
                     DummyUtils.toast(currentContext, result.getConfirmedActivityCount() + " class activities were automatically confirmed.");
                 if (0 < result.getDeletedOldActivityCount())

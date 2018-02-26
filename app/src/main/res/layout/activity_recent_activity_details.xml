@@ -53,6 +53,18 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
+            android:id="@+id/teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="3dp"
+            android:text="Lindsay"
+            android:textStyle="italic"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/level"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
             android:id="@+id/payment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,15 +98,14 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/teacher"
+            android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/text_margin"
-            android:layout_marginTop="3dp"
-            android:text="Lindsay"
-            android:textStyle="italic"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/level"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/payment_type"
+            android:text="Status: Pending"
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <ImageButton android:id="@+id/deleteActivity"
@@ -109,7 +120,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/payment_type"
+            android:layout_below="@id/status"
             android:layout_marginTop="@dimen/text_margin">
 
             <Button

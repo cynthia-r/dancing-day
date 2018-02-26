@@ -22,6 +22,7 @@ import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 
 /**
  * Activity for the detailed view of a given dance class.

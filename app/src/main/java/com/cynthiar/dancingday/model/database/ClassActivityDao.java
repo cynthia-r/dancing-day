@@ -76,13 +76,13 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         this.deleteEntity(classActivity);
     }
 
-    public void confirmActivity(ClassActivity classActivity) {
+    public boolean confirmActivity(ClassActivity classActivity) {
         if (null == classActivity)
-            return;
+            return false;
 
         // Update the activity to be confirmed
         classActivity.confirm();
-        this.updateEntity(classActivity);
+        return 1 == this.updateEntity(classActivity);
     }
 
     public void cancelActivity(long classActivityId) {

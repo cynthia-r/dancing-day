@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.recentactivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.ClassActivityNotification;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
@@ -66,6 +66,12 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
         activityDateView.setText(classActivity.getDate().toString(CardListViewAdapter.ExpirationDateFormatter));
         activityTimeView.setText(danceClass.danceClassTime.toString());
         schoolView.setText(danceClass.school.Key);
+
+        // Make text italic if the activity is pending confirmation
+        if (!classActivity.isConfirmed()) {
+            activityDateView.setTypeface(activityDateView.getTypeface(), Typeface.BOLD_ITALIC);
+            activityTimeView.setTypeface(activityTimeView.getTypeface(), Typeface.ITALIC);
+        }
 
         // Set payment type view
         ImageView paymentTypeCardView = (ImageView)convertView.findViewById(R.id.payment_card);

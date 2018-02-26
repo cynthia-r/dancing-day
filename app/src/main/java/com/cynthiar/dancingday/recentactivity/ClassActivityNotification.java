@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday;
+package com.cynthiar.dancingday.recentactivity;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.cynthiar.dancingday.DetailsActivity;
+import com.cynthiar.dancingday.R;
+import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.DummyItem;
-import com.cynthiar.dancingday.recentactivity.RecentActivityDetailsActivity;
 
 /**
  * Manages building the notification for class activities.

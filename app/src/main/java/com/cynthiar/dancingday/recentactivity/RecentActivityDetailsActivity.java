@@ -1,6 +1,8 @@
 package com.cynthiar.dancingday.recentactivity;
 
+import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cynthiar.dancingday.ClassActivityNotification;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
 import com.cynthiar.dancingday.model.DummyItem;
@@ -42,6 +42,13 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         long classActivityId = intent.getLongExtra(ClassActivityNotification.CLASS_ACTIVITY_ID_KEY, -1);
         mClassActivity = mClassActivityDao.getActivityById(classActivityId);
         DummyItem danceClass = mClassActivity.getDanceClass();
+        boolean isConfirmed = mClassActivity.isConfirmed();
+
+        // Check if the activity was opened from a notification action
+        boolean notification = intent.getBooleanExtra(ClassActivityNotification.NOTIFICATION_ACTION_KEY, false);
+        if (notification) {
+            isConfirmed = isConfirmed | this.handleNotificationConfirmAction(intent);
+        }
 
         // Set text in views
         TextView timeView = (TextView) findViewById(R.id.activity_time);
@@ -52,6 +59,9 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         schoolView.setText(danceClass.school.Key);
         teacherView.setText(danceClass.teacher);
         levelView.setText(danceClass.level.toString());
+
+        // Set status view
+        this.setStatusView(isConfirmed);
 
         // Set payment type view
         this.setPaymentTypeViews(mClassActivity.getPaymentType());
@@ -67,12 +77,6 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Setup action bar buttons
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        // Check if the activity was opened from a notification action
-        boolean notification = intent.getBooleanExtra(ClassActivityNotification.NOTIFICATION_ACTION_KEY, false);
-        if (notification) {
-            this.handleNotificationConfirmAction(intent);
-        }
     }
 
     @Override
@@ -200,16 +204,63 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void handleNotificationConfirmAction(Intent notificationIntent) {
+    private void setStatusView(boolean isConfirmed) {
+        TextView statusView = (TextView) findViewById(R.id.status);
+        if (isConfirmed) {
+            statusView.setText("Status: Confirmed");
+            statusView.setClickable(false);
+        }
+        else {
+            statusView.setText("Status: Pending");
+
+            // Initialize dialog for confirming the activity
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+                    .setTitle("Confirm activity")
+                    .setMessage("Do you want to confirm this activity?")
+                    .setPositiveButton(android.R.string.yes, new PositiveStatusDialogClickListener(statusView))
+                    .setNegativeButton(android.R.string.no, null); // No action
+
+            // Setup onclick listener
+            statusView.setClickable(true);
+            statusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogBuilder.show();
+                }
+            });
+        }
+    }
+
+    private boolean handleNotificationConfirmAction(Intent notificationIntent) {
         // Check if the activity is confirmed
-        boolean confirmed = notificationIntent.getBooleanExtra(ClassActivityNotification.CLASS_ACTIVITY_CONFIRMED_KEY, false);
-        if (confirmed) {
+        boolean confirmed = false;
+        boolean confirmFromNotification = notificationIntent.getBooleanExtra(ClassActivityNotification.CLASS_ACTIVITY_CONFIRMED_KEY, false);
+        if (confirmFromNotification) {
             DummyUtils.toast(this, "Confirmed");
-            mClassActivityDao.confirmActivity(mClassActivity);
+            confirmed = mClassActivityDao.confirmActivity(mClassActivity);
         }
 
         // Dismiss the notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.toString(mClassActivity.getId()), ClassActivityNotification.NOTIFICATION_ID);
+        return confirmed;
+    }
+
+    private class PositiveStatusDialogClickListener implements DialogInterface.OnClickListener {
+        private TextView statusView;
+        public PositiveStatusDialogClickListener(TextView statusView) {
+            this.statusView = statusView;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            // Confirm the activity
+            mClassActivityDao.confirmActivity(mClassActivity);
+            DummyUtils.toast(getApplicationContext(), "Confirmed");
+
+            // Update the status view
+            statusView.setText("Status: Confirmed");
+            statusView.setClickable(false);
+        }
     }
 }
