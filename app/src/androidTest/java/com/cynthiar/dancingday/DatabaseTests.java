@@ -43,7 +43,7 @@ public class DatabaseTests {
     @Before
     public void createDb() {
         Context context = InstrumentationRegistry.getTargetContext();
-        AppDatabase.initializeDb(context);
+        AppDatabase.initializeDb(context, true);
         AppDatabase.clearDb();
     }
 
@@ -107,7 +107,7 @@ public class DatabaseTests {
         // Initialize test data
         DateTime activityDate = new DateTime(2018, 1, 1, 0, 0);
         PaymentType paymentType = PaymentType.PunchCard;
-        DanceClassCard danceClassCard = new DanceClassCard(Schools.KDC_COMPANY, 3, new DateTime(2017, 12, 29, 00, 00), new DateTime(2018, 2, 12, 00, 00));
+        DanceClassCard danceClassCard = new DanceClassCard(Schools.KDC_COMPANY, 3, new DateTime(2017, 12, 29, 00, 00), DateTime.now().plusDays(1));
         DummyItem danceClass = new DummyItem("Monday", new DanceClassTime(7, 0, 8, 30), Schools.KDC_SCHOOL, "Jerry", DanceClassLevel.Advanced);
         ClassActivity classActivity = new ClassActivity(danceClass, activityDate, paymentType, danceClassCard);
 

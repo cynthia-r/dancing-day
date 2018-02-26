@@ -12,6 +12,8 @@ import android.provider.BaseColumns;
 public class AppDatabase extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "DancingDay.db";
+    public static final int TEST_DATABASE_VERSION = 1;
+    public static final String TEST_DATABASE_NAME = "DancingDay-Test.db";
 
     private static AppDatabase mDatabaseInstance;
 
@@ -20,12 +22,19 @@ public class AppDatabase extends SQLiteOpenHelper {
         new ClassActivityDao()
     };
 
-    private AppDatabase(Context context) {
-        super(context, DATABASE_NAME, null, AppDatabase.DATABASE_VERSION);
+    private AppDatabase(Context context, String databaseName, int databaseVersion) {
+        super(context, databaseName, null, databaseVersion);
     }
 
     public static void initializeDb(Context context) {
-        mDatabaseInstance = new AppDatabase(context);
+        AppDatabase.initializeDb(context, false);
+    }
+
+    public static void initializeDb(Context context, boolean testMode) {
+        if (testMode)
+            mDatabaseInstance = new AppDatabase(context, TEST_DATABASE_NAME, AppDatabase.TEST_DATABASE_VERSION);
+        else
+            mDatabaseInstance = new AppDatabase(context, DATABASE_NAME, AppDatabase.DATABASE_VERSION);
     }
 
     public static void finalizeDb() {
