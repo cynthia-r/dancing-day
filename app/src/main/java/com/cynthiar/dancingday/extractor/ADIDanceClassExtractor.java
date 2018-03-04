@@ -18,8 +18,7 @@ import java.util.List;
  */
 
 public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
-    //private static final String mainSelector = ".tve_twc .tve_empty_dropzone , .tcb-flex-col.tve_clearfix:nth-child(1)";
-    private static final String mainSelector = ".tve_tfo p";
+    private static final String mainSelector = ".tve_empty_dropzone:nth-child(1) p:nth-child(1)";
 
     public ADIDanceClassExtractor(Context context) { super(context); }
 
@@ -124,7 +123,13 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
                     + "because of an exception: " + e.getMessage();
             return new ExtractorResults(errorMessage);
         }
+    }
 
+    @Override
+    protected ExtractorResults getAdditionalElements() {
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        dummyItemList.add(new DummyItem("Thursday", DanceClassTime.create("6:30pm-8pm"), Schools.ADI_SCHOOL, "Kara", DanceClassLevel.Intermediate));
+        return new ExtractorResults(dummyItemList);
     }
 
     private DanceClassLevel parseLevel(String levelText) {

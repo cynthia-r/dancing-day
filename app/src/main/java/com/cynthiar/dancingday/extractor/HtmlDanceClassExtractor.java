@@ -19,10 +19,15 @@ import java.util.ArrayList;
 
 public abstract class HtmlDanceClassExtractor extends DanceClassExtractor<Document>{
     protected abstract String getSelector();
+
     protected abstract ExtractorResults parseBaseElement(int elementIndex, Element classElement);
 
     protected boolean validateElements(Elements elements) {
         return true;
+    }
+
+    protected ExtractorResults getAdditionalElements() {
+        return new ExtractorResults();
     }
 
     public HtmlDanceClassExtractor(Context context) { super(context); }
@@ -55,6 +60,9 @@ public abstract class HtmlDanceClassExtractor extends DanceClassExtractor<Docume
             ExtractorResults currentExtractorResults = this.parseBaseElement(i, classElement);
             extractorResults.addExtractorResults(currentExtractorResults);
         }
+
+        // Add the extra elements and return the results
+        extractorResults.addExtractorResults(this.getAdditionalElements());
         return extractorResults;
     }
 }
