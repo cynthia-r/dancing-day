@@ -1,11 +1,13 @@
 package com.cynthiar.dancingday.recentactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -63,10 +65,12 @@ public class RecentActivityFragment extends Fragment {
         // Get the list view and the empty state view
         ListView listView = (ListView) parentActivity.findViewById(R.id.recent_activity_list_view);
         TextView emptyStateTextView = (TextView) parentActivity.findViewById(R.id.emptyList);
+        Button graphButton = (Button) parentActivity.findViewById(R.id.show_graph);
 
         // Display empty state if no results
         if (0 == classActivityList.size()) {
             listView.setVisibility(GONE);
+            graphButton.setVisibility(GONE);
             emptyStateTextView.setText(R.string.activities_empty_state);
             emptyStateTextView.setVisibility(View.VISIBLE);
             return;
@@ -74,6 +78,7 @@ public class RecentActivityFragment extends Fragment {
 
         // Otherwise show the list view
         listView.setVisibility(View.VISIBLE);
+        graphButton.setVisibility(View.VISIBLE);
         emptyStateTextView.setVisibility(View.GONE);
 
         // Setup list adapter

@@ -41,6 +41,7 @@ import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector
 import com.cynthiar.dancingday.recentactivity.ClassActivityBackgroundTask;
 import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
+import com.cynthiar.dancingday.recentactivity.RecentActivityGraphActivity;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -285,6 +286,15 @@ public class TodayActivity extends AppCompatActivity
 
         // Call base
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Starts the activity that shows the class activity graph.
+     * @param view: The "show graph" button.
+     */
+    public void showGraph(View view) {
+        Intent intent = new Intent(this, RecentActivityGraphActivity.class);
+        startActivity(intent);
     }
 
     /**
