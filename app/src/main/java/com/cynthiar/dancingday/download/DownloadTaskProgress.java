@@ -1,6 +1,6 @@
 package com.cynthiar.dancingday.download;
 
-import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.dataprovider.IProgress;
 
 /**
  * Created by Robert on 08/02/2017.

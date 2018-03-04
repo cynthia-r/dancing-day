@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.extractor;
+package com.cynthiar.dancingday.extractor;
 
 import android.content.Context;
 
@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Robert on 14/03/2017.

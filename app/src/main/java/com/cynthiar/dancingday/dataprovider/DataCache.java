@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.data;
+package com.cynthiar.dancingday.dataprovider;
 
 import android.support.v4.util.Pair;
 

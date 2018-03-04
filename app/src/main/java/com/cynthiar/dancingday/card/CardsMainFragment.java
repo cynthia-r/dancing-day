@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.DanceClassCard;
-import com.cynthiar.dancingday.model.database.DanceClassCardDao;
+import com.cynthiar.dancingday.database.DanceClassCardDao;
 
 import java.util.List;
 

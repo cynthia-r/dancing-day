@@ -1,11 +1,9 @@
-package com.cynthiar.dancingday.model.extractor;
+package com.cynthiar.dancingday.extractor;
 
 import android.content.Context;
 
-import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.model.DanceClassLevel;
 import com.cynthiar.dancingday.model.DummyItem;
-import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Schools;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
@@ -16,8 +14,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 

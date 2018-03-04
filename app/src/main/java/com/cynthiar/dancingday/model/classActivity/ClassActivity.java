@@ -7,15 +7,11 @@ import com.cynthiar.dancingday.SettingsActivity;
 import com.cynthiar.dancingday.model.DanceClassCard;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
-import com.cynthiar.dancingday.model.Preferences;
-import com.cynthiar.dancingday.model.database.DanceClassCardDao;
+import com.cynthiar.dancingday.database.DanceClassCardDao;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Represents a class activity: i.e. when the user attended a dance class.

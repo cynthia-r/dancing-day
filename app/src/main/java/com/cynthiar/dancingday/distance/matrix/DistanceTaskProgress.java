@@ -1,6 +1,6 @@
 package com.cynthiar.dancingday.distance.matrix;
 
-import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.dataprovider.IProgress;
 
 /**
  * Created by CynthiaR on 3/4/2017.

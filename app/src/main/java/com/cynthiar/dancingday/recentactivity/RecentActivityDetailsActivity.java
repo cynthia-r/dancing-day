@@ -1,8 +1,6 @@
 package com.cynthiar.dancingday.recentactivity;
 
-import android.app.Activity;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +18,7 @@ import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.classActivity.PaymentType;
-import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.database.ClassActivityDao;
 
 public class RecentActivityDetailsActivity extends AppCompatActivity {
     private Toolbar myToolbar;

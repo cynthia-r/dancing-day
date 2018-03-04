@@ -1,6 +1,6 @@
 package com.cynthiar.dancingday.download;
 
-import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.dataprovider.IProgress;
 
 import java.io.IOException;
 import java.io.InputStream;

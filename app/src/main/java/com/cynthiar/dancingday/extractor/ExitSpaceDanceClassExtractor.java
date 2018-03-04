@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.extractor;
+package com.cynthiar.dancingday.extractor;
 
 import android.content.Context;
 

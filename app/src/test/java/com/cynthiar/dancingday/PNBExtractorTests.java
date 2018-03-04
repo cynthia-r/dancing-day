@@ -1,14 +1,11 @@
 package com.cynthiar.dancingday;
 
-import com.cynthiar.dancingday.model.DummyUtils;
-import com.cynthiar.dancingday.model.extractor.ExtractorResults;
-import com.cynthiar.dancingday.model.extractor.PNBDanceClassExtractor;
+import com.cynthiar.dancingday.extractor.ExtractorResults;
+import com.cynthiar.dancingday.extractor.PNBDanceClassExtractor;
 
 import org.jsoup.nodes.Document;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;

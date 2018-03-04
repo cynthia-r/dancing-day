@@ -1,6 +1,5 @@
 package com.cynthiar.dancingday.recentactivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
-import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.database.ClassActivityDao;
 
 import java.util.List;
 

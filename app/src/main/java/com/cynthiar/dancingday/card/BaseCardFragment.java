@@ -19,7 +19,7 @@ import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.SpinnerAdapter;
 import com.cynthiar.dancingday.TodayActivity;
 import com.cynthiar.dancingday.model.Schools;
-import com.cynthiar.dancingday.model.database.DanceClassCardDao;
+import com.cynthiar.dancingday.database.DanceClassCardDao;
 
 import org.joda.time.DateTime;
 

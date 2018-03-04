@@ -11,7 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.cynthiar.dancingday.model.extractor.Extractors;
+import com.cynthiar.dancingday.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.model.DummyItem;

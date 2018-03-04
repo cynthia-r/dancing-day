@@ -5,11 +5,11 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 
-import com.cynthiar.dancingday.data.IConsumerCallback;
-import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.dataprovider.IConsumerCallback;
+import com.cynthiar.dancingday.dataprovider.IProgress;
 import com.cynthiar.dancingday.model.DummyItem;
-import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.model.extractor.ExtractorResults;
+import com.cynthiar.dancingday.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.extractor.ExtractorResults;
 
 import java.io.IOException;
 import java.io.InputStream;

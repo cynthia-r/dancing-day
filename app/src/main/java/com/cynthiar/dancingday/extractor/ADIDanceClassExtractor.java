@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.extractor;
+package com.cynthiar.dancingday.extractor;
 
 import android.content.Context;
 
@@ -8,7 +8,6 @@ import com.cynthiar.dancingday.model.time.DanceClassTime;
 import com.cynthiar.dancingday.model.DummyContent;
 import com.cynthiar.dancingday.model.DummyItem;
 
-import org.joda.time.LocalDate;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;

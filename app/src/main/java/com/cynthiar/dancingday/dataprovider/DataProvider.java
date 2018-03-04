@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.data;
+package com.cynthiar.dancingday.dataprovider;
 
 /**
  * Created by Robert on 09/02/2017.

@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.database;
+package com.cynthiar.dancingday.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;

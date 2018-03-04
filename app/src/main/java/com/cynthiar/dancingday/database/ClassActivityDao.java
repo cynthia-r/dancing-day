@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.database;
+package com.cynthiar.dancingday.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -11,7 +11,6 @@ import com.cynthiar.dancingday.model.classActivity.PaymentType;
 import org.joda.time.DateTime;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**

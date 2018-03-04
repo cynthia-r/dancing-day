@@ -2,7 +2,7 @@ package com.cynthiar.dancingday.distance.matrix;
 
 import android.net.Uri;
 
-import com.cynthiar.dancingday.data.IProgress;
+import com.cynthiar.dancingday.dataprovider.IProgress;
 import com.cynthiar.dancingday.download.HttpClient;
 import com.cynthiar.dancingday.download.IHttpConsumer;
 import com.cynthiar.dancingday.model.DummyUtils;

@@ -2,8 +2,8 @@ package com.cynthiar.dancingday.recentactivity;
 
 import android.os.AsyncTask;
 
-import com.cynthiar.dancingday.data.IConsumerCallback;
-import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.dataprovider.IConsumerCallback;
+import com.cynthiar.dancingday.database.ClassActivityDao;
 
 /**
  * Created by cynthiar on 2/25/2018.

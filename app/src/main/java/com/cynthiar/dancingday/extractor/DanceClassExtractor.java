@@ -1,8 +1,6 @@
-package com.cynthiar.dancingday.model.extractor;
+package com.cynthiar.dancingday.extractor;
 
 import android.content.Context;
-
-import com.cynthiar.dancingday.model.DummyItem;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.dataprovider.IConsumerCallback;
 import com.cynthiar.dancingday.distance.matrix.DistanceQuery;
 import com.cynthiar.dancingday.distance.matrix.DistanceResult;
 import com.cynthiar.dancingday.distance.matrix.DistanceTask;
@@ -21,7 +21,7 @@ import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
-import com.cynthiar.dancingday.model.database.ClassActivityDao;
+import com.cynthiar.dancingday.database.ClassActivityDao;
 import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 
 /**

@@ -2,7 +2,7 @@ package com.cynthiar.dancingday.distance.matrix;
 
 import android.os.AsyncTask;
 
-import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.dataprovider.IConsumerCallback;
 
 /**
  * Created by CynthiaR on 3/4/2017.

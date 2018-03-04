@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.model.database;
+package com.cynthiar.dancingday.database;
 
 /**
  * Created by CynthiaR on 12/27/2017.
@@ -7,7 +7,6 @@ package com.cynthiar.dancingday.model.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 public class AppDatabase extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 2;

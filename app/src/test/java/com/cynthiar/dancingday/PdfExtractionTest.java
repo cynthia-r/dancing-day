@@ -3,13 +3,13 @@ package com.cynthiar.dancingday;
 import android.net.NetworkInfo;
 import android.util.Pair;
 
-import com.cynthiar.dancingday.data.IConsumerCallback;
+import com.cynthiar.dancingday.dataprovider.IConsumerCallback;
 import com.cynthiar.dancingday.download.DownloadTaskProgress;
 import com.cynthiar.dancingday.download.IDownloadCallback;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
-import com.cynthiar.dancingday.model.extractor.DanceClassExtractor;
-import com.cynthiar.dancingday.model.extractor.KDCDanceClassExtractor;
+import com.cynthiar.dancingday.extractor.DanceClassExtractor;
+import com.cynthiar.dancingday.extractor.KDCDanceClassExtractor;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
 

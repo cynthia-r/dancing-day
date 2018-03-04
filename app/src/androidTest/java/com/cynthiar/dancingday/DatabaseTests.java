@@ -10,10 +10,10 @@ import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.classActivity.PaymentType;
 import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
-import com.cynthiar.dancingday.model.database.AppDatabase;
+import com.cynthiar.dancingday.database.AppDatabase;
 import com.cynthiar.dancingday.model.DanceClassCard;
-import com.cynthiar.dancingday.model.database.ClassActivityDao;
-import com.cynthiar.dancingday.model.database.DanceClassCardDao;
+import com.cynthiar.dancingday.database.ClassActivityDao;
+import com.cynthiar.dancingday.database.DanceClassCardDao;
 import com.cynthiar.dancingday.model.Schools;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;

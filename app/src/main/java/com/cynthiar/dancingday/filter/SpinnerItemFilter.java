@@ -2,7 +2,7 @@ package com.cynthiar.dancingday.filter;
 
 import com.cynthiar.dancingday.MultiDayFragment;
 import com.cynthiar.dancingday.model.DummyItem;
-import com.cynthiar.dancingday.model.extractor.Extractors;
+import com.cynthiar.dancingday.extractor.Extractors;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
 
 import java.util.List;
