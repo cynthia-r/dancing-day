@@ -97,6 +97,16 @@
                 android:onClick="editPaymentType" />
         </FrameLayout>
 
+        <ImageButton android:id="@+id/cancelDebit"
+            android:layout_width="@dimen/small_star"
+            android:layout_height="@dimen/small_star"
+            android:background="@mipmap/ic_cancel"
+            android:layout_alignBottom="@id/payment_type"
+            android:layout_toRightOf="@id/payment_type"
+            android:layout_marginLeft="@dimen/small_text_margin"
+            android:alpha="0.7"
+            android:onClick="cancelDebit"/>
+
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
@@ -117,24 +127,25 @@
             android:layout_marginTop="@dimen/small_text_margin"
             android:onClick="deleteActivity"/>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical" android:layout_width="match_parent"
+        <!-- Button bar -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/status"
             android:layout_marginTop="@dimen/text_margin">
 
             <Button
-                android:id="@+id/cancelDebit"
-                android:layout_width="115dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/cancel_debit"
+                android:text="@string/go_now"
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:background="@drawable/rounded_button"
-                android:onClick="cancelDebit"/>
+                android:onClick="goNow"/>
 
         </LinearLayout>
 

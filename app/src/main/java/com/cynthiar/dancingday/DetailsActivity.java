@@ -30,7 +30,6 @@ import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 public class DetailsActivity extends AppCompatActivity implements IConsumerCallback<DistanceResult> {
     public static final String DANCE_CLASS_KEY = "Dance_Class";
     public static final String SCHOOL_ADDRESS_KEY = "School_Address";
-    public static final String SCHOOL_COORDINATES_KEY = "School_Coordinates";
     public static final String SCHOOL_KEY = "School";
     public static final String LEVEL_KEY = "Level";
     public static final String TEACHER_KEY = "Teacher";
@@ -38,7 +37,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String DAY_KEY = "Day";
 
     private static final String ORIGIN_ADDRESS = "1120 112th Ave NE Bellevue WA 98004";
-    private static final String WAZE_SCHEME = "waze";
 
     private Toolbar myToolbar;
     private boolean mIsFavorite;
@@ -51,9 +49,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
     // The dance class this activity is for
     private DummyItem mDanceClass;
-
-    // Save the company coordinates
-    private String mSchoolCoordinates;
 
     private ClassActivityDao mClassActivityDao;
 
@@ -87,9 +82,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         String teacher = bundle.getString(DetailsActivity.TEACHER_KEY);
         String level = bundle.getString(DetailsActivity.LEVEL_KEY);
         mDanceClass = DummyItem.fromStrings(day, time, school, teacher, level);
-
-        // Save coordinates
-        mSchoolCoordinates = bundle.getString(DetailsActivity.SCHOOL_COORDINATES_KEY);
 
         // Set text in views
         TextView schoolView = (TextView) findViewById(R.id.school);
@@ -162,43 +154,25 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
 
     /**
      * Starts the Waze navigation.
-     * @param view: The "Go now" button.
+     * @param view: The "Go to class" button.
      */
-    public void goNow(View view) {
-        try {
-            // Build url
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme(DetailsActivity.WAZE_SCHEME);
-            builder.authority("");
-            builder.appendQueryParameter("ll", mSchoolCoordinates);
-            builder.appendQueryParameter("z", "10");
-            builder.appendQueryParameter("navigate", "yes");
-            String url = builder.build().toString();
+    public void goToClass(View view) {
+        // Register a new activity if the class is about to start
+        // and there is no current activity for this class
+        if (mDanceClass.isNow() && !mDanceClass.activityExists()) {
+            ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
+            try {
+                // Build a notification
+                long classActivityId = mClassActivityDao.registerActivity(classActivity);
+                Notification notification = new ClassActivityNotification(this).buildNotification(classActivityId, mDanceClass);
 
-            // Start the Waze navigation
-            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
-            startActivity( intent );
-
-            // Register a new activity if the class is about to start
-            // and there is no current activity for this class
-            if (mDanceClass.isNow() && !mDanceClass.activityExists()) {
-                ClassActivity classActivity = ClassActivity.buildActivity(this, mDanceClass);
-                try {
-                    // Build a notification
-                    long classActivityId = mClassActivityDao.registerActivity(classActivity);
-                    Notification notification = new ClassActivityNotification(this).buildNotification(classActivityId, mDanceClass);
-
-                    // Issue the notification
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(Long.toString(classActivityId), ClassActivityNotification.NOTIFICATION_ID, notification);
-                }
-                catch (Exception e) {
-                    DummyUtils.toast(this, "Failed to register activity:" + e.getLocalizedMessage());
-                }
+                // Issue the notification
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(Long.toString(classActivityId), ClassActivityNotification.NOTIFICATION_ID, notification);
             }
-        }
-        catch ( ActivityNotFoundException ex ) {
-            DummyUtils.toast(this, "Failed to start navigation");
+            catch (Exception e) {
+                DummyUtils.toast(this, "Failed to register activity:" + e.getLocalizedMessage());
+            }
         }
     }
 
@@ -213,7 +187,6 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         bundle.putString(DetailsActivity.LEVEL_KEY, dummyItem.level.toString());
         bundle.putString(DetailsActivity.SCHOOL_KEY, dummyItem.school.Key);
         bundle.putString(DetailsActivity.SCHOOL_ADDRESS_KEY, dummyItem.school.Address);
-        bundle.putString(DetailsActivity.SCHOOL_COORDINATES_KEY, dummyItem.school.Coordinates);
         bundle.putString(DetailsActivity.TEACHER_KEY, dummyItem.teacher.toString());
         bundle.putString(DetailsActivity.TIME_KEY, dummyItem.danceClassTime.toString());
         return bundle;

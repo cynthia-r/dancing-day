@@ -1,29 +1,34 @@
 package com.cynthiar.dancingday.recentactivity;
 
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.card.CardListViewAdapter;
+import com.cynthiar.dancingday.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
 import com.cynthiar.dancingday.model.classActivity.PaymentType;
-import com.cynthiar.dancingday.database.ClassActivityDao;
 
 public class RecentActivityDetailsActivity extends AppCompatActivity {
+    private static final String WAZE_SCHEME = "waze";
     private Toolbar myToolbar;
     private ClassActivity mClassActivity;
     private ClassActivityDao mClassActivityDao;
+
+    // Save the company coordinates
+    private String mSchoolCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,9 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         mClassActivity = mClassActivityDao.getActivityById(classActivityId);
         DummyItem danceClass = mClassActivity.getDanceClass();
         boolean isConfirmed = mClassActivity.isConfirmed();
+
+        // Save coordinates
+        mSchoolCoordinates = danceClass.school.Coordinates;
 
         // Check if the activity was opened from a notification action
         boolean notification = intent.getBooleanExtra(ClassActivityNotification.NOTIFICATION_ACTION_KEY, false);
@@ -155,6 +163,31 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
     }
 
     /**
+     * Starts the Waze navigation.
+     * @param view: The "Go now" button.
+     */
+    public void goNow(View view) {
+        // Start the Waze navigation to the class
+        try {
+            // Build url
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme(RecentActivityDetailsActivity.WAZE_SCHEME);
+            builder.authority("");
+            builder.appendQueryParameter("ll", mSchoolCoordinates);
+            builder.appendQueryParameter("z", "10");
+            builder.appendQueryParameter("navigate", "yes");
+            String url = builder.build().toString();
+
+            // Start the Waze navigation
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+            startActivity( intent );
+        }
+        catch ( ActivityNotFoundException ex ) {
+            DummyUtils.toast(this, "Failed to start navigation");
+        }
+    }
+
+    /**
      * Cancels the activity for this instance and credit the corresponding card
      * @param view: The "cancel debit" button
      */
@@ -162,7 +195,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Show confirmation dialog
         new AlertDialog.Builder(this)
             .setTitle("Cancel debit")
-            .setMessage("Are you sure you want to cancel this activity?")
+            .setMessage("This will credit the corresponding card. Are you sure you want to cancel this activity?")
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -186,7 +219,7 @@ public class RecentActivityDetailsActivity extends AppCompatActivity {
         // Retrieve the payment type views
         ImageButton cardView = (ImageButton) findViewById(R.id.payment_card);
         ImageButton ticketView = (ImageButton) findViewById(R.id.payment_ticket);
-        Button cancelDebitButton = (Button) findViewById(R.id.cancelDebit);
+        ImageButton cancelDebitButton = (ImageButton) findViewById(R.id.cancelDebit);
 
         // Set payment view and display the "Cancel Debit" button for card payments
         String paymentText;
