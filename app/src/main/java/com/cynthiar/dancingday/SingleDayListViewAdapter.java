@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.DanceClassCards;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.Preferences;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
@@ -18,6 +20,7 @@ import com.cynthiar.dancingday.model.propertySelector.LevelPropertySelector;
 import com.cynthiar.dancingday.model.propertySelector.SchoolPropertySelector;
 import com.cynthiar.dancingday.model.time.DanceClassTime;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,11 +29,13 @@ import java.util.List;
 
 public class SingleDayListViewAdapter extends BaseAdapter{
     private List<DummyItem> mValues;
+    private HashMap<String, DanceClassCards> mDanceClassCardMap;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public SingleDayListViewAdapter(List<DummyItem> items, Context context) {
+    public SingleDayListViewAdapter(List<DummyItem> items, HashMap<String, DanceClassCards> danceClassCardMap, Context context) {
         mValues = items;
+        mDanceClassCardMap = danceClassCardMap;
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -60,25 +65,28 @@ public class SingleDayListViewAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.single_day_fragment_item, parent, false);
         }
 
-        TextView mTimeView = (TextView) convertView.findViewById(R.id.time);
-        TextView mClassItemTopRightView = (TextView) convertView.findViewById(R.id.class_item_top_right);
-        TextView mTeacherView = (TextView) convertView.findViewById(R.id.teacher);
-        TextView mClassItemBottomLeftView = (TextView) convertView.findViewById(R.id.class_item_bottom_left);
+        // Retrieve text views
+        TextView timeView = (TextView) convertView.findViewById(R.id.time);
+        TextView classItemTopRightView = (TextView) convertView.findViewById(R.id.class_item_top_right);
+        TextView teacherView = (TextView) convertView.findViewById(R.id.teacher);
+        TextView classItemBottomLeftView = (TextView) convertView.findViewById(R.id.class_item_bottom_left);
+        TextView cardExpiringView = (TextView) convertView.findViewById(R.id.card_expiring);
 
+        // Retrieve the current clas item
         final DummyItem dummyItem = mValues.get(position);
 
+        // Set time and teacher view texts
         DanceClassTime danceClassTime = dummyItem.danceClassTime;
         String time = null == danceClassTime ? "" : danceClassTime.toString();
+        timeView.setText(time);
+        teacherView.setText(dummyItem.teacher);
 
-        // Set time and teacher view texts
-        mTimeView.setText(time);
-        mTeacherView.setText(dummyItem.teacher);
-
-        // Set corner view texts
+        // Get the current property selector
         DanceClassPropertySelector currentPropertySelector = ((TodayActivity) mContext).getCurrentPropertySelector();
         String topRightViewText = "";
         String bottomLeftViewText = "";
 
+        // Set corner view texts based on the current property selector
         if (null == currentPropertySelector || currentPropertySelector instanceof DayPropertySelector) {
             topRightViewText = dummyItem.school.Key;
             bottomLeftViewText = dummyItem.level.toString();
@@ -92,8 +100,9 @@ public class SingleDayListViewAdapter extends BaseAdapter{
             bottomLeftViewText = dummyItem.day;
         }
 
-        mClassItemTopRightView.setText(topRightViewText);
-        mClassItemBottomLeftView.setText(bottomLeftViewText);
+        // Set text in corner views
+        classItemTopRightView.setText(topRightViewText);
+        classItemBottomLeftView.setText(bottomLeftViewText);
 
         // Display whether the item is a favorite
         ImageView starView = (ImageView)convertView.findViewById(R.id.star);
@@ -103,22 +112,40 @@ public class SingleDayListViewAdapter extends BaseAdapter{
         else
             starView.setVisibility(View.GONE);
 
+        // Display whether the card is expiring soon
+        DanceClassCards danceClassCards = mDanceClassCardMap.get(dummyItem.school.Key);
+        if (danceClassCards.isExpiringSoon()) {
+            cardExpiringView.setText("Card expiring soon");
+            cardExpiringView.setVisibility(View.VISIBLE);
+        }
+        else if (danceClassCards.hasFewRemainingClasses()) {
+            int remainingClassCount = danceClassCards.getRemainingCardClasses();
+            cardExpiringView.setText(remainingClassCount + (remainingClassCount == 1 ? " class" : " classes") + " left");
+            cardExpiringView.setVisibility(View.VISIBLE);
+        }
+        else
+            cardExpiringView.setVisibility(View.GONE);
+
+        // Set actions
         convertView.setClickable(true);
         convertView.setFocusable(true);
-
         convertView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                // Setup intent
                 TodayActivity parentActivity = (TodayActivity)mContext;
                 Intent intent = new Intent(parentActivity, DetailsActivity.class);
                 Bundle bundle = DetailsActivity.toBundle(dummyItem);
                 intent.putExtra(DetailsActivity.DANCE_CLASS_KEY, bundle);
 
+                // Start the details activity
                 parentActivity.startActivity(intent);
             }
 
         });
+
+        // Return the view
         return convertView;
     }
 }

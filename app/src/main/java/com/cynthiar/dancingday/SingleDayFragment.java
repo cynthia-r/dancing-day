@@ -15,6 +15,7 @@ import com.cynthiar.dancingday.model.DummyUtils;
 import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -70,6 +71,7 @@ public class SingleDayFragment extends Fragment {
 
         // Retrieve list of items
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
+        HashMap danceClassCardMap = parentActivity.getDanceClassCardMap(dummyItemList);
 
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);
@@ -96,7 +98,7 @@ public class SingleDayFragment extends Fragment {
         dummyItemList = DummyUtils.sortItemList(dummyItemList);
 
         // Setup list adapter
-        SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, parentActivity);
+        SingleDayListViewAdapter adapter = new SingleDayListViewAdapter(dummyItemList, danceClassCardMap, parentActivity);
         listView.setAdapter(adapter);
 
         // Set title

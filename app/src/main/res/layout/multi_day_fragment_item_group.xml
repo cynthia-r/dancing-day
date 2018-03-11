@@ -12,7 +12,7 @@
         android:layout_marginBottom="6dp"
         android:text="Monday"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/colorWhite"
         android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceListItem" />
 

@@ -9,6 +9,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.cynthiar.dancingday.model.DanceClassCard;
+import com.cynthiar.dancingday.model.DanceClassCards;
 import com.cynthiar.dancingday.model.DummyItem;
 import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
 import com.cynthiar.dancingday.filter.MultiDayFilter;
@@ -25,13 +27,15 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     private List<String> mGroups;
     private HashMap<String, List<DummyItem>> mValues;
     private HashMap<String, List<DummyItem>> mAllValues;
+    private HashMap<String, DanceClassCards> mDanceClassCardMap;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, Context context) {
+    public MultiDayListViewAdapter(List<String> groupList, HashMap<String, List<DummyItem>> itemMap, HashMap<String, List<DummyItem>> allItemMap, HashMap<String, DanceClassCards> danceClassCardMap, Context context) {
         mGroups = groupList;
         mValues = itemMap;
         mAllValues = allItemMap;
+        mDanceClassCardMap = danceClassCardMap;
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -108,7 +112,7 @@ public class MultiDayListViewAdapter extends BaseExpandableListAdapter implement
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String group = mGroups.get(groupPosition);
         List<DummyItem> dummyItemList = mValues.get(group);
-        SingleDayListViewAdapter singleDayListViewAdapter = new SingleDayListViewAdapter(dummyItemList, this.mContext);
+        SingleDayListViewAdapter singleDayListViewAdapter = new SingleDayListViewAdapter(dummyItemList, this.mDanceClassCardMap, this.mContext);
         return singleDayListViewAdapter.getView(childPosition, convertView, parent);
     }
 

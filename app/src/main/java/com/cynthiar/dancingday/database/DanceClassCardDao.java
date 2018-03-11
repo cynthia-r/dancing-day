@@ -8,6 +8,7 @@ import com.cynthiar.dancingday.model.Schools;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,18 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
 
         // Return the card found (null if no card was found)
         return classCard;
+    }
+
+    public List<DanceClassCard> getCurrentCards(String companyKey) {
+        // Filter by school company
+        String selection = DanceClassCard.COLUMN_COMPANY + " = ?";
+        String[] selectionArgs = { companyKey };
+
+        // Retrieve the available class cards in this company
+        List<DanceClassCard> classCardList = this.retrieveEntities(selection, selectionArgs, null, null, null);
+
+        // Return the cards found
+        return classCardList;
     }
 
     public long saveCard(DanceClassCard danceClassCard){

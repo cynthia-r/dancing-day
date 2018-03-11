@@ -82,6 +82,7 @@ public class MultiDayFragment extends Fragment {
         // Retrieve list of items
         TodayActivity parentActivity = (TodayActivity)getActivity();
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
+        HashMap danceClassCardMap = parentActivity.getDanceClassCardMap(dummyItemList);
 
         // Setup spinners
         // View by spinner
@@ -137,7 +138,7 @@ public class MultiDayFragment extends Fragment {
             List<String> groupList = DummyUtils.sortAndRotateGroups(getActivity(), dummyItemMap, danceClassPropertySelector);
 
             // Set up list view
-            MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, parentActivity);
+            MultiDayListViewAdapter adapter = new MultiDayListViewAdapter(groupList, dummyItemMap, mAllItemMap, danceClassCardMap, parentActivity);
             expandableListView.setAdapter(adapter);
 
             // Expand groups the first time

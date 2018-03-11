@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Extractors {
 
-    private static Extractors mExtractorsInstance;
+    private static Extractors extractorsInstance;
 
     private static volatile Object syncObject = new Object();
 
@@ -28,19 +28,19 @@ public class Extractors {
     private DanceClassExtractor[] extractors;
 
     public static Extractors getInstance(Context context) {
-        if (null != mExtractorsInstance)
-            return mExtractorsInstance;
+        if (null != extractorsInstance)
+            return extractorsInstance;
 
         synchronized (syncObject) {
-            if (null == mExtractorsInstance) {
+            if (null == extractorsInstance) {
                 DanceClassExtractor[] danceClassExtractors = loadExtractors(context);
-                mExtractorsInstance = new Extractors(danceClassExtractors);
+                extractorsInstance = new Extractors(danceClassExtractors);
             }
         }
-        return mExtractorsInstance;
+        return extractorsInstance;
     }
 
-    public static Extractors getInstance() { return mExtractorsInstance; }
+    public static Extractors getInstance() { return extractorsInstance; }
 
     private static DanceClassExtractor[] loadExtractors(Context context) {
         DanceClassExtractor[] danceClassExtractors = new DanceClassExtractor[] {
@@ -54,9 +54,7 @@ public class Extractors {
     }
 
     public DanceClassExtractor[] getExtractors() {
-        DanceClassExtractor[] extractorsCopy = new DanceClassExtractor[this.extractors.length];
-        System.arraycopy(this.extractors, 0, extractorsCopy, 0, this.extractors.length);
-        return extractorsCopy;
+        return this.extractors;
     }
 
     public DanceClassExtractor getExtractor(String key) {

@@ -21,7 +21,6 @@ public class DummyItem {
     public final DanceClassLevel level;
     public final DanceClassTime danceClassTime;
     public Schools.DanceSchool school;
-    private boolean mIsMarkedAsFavorite;
     private ClassActivityDao classActivityDao;
 
     public DummyItem(String day, DanceClassTime time, Schools.DanceSchool school, String teacher, DanceClassLevel level) {
@@ -30,7 +29,6 @@ public class DummyItem {
         this.school = school;
         this.teacher = teacher;
         this.level = level;
-        this.mIsMarkedAsFavorite = false;
         this.classActivityDao = new ClassActivityDao();
     }
 
