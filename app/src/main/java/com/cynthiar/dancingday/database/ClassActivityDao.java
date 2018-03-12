@@ -11,6 +11,7 @@ import com.cynthiar.dancingday.model.classActivity.PaymentType;
 import org.joda.time.DateTime;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,6 +46,20 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
 
         // Retrieve the class activities
         return this.retrieveEntities(selection, selectionArgs, null, null, sortOrder);
+    }
+
+    public Iterator<ClassActivity> getActivityHistory(int numberOfDays) {
+        // Retrieve the activities up to the number of days specified
+        DateTime dateThreshold = DateTime.now().minusDays(numberOfDays);
+        // todo
+        String selection = ClassActivity.COLUMN_DATE + " > ?";
+        String[] selectionArgs = { dateThreshold.toString(ClassActivity.dateTimeFormatter) };
+
+        // Sort by oldest activity
+        String sortOrder = ClassActivity.COLUMN_DATE + " ASC";
+
+        // Retrieve the class activities
+        return this.retrieveEntityIterator(null, null, null, null, sortOrder);
     }
 
     public long registerActivity(ClassActivity classActivity) throws Exception {

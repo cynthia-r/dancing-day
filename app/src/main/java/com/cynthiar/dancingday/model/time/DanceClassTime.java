@@ -3,6 +3,7 @@ package com.cynthiar.dancingday.model.time;
 import com.cynthiar.dancingday.model.DummyUtils;
 
 import org.joda.time.LocalTime;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -60,5 +61,11 @@ public class DanceClassTime {
 
         // Concatenate start and end
         return startTimeString.concat("-").concat(endTimeString);
+    }
+
+    public int getDurationInMinutes() {
+        Period period = new Period(this.startTime, this.endTime);
+        return period.getHours() * 60 + period.getMinutes();
+        // todo this returns the diff of minutes, need to return the diff of hours as well
     }
 }

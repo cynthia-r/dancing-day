@@ -186,17 +186,17 @@ public class DummyUtils<T> {
     public static String getCurrentDay() {
         Calendar calendar = Calendar.getInstance();
         int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
-        return getCurrentDay(dayToFilter);
+        return getDayName(dayToFilter);
     }
 
     public static String getTomorrow() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 1);
         int dayToFilter = calendar.get(Calendar.DAY_OF_WEEK);
-        return getCurrentDay(dayToFilter);
+        return getDayName(dayToFilter);
     }
 
-    private static String getCurrentDay(int calendarDayPosition) {
+    public static String getDayName(int calendarDayPosition) {
         String dayString = "";
         switch (calendarDayPosition) {
             case Calendar.MONDAY:
