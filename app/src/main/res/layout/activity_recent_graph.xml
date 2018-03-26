@@ -9,6 +9,8 @@
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="200dip"
+        android:layout_marginLeft="@dimen/small_text_margin"
+        android:layout_marginRight="@dimen/small_text_margin"
         android:id="@+id/graph" />
 
 </LinearLayout>
