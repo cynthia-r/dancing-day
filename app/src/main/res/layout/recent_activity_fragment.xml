@@ -8,7 +8,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="5">
 
         <!-- Show list when one result or more -->
         <ListView
@@ -20,17 +21,27 @@
         <include layout="@layout/empty_list"/>
     </FrameLayout>
 
-    <Button
-        android:id="@+id/show_graph"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Show graph"
-        android:textSize="16sp"
-        android:textAllCaps="false"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:background="@drawable/rounded_button"
-        android:onClick="showGraph"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/show_graph"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginLeft="120dp"
+            android:layout_marginRight="120dp"
+            android:text="Show graph"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="@drawable/rounded_button"
+            android:onClick="showGraph"/>
+
+    </LinearLayout>
 
 </LinearLayout>

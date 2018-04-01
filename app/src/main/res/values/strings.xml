@@ -12,6 +12,7 @@
     <string name="title_edit_delete_card_dialog">Edit or delete card</string>
     <string name="title_recent_activity">Recent activity</string>
     <string name="title_settings">Settings</string>
+    <string name="title_graph">Activity history</string>
 
     <!-- Navigation Drawer -->
     <string-array name="timeframes_array">
@@ -66,5 +67,13 @@
     <!-- Activity details view -->
     <string name="go_now">Go now</string>
     <string name="cancel_debit">Cancel debit</string>
+
+    <!-- Graph view -->
+    <string-array name="graph_array">
+        <item>Last week</item>
+        <item>Last 30 days</item>
+        <item>Last 60 days</item>
+        <item>Last 90 days</item>
+    </string-array>
 
 </resources>

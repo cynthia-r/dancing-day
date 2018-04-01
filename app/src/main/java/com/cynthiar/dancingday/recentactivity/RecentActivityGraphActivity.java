@@ -1,10 +1,19 @@
 package com.cynthiar.dancingday.recentactivity;
 
+import android.content.Context;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
+import com.cynthiar.dancingday.SpinnerAdapter;
 import com.cynthiar.dancingday.database.ClassActivityDao;
 import com.cynthiar.dancingday.model.DummyUtils;
 import com.cynthiar.dancingday.model.classActivity.ClassActivity;
@@ -20,6 +29,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,10 +44,34 @@ public class RecentActivityGraphActivity extends AppCompatActivity {
     public static DateTimeFormatter localTimeFormatter = DateTimeFormat.forPattern("H'h'mm");
     public static DateTimeFormatter localTimeFormatterNoMinutes = DateTimeFormat.forPattern("H'h'");
 
+    private Toolbar myToolbar;
+    private Spinner graphSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_graph);
+
+        // Setup toolbar
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(getResources().getString(R.string.title_graph));
+        setSupportActionBar(myToolbar);
+
+        // Setup action bar buttons
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        // Setup spinner
+        graphSpinner = (Spinner)this.findViewById(R.id.graphSpinner);
+        List<String> dropDownList = new ArrayList<>();
+        for (String graphView:getResources().getStringArray(R.array.graph_array)
+                ) {
+            dropDownList.add(graphView);
+        }
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(
+                this, R.layout.graph_spinner_item, R.layout.graph_spinner_dropdown_item, dropDownList);
+        graphSpinner.setAdapter(spinnerAdapter);
+        graphSpinner.setOnItemSelectedListener(new GraphSpinnerSelectedListener());
 
         // Get the activity over the past 7 days - todo
         int numberOfDays = 20;
@@ -103,6 +137,12 @@ public class RecentActivityGraphActivity extends AppCompatActivity {
             // Disable the human rounding to avoid pre-calculating labels
             graph.getGridLabelRenderer().setHumanRounding(false);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private HashMap<Date, Pair<Integer, Integer>> getPastDays(int numberOfDays) {
