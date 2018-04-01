@@ -177,6 +177,19 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         return this.updateColumns(columnValues, selection, selectionArgs);
     }
 
+    public int updateActivityDate(long classActivityId, DateTime activityDate) {
+        // Filter by ID
+        String selection = ClassActivity._ID + " = ?";
+        String[] selectionArgs = { Long.toString(classActivityId) };
+
+        // Set the new activity date
+        HashMap<String, String> columnValues = new HashMap<>();
+        columnValues.put(ClassActivity.COLUMN_DATE, activityDate.toString(ClassActivity.dateTimeFormatter));
+
+        // Update the activity
+        return this.updateColumns(columnValues, selection, selectionArgs);
+    }
+
     public int deleteOldActivities() {
         // Filter based on the threshold date
         DateTime oldActivityThresholdDate = DateTime.now().minusDays(15);

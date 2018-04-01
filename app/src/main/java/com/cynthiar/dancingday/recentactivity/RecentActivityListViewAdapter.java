@@ -3,6 +3,7 @@ package com.cynthiar.dancingday.recentactivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,13 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
     private List<ClassActivity> mValues;
     private Context mContext;
     private LayoutInflater mInflater;
+    private Fragment mTargetFragment;
 
-    public RecentActivityListViewAdapter(List<ClassActivity> items, Context context) {
+    public RecentActivityListViewAdapter(List<ClassActivity> items, Context context, Fragment targetFragment) {
         mValues = items;
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mTargetFragment = targetFragment;
     }
 
     @Override
@@ -85,7 +88,19 @@ public class RecentActivityListViewAdapter extends BaseAdapter {
             paymentTypeCardView.setVisibility(View.GONE);
         }
 
-        // Setup on-click event
+        // Setup on-click event for the date
+        activityDateView.setClickable(true);
+        activityDateView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                EditActivityFragment editActivityFragment = EditActivityFragment.newInstance(classActivity);
+                editActivityFragment.setTargetFragment(mTargetFragment, EditActivityFragment.REQUEST_CODE);
+                editActivityFragment.show(mTargetFragment.getFragmentManager(), EditActivityFragment.TAG);
+            }
+        });
+
+        // Setup on-click event for the list item
         convertView.setClickable(true);
         convertView.setFocusable(true);
 

@@ -2,6 +2,7 @@ package com.cynthiar.dancingday.recentactivity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ import static android.view.View.GONE;
 /*
     Activity showing the past activity.
  */
-public class RecentActivityFragment extends Fragment {
+public class RecentActivityFragment extends Fragment implements EditActivityFragment.EditActivityDialogListener {
     public static final String TAG = "RecentActivityFragment";
     public static final int POSITION = 4;
 
@@ -58,6 +59,23 @@ public class RecentActivityFragment extends Fragment {
         // Get the parent activity
         TodayActivity parentActivity = (TodayActivity)getActivity();
 
+        // Get the list
+        this.refreshList(parentActivity);
+
+        // Set title
+        parentActivity.setTitle(RecentActivityFragment.POSITION);
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        TodayActivity parentActivity = (TodayActivity)getActivity();
+        this.refreshList(parentActivity);
+    }
+
+    /*
+        Refreshes the list of cards
+     */
+    private void refreshList(TodayActivity parentActivity) {
         // Retrieve list of items
         List<ClassActivity> classActivityList = classActivityDao.getActivityList();
 
@@ -81,10 +99,7 @@ public class RecentActivityFragment extends Fragment {
         emptyStateTextView.setVisibility(View.GONE);
 
         // Setup list adapter
-        recentActivityListViewAdapter = new RecentActivityListViewAdapter(classActivityList, parentActivity);
+        recentActivityListViewAdapter = new RecentActivityListViewAdapter(classActivityList, parentActivity, this);
         listView.setAdapter(recentActivityListViewAdapter);
-
-        // Set title
-        parentActivity.setTitle(RecentActivityFragment.POSITION);
     }
 }
