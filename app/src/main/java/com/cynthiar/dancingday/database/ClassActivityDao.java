@@ -59,7 +59,7 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
         String sortOrder = ClassActivity.COLUMN_DATE + " ASC";
 
         // Retrieve the class activities
-        return this.retrieveEntityIterator(null, null, null, null, sortOrder);
+        return this.retrieveEntityIterator(selection, selectionArgs, null, null, sortOrder);
     }
 
     public long registerActivity(ClassActivity classActivity) throws Exception {
