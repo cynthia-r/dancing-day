@@ -1,5 +1,6 @@
 package com.cynthiar.dancingday.recentactivity;
 
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
@@ -41,6 +42,6 @@ public class ThirtyDaysGraphInformation implements GraphInformation {
 
     @Override
     public Series getSeries(DataPoint[] dataPoints) {
-        return new LineGraphSeries<>(dataPoints);
+        return new BarGraphSeries<>(dataPoints);
     }
 }

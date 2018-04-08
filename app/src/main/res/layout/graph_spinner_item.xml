@@ -5,6 +5,7 @@
     android:id="@+id/dropdown_item"
     android:layout_width="130dp"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/small_text_margin"
     android:textColor="@color/colorBlack"
     android:gravity="center"
     />
