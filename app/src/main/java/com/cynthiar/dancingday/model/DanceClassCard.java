@@ -84,13 +84,23 @@ public class DanceClassCard implements BaseColumns {
         return purchaseDate;
     }
 
-    public boolean isValid() {
-        return this.count > 0 && this.expirationDate.isAfterNow();
+    public boolean isValid(StringBuilder validationMessageBuilder) {
+        boolean validationSuccessful = true;
+        if (this.count <= 0) {
+            validationMessageBuilder.append("No available classes on card");
+            validationSuccessful = false;
+        }
+        if (this.expirationDate.isBeforeNow()) {
+            validationMessageBuilder.append("Card expired on: " + this.expirationDate.toString(CardListViewAdapter.ExpirationDateFormatter));
+            validationSuccessful = false;
+        }
+        return validationSuccessful;
     }
 
     public void debit() throws Exception {
-        if (!this.isValid())
-            throw new Exception("Cannot debit expired card for: " + this.company.Key + ". Card expired on: " + this.expirationDate.toString(CardListViewAdapter.ExpirationDateFormatter));
+        StringBuilder validationMessageBuilder = new StringBuilder();
+        if (!this.isValid(validationMessageBuilder))
+            throw new Exception("Cannot debit expired card for " + this.company.Key + " " + validationMessageBuilder.toString());
         this.count--;
     }
 

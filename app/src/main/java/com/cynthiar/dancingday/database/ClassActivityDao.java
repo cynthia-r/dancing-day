@@ -51,7 +51,6 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
     public Iterator<ClassActivity> getActivityHistory(int numberOfDays) {
         // Retrieve the activities up to the number of days specified
         DateTime dateThreshold = DateTime.now().minusDays(numberOfDays);
-        // todo
         String selection = ClassActivity.COLUMN_DATE + " > ?";
         String[] selectionArgs = { dateThreshold.toString(ClassActivity.dateTimeFormatter) };
 

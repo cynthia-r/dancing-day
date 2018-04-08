@@ -38,14 +38,21 @@ public class DanceClassCardDao extends AppDao<DanceClassCard> {
     }
 
     public DanceClassCard getCompatibleCard(Schools.DanceSchool school) {
-        // Filter by school company
-        String selection = DanceClassCard.COLUMN_COMPANY + " = ?";
-        String[] selectionArgs = { school.getDanceCompany().Key };
+        // Filter by school company, number of classes and expiration date
+        DateTime expirationDateThreshold = DateTime.now();
+        String selection = DanceClassCard.COLUMN_COMPANY + " = ?" +
+                " AND " + DanceClassCard.COLUMN_COUNT + " > ?" +
+                " AND " + DanceClassCard.COLUMN_EXPIRATION_DATE + " > ?";
+        String[] selectionArgs = {
+                school.getDanceCompany().Key,
+                Integer.toString(0),
+                expirationDateThreshold.toString(DanceClassCard.dateTimeFormatter)
+        };
 
         // Sort by purchase date
         String sortOrder = DanceClassCard.COLUMN_PURCHASE_DATE + " ASC";
 
-        // Retrieve the first available class card in this company
+        // Retrieve the first available and valid class card in this company
         DanceClassCard classCard = this.retrieveEntity(selection, selectionArgs, null, null, sortOrder);
 
         // Return the card found (null if no card was found)
