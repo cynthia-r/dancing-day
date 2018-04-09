@@ -44,7 +44,7 @@ import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector
 import com.cynthiar.dancingday.recentactivity.ClassActivityBackgroundTask;
 import com.cynthiar.dancingday.recentactivity.ClassActivityNotification;
 import com.cynthiar.dancingday.recentactivity.RecentActivityFragment;
-import com.cynthiar.dancingday.recentactivity.RecentActivityGraphActivity;
+import com.cynthiar.dancingday.recentactivity.graph.RecentActivityGraphActivity;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 

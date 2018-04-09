@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -99,23 +99,7 @@ public class GraphFragment extends Fragment {
         graph.addSeries(series);
 
         // Set label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    // Format x values as dates
-                    DateTime dateTime = new DateTime((long) value);
-                    return dateTime.toString(RecentActivityGraphActivity.dateTimeFormatter);
-                } else {
-                    // Format y values as amounts of time
-                    int hours = (int)value / 60;
-                    int minutes = (int)value % 60;
-                    LocalTime localTime = new LocalTime(hours, minutes);
-                    return minutes > 0 ? localTime.toString(RecentActivityGraphActivity.localTimeFormatter)
-                            : localTime.toString(RecentActivityGraphActivity.localTimeFormatterNoMinutes);
-                }
-            }
-        });
+        graph.getGridLabelRenderer().setLabelFormatter(graphInformation.getLabelFormatter());
 
         // Set viewport to last X days
         graph.getViewport().setMinX(graphData.minDate.getTime());

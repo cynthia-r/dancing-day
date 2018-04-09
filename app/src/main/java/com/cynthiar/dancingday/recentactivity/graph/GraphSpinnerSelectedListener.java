@@ -1,4 +1,4 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
 import android.content.Context;
 import android.view.View;

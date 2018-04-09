@@ -39,7 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TodayActivity" />
         </activity>
-        <activity android:name=".recentactivity.RecentActivityGraphActivity"></activity>
+        <activity android:name=".recentactivity.graph.RecentActivityGraphActivity"></activity>
     </application>
 
 </manifest>

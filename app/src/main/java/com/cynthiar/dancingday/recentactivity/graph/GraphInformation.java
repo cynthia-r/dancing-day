@@ -1,5 +1,6 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
+import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.Series;
@@ -18,5 +19,7 @@ public interface GraphInformation {
     int numYs();
 
     Series getSeries(DataPoint[] dataPoints);
+
+    LabelFormatter getLabelFormatter();
 }
 

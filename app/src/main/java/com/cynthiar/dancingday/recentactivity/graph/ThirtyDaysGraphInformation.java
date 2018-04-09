@@ -1,21 +1,18 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
+import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.Series;
 
-/*
-    7 days:
-    minY = 0
-    max Y = 180.0 // 0h to 3h
-    numHorizontalLabels = 5 // show 5 dates
-    numVerticalLabels = 7 // show every half-hour
-    */
-public class SevenDaysGraphInformation implements GraphInformation {
+/**
+ * Created by CynthiaR on 4/5/2018.
+ */
 
+public class ThirtyDaysGraphInformation implements GraphInformation {
     @Override
     public int numberOfDays() {
-        return 7;
+        return 30;
     }
 
     @Override
@@ -46,5 +43,10 @@ public class SevenDaysGraphInformation implements GraphInformation {
     @Override
     public Series getSeries(DataPoint[] dataPoints) {
         return new BarGraphSeries<>(dataPoints);
+    }
+
+    @Override
+    public LabelFormatter getLabelFormatter() {
+        return new GraphSeriesLabelFormatter(RecentActivityGraphActivity.dateTimeFormatter2);
     }
 }

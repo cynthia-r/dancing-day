@@ -1,5 +1,6 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
+import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
@@ -36,11 +37,16 @@ public class SixtyDaysGraphInformation implements GraphInformation {
 
     @Override
     public int numYs() {
-        return 4;
+        return 5;
     }
 
     @Override
     public Series getSeries(DataPoint[] dataPoints) {
         return new LineGraphSeries(dataPoints);
+    }
+
+    @Override
+    public LabelFormatter getLabelFormatter() {
+        return new GraphSeriesLabelFormatter(RecentActivityGraphActivity.dateTimeFormatter2);
     }
 }

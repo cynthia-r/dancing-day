@@ -1,49 +1,26 @@
-package com.cynthiar.dancingday.recentactivity;
+package com.cynthiar.dancingday.recentactivity.graph;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.cynthiar.dancingday.R;
 import com.cynthiar.dancingday.SpinnerAdapter;
-import com.cynthiar.dancingday.database.ClassActivityDao;
-import com.cynthiar.dancingday.model.DummyUtils;
-import com.cynthiar.dancingday.model.classActivity.ClassActivity;
-import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.Series;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Activity displaying the graph of recent activity.
  */
 public class RecentActivityGraphActivity extends AppCompatActivity {
-    public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE dd");
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE d");
+    public static DateTimeFormatter dateTimeFormatter2 = DateTimeFormat.forPattern("MMM d");
     public static DateTimeFormatter localTimeFormatter = DateTimeFormat.forPattern("H'h'mm");
     public static DateTimeFormatter localTimeFormatterNoMinutes = DateTimeFormat.forPattern("H'h'");
 
