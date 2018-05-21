@@ -191,7 +191,7 @@ public class ClassActivityDao extends AppDao<ClassActivity> {
 
     public int deleteOldActivities() {
         // Filter based on the threshold date
-        DateTime oldActivityThresholdDate = DateTime.now().minusDays(15);
+        DateTime oldActivityThresholdDate = DateTime.now().minusDays(60);
         String selection = ClassActivity.COLUMN_DATE + " < ?";
         String[] selectionArgs = { oldActivityThresholdDate.toString(ClassActivity.dateTimeFormatter) };
 

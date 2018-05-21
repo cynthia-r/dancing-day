@@ -25,7 +25,7 @@ public class ClassActivityBackgroundTask extends AsyncTask<Void, Void, ClassActi
         // Confirm the pending activities
         int confirmedCount = this.classActivityDao.confirmPendingActivities();
 
-        // Delete the old activities (older than 15 days)
+        // Delete the old activities (older than 60 days)
         int deletedCount = this.classActivityDao.deleteOldActivities();
 
         // Return the results
