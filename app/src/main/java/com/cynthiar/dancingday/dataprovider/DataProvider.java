@@ -1,11 +1,15 @@
 package com.cynthiar.dancingday.dataprovider;
 
 /**
+ * Asynchronous data provider.
  * Created by Robert on 09/02/2017.
  */
 
 public abstract class DataProvider<T> {
-    public IConsumerCallback<T> mConsumerCallback;
+    /*
+        Consumer to call when providing the data back.
+     */
+    protected IConsumerCallback<T> mConsumerCallback;
 
     public DataProvider() {
     }

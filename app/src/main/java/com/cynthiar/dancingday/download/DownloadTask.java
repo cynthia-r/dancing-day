@@ -23,12 +23,12 @@ import java.util.List;
  */
 public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, DownloadTask.Result>
     implements IHttpConsumer {
-    private IDownloadCallback<List<DummyItem>> mDownloadCallback;
+    private IDownloadCallback<String, List<DummyItem>> mDownloadCallback;
     private IConsumerCallback<Pair<String, List<DummyItem>>> mConsumerCallback;
     private String mKey;
     private DanceClassExtractor mExtractor;
 
-    public DownloadTask(IDownloadCallback<List<DummyItem>> callback,
+    public DownloadTask(IDownloadCallback<String, List<DummyItem>> callback,
                  IConsumerCallback<Pair<String, List<DummyItem>>> consumerCallback,
                  String key, DanceClassExtractor danceClassExtractor) {
         setDownloadCallback(callback);
@@ -37,7 +37,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
         mExtractor = danceClassExtractor;
     }
 
-    private void setDownloadCallback(IDownloadCallback<List<DummyItem>> callback) {
+    private void setDownloadCallback(IDownloadCallback<String, List<DummyItem>> callback) {
         mDownloadCallback = callback;
     }
 
@@ -88,7 +88,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
                 mDownloadCallback.onProgressUpdate(new DownloadTaskProgress(IProgress.NO_NETWORK_CONNECTION), new DownloadTaskProgress(IProgress.ERROR)); // todo set exception message for no connectivity?
                 Result result = new Result(new Pair<String, List<DummyItem>>(mKey, new ArrayList<DummyItem>()));
                 mConsumerCallback.updateFromResult(result.mResultValue);
-                mDownloadCallback.finishDownloading();
+                mDownloadCallback.finishDownloading(mKey);
                 cancel(true);
             }
         }
@@ -153,7 +153,7 @@ public class DownloadTask extends AsyncTask<String, DownloadTaskProgress, Downlo
             if (result.mResultValue != null) {
                 mConsumerCallback.updateFromResult(result.mResultValue);
             }
-            mDownloadCallback.finishDownloading();
+            mDownloadCallback.finishDownloading(mKey);
         }
     }
 

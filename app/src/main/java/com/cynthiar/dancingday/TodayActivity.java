@@ -56,8 +56,7 @@ import java.util.List;
  * Main activity.
  */
 public class TodayActivity extends AppCompatActivity
-        implements IDownloadCallback<List<DummyItem>>,
-        IConsumerCallback<List<DummyItem>> {
+        implements IConsumerCallback<List<DummyItem>> {
 
     // Time frames
     private String[] mTimeFrames;
@@ -76,10 +75,6 @@ public class TodayActivity extends AppCompatActivity
     // Keep a reference to the NetworkFragment, which owns the AsyncTask object
     // that is used to execute network ops.
     private NetworkFragment mNetworkFragment;
-
-    // Boolean telling us whether a download is in progress, so we don't trigger overlapping
-    // downloads with consecutive button clicks.
-    private boolean mDownloading = false;
 
     // Cache for the dance classes
     private DataCache<List<DummyItem>> mDanceClassCache;
@@ -165,7 +160,7 @@ public class TodayActivity extends AppCompatActivity
         mClassActivityDao = new ClassActivityDao();
 
         // Setup the network fragment
-        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), danceClassDataProvider);
+        mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), this, danceClassDataProvider);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         // Check if the activity was started from a notification
@@ -481,17 +476,12 @@ public class TodayActivity extends AppCompatActivity
         return schoolMap;
     }
 
-    public void updateFromDownload(List<DummyItem> result) {
-        // Do nothing
-    }
-
     public void startDownload(String key) {
         // TODO this implementation only allows a single download at a time
         // We could download in parallel and make sure the today activity is thread-safe
-        if (!mDownloading && mNetworkFragment != null) {
+        if (mNetworkFragment != null) {
             // Execute the async download
             DanceClassExtractor danceClassExtractor = Extractors.getInstance(this).getExtractor(key);
-            mDownloading = true;
             mNetworkFragment.startDownload(key, danceClassExtractor);
         }
     }
@@ -564,48 +554,6 @@ public class TodayActivity extends AppCompatActivity
 
         // Mark the reload as done
         mReloadFragmentOnResume = false;
-    }
-
-    public NetworkInfo getActiveNetworkInfo() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo;
-    }
-
-    public void onProgressUpdate(DownloadTaskProgress taskProgress, DownloadTaskProgress percentComplete) {
-        switch(taskProgress.getProgressCode()) {
-            // You can add UI behavior for progress updates here.
-            case IProgress.ERROR:
-                DummyUtils.toast(this, "Error happened during downloading");
-                break;
-            case IProgress.CONNECT_SUCCESS:
-
-                break;
-            case IProgress.GET_INPUT_STREAM_SUCCESS:
-
-                break;
-            case IProgress.PROCESS_INPUT_STREAM_IN_PROGRESS:
-
-                break;
-            case IProgress.PROCESS_INPUT_STREAM_SUCCESS:
-
-                break;
-            case IProgress.NO_NETWORK_CONNECTION:
-                DummyUtils.toast(this, "No network connection");
-                break;
-        }
-    }
-
-    public void reportError(Exception exception) {
-        DummyUtils.toast(this, exception.getMessage());
-    }
-
-    public void finishDownloading() {
-        mDownloading = false;
-        if (mNetworkFragment != null) {
-            mNetworkFragment.cancelDownload();
-        }
     }
 
     /**

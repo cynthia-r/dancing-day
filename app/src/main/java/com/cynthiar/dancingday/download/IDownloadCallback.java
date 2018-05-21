@@ -6,12 +6,12 @@ import android.net.NetworkInfo;
  * Created by Robert on 08/02/2017.
  * Represents a callback for download operations.
  */
-public interface IDownloadCallback<T> {
+public interface IDownloadCallback<TKey, TResult> {
     /**
      * Indicates that the callback handler needs to update its appearance or information based on
      * the result of the task. Expected to be called from the main thread.
      */
-    void updateFromDownload(T result);
+    void updateFromDownload(TResult result);
 
     /**
      * Gets the device's active network status in the form of a NetworkInfo object.
@@ -35,5 +35,5 @@ public interface IDownloadCallback<T> {
      * Indicates that the download operation has finished. This method is called even if the
      * download hasn't completed successfully.
      */
-    void finishDownloading();
+    void finishDownloading(TKey key);
 }
