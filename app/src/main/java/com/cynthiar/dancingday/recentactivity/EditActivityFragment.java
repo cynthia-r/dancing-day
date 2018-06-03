@@ -22,14 +22,11 @@ import org.joda.time.DateTime;
 /**
  * Created by CynthiaR on 3/31/2018.
  */
-public class EditActivityFragment extends DialogFragment{
+public class EditActivityFragment extends BaseRecentActivityFragment{
     public static final String TAG = "EditActivityFragment";
     public static final int REQUEST_CODE = 1;
 
     private ClassActivity classActivity;
-    private ClassActivityDao classActivityDao;
-    private DateTime activityDate;
-    private EditActivityDialogListener dialogListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,28 +43,6 @@ public class EditActivityFragment extends DialogFragment{
 
     private void setClassActivity(ClassActivity classActivity) {
         this.classActivity = classActivity;
-    }
-
-    /*
-        Listener interface for events coming from this dialog.
-     */
-    public interface EditActivityDialogListener {
-        void onDialogPositiveClick(DialogFragment dialog);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // Verify that the target fragment implements the callback interface
-        Fragment targetFragment = getTargetFragment();
-        try {
-            // Instantiate the EditActivityDialogListener so we can send events to the host
-            dialogListener = (EditActivityDialogListener) targetFragment;
-        } catch (ClassCastException e) {
-            // The target fragment doesn't implement the interface, throw exception
-            throw new ClassCastException(targetFragment.getTag()
-                    + " must implement EditActivityDialogListener");
-        }
     }
 
     @Override
@@ -109,16 +84,5 @@ public class EditActivityFragment extends DialogFragment{
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-    }
-
-    /*
-        Listener for the activity's date picker.
-     */
-    protected class ActivityDatePickerListener implements DatePicker.OnDateChangedListener {
-        @Override
-        public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            activityDate = new DateTime(year, monthOfYear + 1, dayOfMonth, 00, 00);
-            // The date picker's day of month is zero-based
-        }
     }
 }

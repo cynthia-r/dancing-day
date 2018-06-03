@@ -29,7 +29,7 @@ import static android.view.View.GONE;
 /*
     Activity showing the past activity.
  */
-public class RecentActivityFragment extends Fragment implements EditActivityFragment.EditActivityDialogListener {
+public class RecentActivityFragment extends Fragment implements BaseRecentActivityFragment.RecentActivityDialogListener {
     public static final String TAG = "RecentActivityFragment";
     public static final int POSITION = 4;
 

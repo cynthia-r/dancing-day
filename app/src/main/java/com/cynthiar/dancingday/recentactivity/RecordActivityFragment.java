@@ -33,53 +33,17 @@ import java.util.List;
  * Created by CynthiaR on 6/3/2018.
  */
 
-public class RecordActivityFragment extends DialogFragment {
+public class RecordActivityFragment extends BaseRecentActivityFragment {
     public static final String TAG = "RecordActivityFragment";
     public static final int REQUEST_CODE = 1;
 
     private Schools.DanceCompany danceCompany;
-    private ClassActivity classActivity;
-    private ClassActivityDao classActivityDao;
-    private DateTime activityDate;
-    private EditActivityFragment.EditActivityDialogListener dialogListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public RecordActivityFragment() {
-    }
-
-    /*public static com.cynthiar.dancingday.recentactivity.EditActivityFragment newInstance(ClassActivity classActivity) {
-        com.cynthiar.dancingday.recentactivity.EditActivityFragment editActivityFragment = new com.cynthiar.dancingday.recentactivity.EditActivityFragment();
-        editActivityFragment.setClassActivity(classActivity);
-        return editActivityFragment;
-    }*/
-
-    private void setClassActivity(ClassActivity classActivity) {
-        this.classActivity = classActivity;
-    }
-
-    /*
-        Listener interface for events coming from this dialog.
-     */
-    public interface RecordActivityDialogListener {
-        void onDialogPositiveClick(DialogFragment dialog);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // Verify that the target fragment implements the callback interface
-        Fragment targetFragment = getTargetFragment();
-        try {
-            // Instantiate the RecordActivityDialogListener so we can send events to the host
-            dialogListener = (EditActivityFragment.EditActivityDialogListener) targetFragment;
-        } catch (ClassCastException e) {
-            // The target fragment doesn't implement the interface, throw exception
-            throw new ClassCastException(targetFragment.getTag()
-                    + " must implement RecordActivityDialogListener");
-        }
     }
 
     @Override
@@ -139,17 +103,6 @@ public class RecordActivityFragment extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-    }
-
-    /*
-        Listener for the activity's date picker.
-     */
-    protected class ActivityDatePickerListener implements DatePicker.OnDateChangedListener {
-        @Override
-        public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            activityDate = new DateTime(year, monthOfYear + 1, dayOfMonth, 00, 00);
-            // The date picker's day of month is zero-based
-        }
     }
 
     /*
