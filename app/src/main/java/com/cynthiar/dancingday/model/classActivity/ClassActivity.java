@@ -120,6 +120,11 @@ public class ClassActivity implements BaseColumns {
     }
 
     public static ClassActivity buildActivity(Context context, DummyItem danceClass) {
+        // Build and return the new activity
+        return ClassActivity.buildActivity(context, danceClass, DateTime.now());
+    }
+
+    public static ClassActivity buildActivity(Context context, DummyItem danceClass, DateTime activityDate) {
         if (null == context || null == danceClass)
             return null;
 
@@ -134,7 +139,7 @@ public class ClassActivity implements BaseColumns {
             paymentType = PaymentType.PunchCard;
 
         // Build and return the new activity
-        return new ClassActivity(danceClass, DateTime.now(), paymentType, cardToUse);
+        return new ClassActivity(danceClass, activityDate, paymentType, cardToUse);
     }
 
     /*

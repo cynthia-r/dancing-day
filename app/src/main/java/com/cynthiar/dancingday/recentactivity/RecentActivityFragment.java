@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -50,6 +53,7 @@ public class RecentActivityFragment extends Fragment implements EditActivityFrag
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -72,12 +76,35 @@ public class RecentActivityFragment extends Fragment implements EditActivityFrag
         this.refreshList(parentActivity);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_recent_activity, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_record_activity:
+                // User chose the "Record card" item, launch the record card fragment...
+                RecordActivityFragment newCardFragment = new RecordActivityFragment();
+                newCardFragment.setTargetFragment(this, RecordActivityFragment.REQUEST_CODE);
+                newCardFragment.show(getFragmentManager(), RecordActivityFragment.TAG);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /*
         Refreshes the list of cards
      */
     private void refreshList(TodayActivity parentActivity) {
         // Retrieve list of items
-        List<ClassActivity> classActivityList = classActivityDao.getActivityList();
+        List<ClassActivity> classActivityList = classActivityDao.getRecentActivityList();
 
         // Get the list view and the empty state view
         ListView listView = (ListView) parentActivity.findViewById(R.id.recent_activity_list_view);

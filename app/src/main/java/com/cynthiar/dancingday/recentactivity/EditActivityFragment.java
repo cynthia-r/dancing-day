@@ -78,7 +78,7 @@ public class EditActivityFragment extends DialogFragment{
         // Initialize the data
         classActivityDao = new ClassActivityDao();
 
-        // Get the activity view
+        // Get the fragment view
         LayoutInflater inflater = parentActivity.getLayoutInflater();
         final View editActivityDateView = inflater.inflate(R.layout.edit_activity_date_fragment, null);
 
@@ -102,7 +102,7 @@ public class EditActivityFragment extends DialogFragment{
                         DummyUtils.toast(getActivity(), "Activity updated");
                     }
                 })
-                .setNegativeButton(R.string.cancel_edit_activity, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel_activity_action, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }

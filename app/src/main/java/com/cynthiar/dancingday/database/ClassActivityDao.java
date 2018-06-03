@@ -21,10 +21,15 @@ import java.util.List;
 public class ClassActivityDao extends AppDao<ClassActivity> {
     private DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
 
-    public List<ClassActivity> getActivityList() {
+    public List<ClassActivity> getRecentActivityList() {
         // Sort by most recent activity
         String sortOrder = ClassActivity.COLUMN_DATE + " DESC";
-        return this.retrieveEntities(null, null, null, null, sortOrder);
+
+        // Retrieve the activities up to 30 days ago
+        DateTime dateThreshold = DateTime.now().minusDays(30);
+        String selection = ClassActivity.COLUMN_DATE + " > ?";
+        String[] selectionArgs = { dateThreshold.toString(ClassActivity.dateTimeFormatter) };
+        return this.retrieveEntities(selection, selectionArgs, null, null, sortOrder);
     }
 
     public ClassActivity getActivityById(long classActivityId) {

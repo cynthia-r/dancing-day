@@ -119,7 +119,7 @@ public class DatabaseTests {
         classActivityDao.registerActivity(classActivity);
 
         // Check that the activity is registered
-        List<ClassActivity> classActivityList = classActivityDao.getActivityList();
+        List<ClassActivity> classActivityList = classActivityDao.getRecentActivityList();
         assertEquals(1, classActivityList.size());
         ClassActivity registeredActivity = classActivityList.get(0);
         assertEquals(activityDate, registeredActivity.getDate());
