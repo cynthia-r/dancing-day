@@ -24,9 +24,6 @@ import java.util.List;
 import static android.view.View.GONE;
 
 /**
- * Created by cynthiar on 1/27/2018.
- */
-/*
     Activity showing the past activity.
  */
 public class RecentActivityFragment extends Fragment implements BaseRecentActivityFragment.RecentActivityDialogListener {

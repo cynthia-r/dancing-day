@@ -381,9 +381,17 @@ public class TodayActivity extends AppCompatActivity
     }
 
     /**
-    * Gets the current list of dance classes.
-    */
+     * Gets the current list of dance classes.
+     */
     public List<DummyItem> getCurrentList() {
+        return getCurrentList(true);
+    }
+
+    /**
+    * Gets the current list of dance classes.
+     * @param updateLoadingStatus: whether to update the loading status.
+    */
+    public List<DummyItem> getCurrentList(boolean updateLoadingStatus) {
         // Loop through the extractors
         Extractors extractorsInstance = Extractors.getInstance(this);
         DanceClassExtractor[] extractors = extractorsInstance.getExtractors();
@@ -417,13 +425,15 @@ public class TodayActivity extends AppCompatActivity
         }
 
         // Show/Hide loading circle depending on whether all lists are loaded
-        if (mAllListsLoaded) {
-            findViewById(R.id.loadingCircle).setVisibility(View.GONE);
-            findViewById(R.id.refreshCircle).setVisibility(View.VISIBLE);
-        }
-        else {
-            findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
-            findViewById(R.id.refreshCircle).setVisibility(View.GONE);
+        if (updateLoadingStatus) {
+            if (mAllListsLoaded) {
+                findViewById(R.id.loadingCircle).setVisibility(View.GONE);
+                findViewById(R.id.refreshCircle).setVisibility(View.VISIBLE);
+            }
+            else {
+                findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
+                findViewById(R.id.refreshCircle).setVisibility(View.GONE);
+            }
         }
 
         // Return the list of dummy items

@@ -10,11 +10,19 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="4dp"
         android:dropDownSelector="@android:drawable/btn_dropdown"/>
+    <Spinner
+        android:id="@+id/classSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="4dp"
+        android:dropDownSelector="@android:drawable/btn_dropdown"/>
     <DatePicker
         android:id="@+id/activity_date_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:datePickerMode="spinner"
         android:calendarViewShown="false"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

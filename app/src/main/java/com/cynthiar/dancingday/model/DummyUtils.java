@@ -226,6 +226,11 @@ public class DummyUtils<T> {
         return dayString;
     }
 
+    public static String getDayOfTheWeekName(int dayOfTheWeek) {
+        // 1=Monday, 7=Sunday
+        return DummyContent.DAYS_OF_THE_WEEK[dayOfTheWeek-1];
+    }
+
     public static String readAllStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder out = new StringBuilder();
