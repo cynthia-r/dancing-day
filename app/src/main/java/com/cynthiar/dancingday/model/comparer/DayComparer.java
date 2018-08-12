@@ -23,7 +23,7 @@ public class DayComparer implements DummyUtils.IComparer<String> {
 
     private int findPosition(String day) {
         int i=0;
-        while(!DummyContent.DAYS_OF_THE_WEEK[i].equals(day) && i < DummyContent.DAYS_OF_THE_WEEK.length) {
+        while(i < DummyContent.DAYS_OF_THE_WEEK.length && !DummyContent.DAYS_OF_THE_WEEK[i].equals(day)) {
             i++;
         }
         if (i == DummyContent.DAYS_OF_THE_WEEK.length)

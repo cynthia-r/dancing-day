@@ -64,7 +64,7 @@ public class PdfExtractionTest {
         Document pdf = PDF.open(file);
     }
 
-    private class TestDownloadCallback implements IDownloadCallback<List<DummyItem>>,
+    private class TestDownloadCallback implements IDownloadCallback<Void, List<DummyItem>>,
             IConsumerCallback<Pair<String, List<DummyItem>>> {
 
         @Override
@@ -88,7 +88,7 @@ public class PdfExtractionTest {
         }
 
         @Override
-        public void finishDownloading() {
+        public void finishDownloading(Void key) {
 
         }
 

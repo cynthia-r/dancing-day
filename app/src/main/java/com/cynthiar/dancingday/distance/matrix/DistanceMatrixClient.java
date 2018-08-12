@@ -8,6 +8,8 @@ import com.cynthiar.dancingday.download.IHttpConsumer;
 import com.cynthiar.dancingday.model.DummyUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,8 +93,18 @@ public class DistanceMatrixClient {
             e.printStackTrace();
         }
 
+        // Build the distance result
+        DistanceResult distanceResult = null;
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            distanceResult = new DistanceResult();
+            distanceResult.initialize(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         // Return the result
-        return new DistanceResult(jsonResponse);
+        return distanceResult;
     }
 
     private void appendQueryParam(Uri.Builder builder, String paramName, String paramValue) {

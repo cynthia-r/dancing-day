@@ -45,7 +45,9 @@ public class Extractors {
     private static DanceClassExtractor[] loadExtractors(Context context) {
         DanceClassExtractor[] danceClassExtractors = new DanceClassExtractor[] {
                 new ADIDanceClassExtractor(context),
-                new PNBDanceClassExtractor(context),
+                //new PNBDanceClassExtractor(context),
+                new PNBBellevueDanceClassExtractor(context),
+                new PNBSeattleDanceClassExtractor(context),
                 new KDCDanceClassExtractor(context),
                 new WDCDanceClassExtractor(context),
                 new ExitSpaceDanceClassExtractor(context)

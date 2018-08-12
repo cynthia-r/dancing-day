@@ -29,7 +29,7 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
 
     @Override
     public String getUrl() {
-        return "https://www.americandanceinstitute.com/2018-winter-spring-class-schedule-%e2%8b%86-greenwood/";
+        return "https://www.americandanceinstitute.com/2018-summer-class-schedule-%e2%8b%86-greenwood/";
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
             classType = classElementText.substring(0, indexOfColon);
             if (!classType.contains("Ballet"))
             {
-                System.out.print("Excluded:" + classType + " because doesn't contain 'Ballet'");
+                System.out.print("Excluded:" + classElementText + " because doesn't contain 'Ballet'");
                 return null;
             }
 
@@ -86,7 +86,10 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
             }
 
             if (0 > indexOfDay)
+            {
+                System.out.print("Excluded:" + classElementText + " because day information wasn't found");
                 return null;
+            }
 
             // Get the level and class description
             levelText = classText.substring(0, indexOfDay);
@@ -96,18 +99,37 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
             DanceClassLevel level = this.parseLevel(levelText);
             if (DanceClassLevel.Children == level)
             {
-                System.out.print("Excluded:" + levelText + " because level is Children");
+                System.out.print("Excluded:" + classElementText + " because level is Children");
                 return null;
             }
 
+            // Initialize teacher and time information
+            String time = null;
+            String teacher = null;
+
+            // Search for the teacher information
             int indexOfOpeningParenthesis = classTimeText.indexOf('(');
             int indexOfClosingParenthesis = classTimeText.indexOf(')');
+            if (0 < indexOfOpeningParenthesis && 0 < indexOfClosingParenthesis) {
+                // Extract the time
+                time = classTimeText.substring(0, indexOfOpeningParenthesis).trim();
 
-            // Extract the time
-            String time = classTimeText.substring(0, indexOfOpeningParenthesis).trim();
+                // Extract the teacher
+                teacher = classTimeText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
+            }
+            // Search for the studio information
+            else {
+                int indexOfStudio = classTimeText.indexOf("Studio");
+                if (0 < indexOfStudio) {
+                    time = classTimeText.substring(0, indexOfStudio).trim();
+                }
+            }
 
-            // Extract the teacher
-            String teacher = classTimeText.substring(indexOfOpeningParenthesis + 1, indexOfClosingParenthesis);
+            if ((null == teacher || teacher.isEmpty())
+                && (null == time || time.isEmpty())) {
+                System.out.print("Excluded:" + classElementText + " because time and teacher information wasn't found");
+                return null;
+            }
 
             // Build and return the class object
             List<DummyItem> dummyItemList = new ArrayList<>();
@@ -139,7 +161,9 @@ public class ADIDanceClassExtractor extends HtmlDanceClassExtractor {
             return DanceClassLevel.Children;
         if (levelText.contains("Intermediate"))
             return DanceClassLevel.Intermediate;
-        if (levelText.contains("Beginning"))
+        if (levelText.contains("Ballet II"))
+            return DanceClassLevel.BeginnerIntermediate;
+        if (levelText.contains("Beginning") || levelText.contains("Ballet I") || levelText.contains("new beginners"))
             return DanceClassLevel.Beginner;
         return DanceClassLevel.Unknown;
     }

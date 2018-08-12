@@ -18,8 +18,8 @@ import javax.net.ssl.TrustManagerFactory;
  * Represents a client to perform HTTP calls.
  */
 public class HttpClient {
-    private static final int READ_TIMEOUT = 3000;
-    private static final int CONNECT_TIMEOUT = 3000;
+    private static final int READ_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 10000;
 
     private IHttpConsumer mHttpConsumer;
     private Certificate mCertificate;

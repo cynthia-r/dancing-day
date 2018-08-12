@@ -24,10 +24,10 @@ public class DummyItem {
     private ClassActivityDao classActivityDao;
 
     public DummyItem(String day, DanceClassTime time, Schools.DanceSchool school, String teacher, DanceClassLevel level) {
-        this.day = day;
+        this.day = null == day ? "" : day;
         this.danceClassTime = time;
         this.school = school;
-        this.teacher = teacher;
+        this.teacher = null == day ? "" : teacher;
         this.level = level;
         this.classActivityDao = new ClassActivityDao();
     }

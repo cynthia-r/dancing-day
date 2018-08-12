@@ -19,8 +19,7 @@ public class DistanceResult {
     private String[] mDestinationAddresses;
     private DistanceMatrixRow[] mRows;
 
-    public DistanceResult(String distanceMatrixResponseString) {
-        this.initialize(distanceMatrixResponseString);
+    public DistanceResult() {
     }
 
     public DistanceMatrixStatusCode getStatus() {
@@ -39,13 +38,10 @@ public class DistanceResult {
         return mRows;
     }
 
-    private void initialize(String distanceMatrixResponseString) {
-        if (null == distanceMatrixResponseString || distanceMatrixResponseString.isEmpty())
+    public void initialize(JSONObject jsonObject) {
+        if (null == jsonObject)
             return;
         try {
-            // Get the JSON object
-            JSONObject jsonObject = new JSONObject(distanceMatrixResponseString);
-
             // Status
             String statusString = jsonObject.getString("status");
             mStatus = this.parseStatusCode(statusString);
