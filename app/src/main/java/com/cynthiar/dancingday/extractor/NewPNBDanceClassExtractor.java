@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public abstract class NewPNBDanceClassExtractor extends DanceClassExtractor<Stri
 
     @Override
     public Certificate getCertificate() throws IOException, CertificateException {
+        // Open the certificate
         InputStream certificateInput = mContext.getResources().openRawResource(R.raw.wwwpnborg);
         Certificate certificate = null;
         try {
@@ -48,6 +50,14 @@ public abstract class NewPNBDanceClassExtractor extends DanceClassExtractor<Stri
         finally {
             certificateInput.close();
         }
+
+        // Check that the certificate is currently valid
+        if (certificate instanceof X509Certificate) {
+            X509Certificate x509Certificate = (X509Certificate)certificate;
+            x509Certificate.checkValidity();
+        }
+
+        // Return the certificate
         return certificate;
     }
 

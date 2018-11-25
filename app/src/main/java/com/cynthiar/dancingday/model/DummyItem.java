@@ -27,7 +27,7 @@ public class DummyItem {
         this.day = null == day ? "" : day;
         this.danceClassTime = time;
         this.school = school;
-        this.teacher = null == day ? "" : teacher;
+        this.teacher = null == teacher ? "" : teacher;
         this.level = level;
         this.classActivityDao = new ClassActivityDao();
     }

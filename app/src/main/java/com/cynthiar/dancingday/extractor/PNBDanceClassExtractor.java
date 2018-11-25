@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Created by Robert on 13/02/2017.
+ * This extractor is not used anymore. See NewPNBDanceClassExtractor instead.
  */
 
 public class PNBDanceClassExtractor extends HtmlDanceClassExtractor {
