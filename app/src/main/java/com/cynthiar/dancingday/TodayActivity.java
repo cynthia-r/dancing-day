@@ -444,48 +444,6 @@ public class TodayActivity extends AppCompatActivity
         return mAllListsLoaded;
     }
 
-    /**
-     * Builds the map of schools and corresponding current class cards, for the specified list of dance classes.
-     * @param danceClassList: The list of dance classes.
-     * @return: The map of schools and corresponding class cards.
-     */
-    public HashMap<String, DanceClassCards> getDanceClassCardMap(List<DummyItem> danceClassList) {
-        if ((null == danceClassList) || danceClassList.isEmpty())
-            return new HashMap<>();
-
-        // Map each class with the corresponding classes
-        HashMap<String, DanceClassCards> schoolMap = new HashMap<>();
-        HashMap<String, DanceClassCards> companyMap = new HashMap<>();
-        for (DummyItem danceClass:danceClassList
-             ) {
-            // Get the school key
-            String schoolKey = danceClass.school.Key;
-
-            // Check if there are current cards for this school
-            if (!schoolMap.containsKey(schoolKey)) {
-                // Get the company key
-                String companyKey = danceClass.school.getDanceCompany().Key;
-
-                // Check if the cards were already retrieved for this company
-                if (companyMap.containsKey(companyKey)) {
-                    schoolMap.put(schoolKey, companyMap.get(companyKey));
-                }
-                else {
-                    DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
-                    List<DanceClassCard> danceClassCardList = danceClassCardDao.getCurrentCards(companyKey);
-
-                    // Save the dance class cards
-                    DanceClassCards danceClassCards = new DanceClassCards(danceClassCardList);
-                    schoolMap.put(schoolKey, danceClassCards);
-                    companyMap.put(companyKey, danceClassCards);
-                }
-            }
-        }
-
-        // Return the augmented list
-        return schoolMap;
-    }
-
     public void startDownload(String key) {
         // TODO this implementation only allows a single download at a time
         // We could download in parallel and make sure the today activity is thread-safe

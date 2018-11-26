@@ -71,7 +71,7 @@ public class SingleDayFragment extends Fragment {
 
         // Retrieve list of items
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
-        HashMap danceClassCardMap = parentActivity.getDanceClassCardMap(dummyItemList);
+        HashMap danceClassCardMap = DummyUtils.getDanceClassCardMap(dummyItemList);
 
         // Filter for single day results
         dummyItemList = this.filterList(position, dummyItemList);

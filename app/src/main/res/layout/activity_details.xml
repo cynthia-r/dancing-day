@@ -64,6 +64,19 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
+            android:id="@+id/card_expiring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="@dimen/small_text_margin"
+            android:text="Card expiring soon"
+            android:textStyle="italic"
+            android:textColor="@color/colorRed"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/teacher"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
             android:id="@+id/eta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

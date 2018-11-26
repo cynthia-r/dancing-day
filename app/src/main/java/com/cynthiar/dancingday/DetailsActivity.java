@@ -2,10 +2,8 @@ package com.cynthiar.dancingday;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +33,7 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
     public static final String TEACHER_KEY = "Teacher";
     public static final String TIME_KEY = "Time";
     public static final String DAY_KEY = "Day";
+    public static final String CARD_EXPIRING_KEY = "CARD_EXPIRED";
 
     private static final String ORIGIN_ADDRESS = "1120 112th Ave NE Bellevue WA 98004";
 
@@ -92,6 +91,16 @@ public class DetailsActivity extends AppCompatActivity implements IConsumerCallb
         teacherView.setText(teacher);
         levelView.setText(level);
         timeView.setText(time);
+
+        // Display whether the card is expiring soon
+        TextView cardExpiringView = (TextView) this.findViewById(R.id.card_expiring);
+        String cardExpiringText = bundle.getString(DetailsActivity.CARD_EXPIRING_KEY);
+        if (!cardExpiringText.isEmpty()) {
+            cardExpiringView.setText(cardExpiringText);
+            cardExpiringView.setVisibility(View.VISIBLE);
+        }
+        else
+            cardExpiringView.setVisibility(View.GONE);
 
         // Set ETA to empty initially
         TextView etaView = (TextView) findViewById(R.id.eta);

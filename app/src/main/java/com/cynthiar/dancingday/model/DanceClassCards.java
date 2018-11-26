@@ -44,4 +44,8 @@ public class DanceClassCards {
     public boolean isExpiringSoon() {
         return this.hasCards && cardExpirationDate.minusWeeks(1).isBeforeNow();
     }
+
+    public boolean hasExpired() {
+        return this.hasCards && cardExpirationDate.isBeforeNow();
+    }
 }

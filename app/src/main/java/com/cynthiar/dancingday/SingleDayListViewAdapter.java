@@ -2,6 +2,7 @@ package com.cynthiar.dancingday;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,6 @@ public class SingleDayListViewAdapter extends BaseAdapter{
         TextView classItemTopRightView = (TextView) convertView.findViewById(R.id.class_item_top_right);
         TextView teacherView = (TextView) convertView.findViewById(R.id.teacher);
         TextView classItemBottomLeftView = (TextView) convertView.findViewById(R.id.class_item_bottom_left);
-        TextView cardExpiringView = (TextView) convertView.findViewById(R.id.card_expiring);
 
         // Retrieve the current clas item
         final DummyItem dummyItem = mValues.get(position);
@@ -112,19 +112,26 @@ public class SingleDayListViewAdapter extends BaseAdapter{
         else
             starView.setVisibility(View.GONE);
 
-        // Display whether the card is expiring soon
+        // Display a warning if the card is expiring soon or has expired
+        ImageView cardWarningView = (ImageView) convertView.findViewById(R.id.card_warning);
         DanceClassCards danceClassCards = mDanceClassCardMap.get(dummyItem.school.Key);
-        if (danceClassCards.isExpiringSoon()) {
-            cardExpiringView.setText("Card expiring soon");
-            cardExpiringView.setVisibility(View.VISIBLE);
+        String cardExpiringText = "";
+        if (danceClassCards.hasExpired()) {
+            cardExpiringText = "Card expired";
+            cardWarningView.setVisibility(View.VISIBLE);
+        }
+        else if (danceClassCards.isExpiringSoon()) {
+            cardExpiringText = "Card expiring soon";
+            cardWarningView.setVisibility(View.VISIBLE);
         }
         else if (danceClassCards.hasFewRemainingClasses()) {
             int remainingClassCount = danceClassCards.getRemainingCardClasses();
-            cardExpiringView.setText(remainingClassCount + (remainingClassCount == 1 ? " class" : " classes") + " left");
-            cardExpiringView.setVisibility(View.VISIBLE);
+            cardExpiringText = remainingClassCount + (remainingClassCount == 1 ? " class" : " classes") + " left";
+            cardWarningView.setVisibility(View.VISIBLE);
         }
         else
-            cardExpiringView.setVisibility(View.GONE);
+            cardWarningView.setVisibility(View.GONE);
+        final String finalCardExpiringText = cardExpiringText;
 
         // Set actions
         convertView.setClickable(true);
@@ -137,6 +144,7 @@ public class SingleDayListViewAdapter extends BaseAdapter{
                 TodayActivity parentActivity = (TodayActivity)mContext;
                 Intent intent = new Intent(parentActivity, DetailsActivity.class);
                 Bundle bundle = DetailsActivity.toBundle(dummyItem);
+                bundle.putString(DetailsActivity.CARD_EXPIRING_KEY, finalCardExpiringText);
                 intent.putExtra(DetailsActivity.DANCE_CLASS_KEY, bundle);
 
                 // Start the details activity

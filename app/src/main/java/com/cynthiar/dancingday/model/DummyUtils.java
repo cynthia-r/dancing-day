@@ -3,6 +3,7 @@ package com.cynthiar.dancingday.model;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.cynthiar.dancingday.database.DanceClassCardDao;
 import com.cynthiar.dancingday.model.comparer.SingleDayDummyItemComparer;
 import com.cynthiar.dancingday.model.propertySelector.DanceClassPropertySelector;
 import com.cynthiar.dancingday.model.propertySelector.DayPropertySelector;
@@ -33,7 +34,7 @@ import java.util.List;
 public class DummyUtils<T> {
 
     public interface IComparer<T> {
-        public int compare(T elem1, T elem2);
+        int compare(T elem1, T elem2);
     }
 
     private IComparer<T> mComparer;
@@ -464,5 +465,48 @@ public class DummyUtils<T> {
                         return danceClassLevel;
             }
         return DanceClassLevel.Unknown;
+    }
+
+    /**
+     * Builds the map of schools and corresponding current class cards, for the specified list of dance classes.
+     * @param danceClassList: The list of dance classes.
+     * @return: The map of schools and corresponding class cards.
+     */
+    public static HashMap<String, DanceClassCards> getDanceClassCardMap(List<DummyItem> danceClassList) {
+        if ((null == danceClassList) || danceClassList.isEmpty())
+            return new HashMap<>();
+
+        // Map each class with the corresponding classes
+        HashMap<String, DanceClassCards> schoolMap = new HashMap<>();
+        HashMap<String, DanceClassCards> companyMap = new HashMap<>();
+        for (DummyItem danceClass:danceClassList
+                ) {
+            // Get the school key
+            String schoolKey = danceClass.school.Key;
+
+            // Check if there are current cards for this school
+            if (!schoolMap.containsKey(schoolKey)) {
+                // Get the company key
+                String companyKey = danceClass.school.getDanceCompany().Key;
+
+                // Check if the cards were already retrieved for this company
+                if (companyMap.containsKey(companyKey)) {
+                    schoolMap.put(schoolKey, companyMap.get(companyKey));
+                }
+                else {
+                    // Retrieve the classes for this company
+                    DanceClassCardDao danceClassCardDao = new DanceClassCardDao();
+                    List<DanceClassCard> danceClassCardList = danceClassCardDao.getCurrentCards(companyKey);
+
+                    // Save the dance class cards
+                    DanceClassCards danceClassCards = new DanceClassCards(danceClassCardList);
+                    schoolMap.put(schoolKey, danceClassCards);
+                    companyMap.put(companyKey, danceClassCards);
+                }
+            }
+        }
+
+        // Return the augmented list
+        return schoolMap;
     }
 }

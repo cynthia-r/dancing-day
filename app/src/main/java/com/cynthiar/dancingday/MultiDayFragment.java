@@ -82,7 +82,7 @@ public class MultiDayFragment extends Fragment {
         // Retrieve list of items
         TodayActivity parentActivity = (TodayActivity)getActivity();
         List<DummyItem> dummyItemList = parentActivity.getCurrentList();
-        HashMap danceClassCardMap = parentActivity.getDanceClassCardMap(dummyItemList);
+        HashMap danceClassCardMap = DummyUtils.getDanceClassCardMap(dummyItemList);
 
         // Setup spinners
         // View by spinner

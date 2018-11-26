@@ -9,6 +9,7 @@
     <color name="colorBluer">#207cdf</color>
     <color name="colorBluest">#1d70c9</color>
     <color name="colorRed">#f00</color>
+    <color name="colorDarkRed">#c00</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhite">#fff</color>
 </resources>
